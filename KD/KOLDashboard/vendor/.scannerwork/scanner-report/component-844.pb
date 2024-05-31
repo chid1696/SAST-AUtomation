@@ -1,0 +1,1 @@
+Ì 2webXhr=dom-to-image/bower_components/ocrad-bower/examples/image.html

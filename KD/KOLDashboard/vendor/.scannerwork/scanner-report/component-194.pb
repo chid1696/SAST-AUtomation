@@ -1,0 +1,1 @@
+Â 2jsXxhr!@antv/g2/src/scale/auto/number.js

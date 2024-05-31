@@ -1,0 +1,1 @@
+³ 2jsXøhr@antv/g2/src/geom/shape/area.js

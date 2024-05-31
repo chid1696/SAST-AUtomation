@@ -1,0 +1,1 @@
+º 2jsXªhr!@antv/g2/src/geom/shape/schema.js

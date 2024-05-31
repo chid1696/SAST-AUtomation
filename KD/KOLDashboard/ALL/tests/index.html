@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
+
+<title>Test Scenario</title>
+
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+  <link href="../vendor/semantic/themes/bootswatch/semantic.apollo.min.css" rel="stylesheet" />
+<link href="../vendor/rxds/css/main.css" rel="stylesheet" />
+<link href="../vendor/rxds/css/ionicons.min.css" rel="stylesheet" />
+<link href="../vendor/shepherd/css/shepherd-theme-arrows.css" rel="stylesheet" />
+<style>
+.shepherd-element {
+   z-index:1001
+}
+.ui.dropdown .remove.icon {
+  font-size: 0.857143em;
+  margin:0;
+  padding:0;
+  right: 2em;
+  top: auto;
+  position: absolute;
+  opacity: 0.5;
+  z-index: 4;
+}
+.pivotcols {
+  cursor: pointer;
+}
+.ui.dropdown input[value=''] ~ .remove.icon,
+.ui.dropdown input:not([value]) ~ .remove.icon,
+.ui.dropdown.loading .remove.icon {
+  display: none;
+}
+.ui.list.draggable-container--over {
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.ag-header-cell-text {
+   white-space: pre !important;
+   
+}
+</style>
+
+      <link rel="shortcut icon" href="/rxds-logo.png" type="image/x-icon"  />
+    
+
+   <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+   <script src="../vendor/semantic/semantic.min.js"></script>
+   <script src="../vendor/vue/vue.min.js"></script>
+   <script src="../vendor/ramda/0.25.0/ramda.min.js"></script>
+
+   <!-- Page header content goes here -->
+   
+</head>
+
+
+
+
+<body class="pushable light-mode" id="body">
+
+    <div class="ui inverted labeled icon left  inline vertical sidebar menu">
+        <a class="item logo">
+  <i>
+     <img src="../vendor/rxds/img/rxdsthumb.png" relative="true" alt="" />
+  </i>
+</a>
+   <a href="../." class="item page_link" 
+            data-roles="ALL"> 
+        <i class="paperclip icon"></i>
+       Key Opinion leader </a>
+
+    </div>
+    <div class="pusher">
+        <div class="ui top fixed menu ">
+            <a class="item" id="hamburger">
+              <i class="sidebar icon"></i>
+            </a>
+              <div class="item page_name" onclick='$("#version").show();'>
+                 <!-- <i class="diagnoses icon"></i> --> 
+                 Key Opinion Leader<span id="version" style="display:none">(0.100)</span>
+                 <!-- &nbsp;<i class="chevron circle right icon"></i> -->
+                 <span> &nbsp; > &nbsp; </span>
+                 <!-- <i class="help icon"></i> --> 
+                 <span id="pageTitle">Test Scenario</span>
+              </div>  
+                <div class="center menu margin-center">
+                  <a class="item logo vertically fitted">
+                    <img src="../vendor/rxds/img/apollo_logo.png" style="width:100px" relative="true" alt="" />
+                  </a>
+                </div>
+            <div class="right menu">
+                <!--
+                <a class="item logo vertically fitted">
+                <img src="../vendor/rxds/img/RXDSLogoOnWhite-SVG.svg" style="width:140px" relative="true" alt="" />
+                </a>
+                  <div class="ui item" id="feedback_link"></div>
+                  <a class="item feedback"> 
+                      <i class="bullhorn icon"></i> Feedback
+                  </a>  
+                -->
+
+                <!--
+
+                <a class="item help"> 
+                    <i class="question circle icon"></i> Help
+                </a>
+                -->
+
+                <a class="item tour" style="display:none">
+                    <i class="hand point right icon"></i>Tour
+                </a>  
+                <div class="ui item toggle checkbox">
+                  <input type="checkbox" name="darkModeToggle" id="darkModeToggle">
+                  <label id="darkModeLabel" for="darkModeToggle">Dark Mode</label>
+                </div>
+                <div class="ui item powerpoint dropdown" id="username">
+                  <!-- <i class="user circle icon"></i> <span id="rxuser">user@rxdatascience.com</span>   -->
+                  <i class="user circle icon font-2em mr-0"></i> 
+                  <i class="dropdown icon ml-0"></i>
+                  <div class="menu">
+                    <span id="rxuser" class="rxuser item"> user@rxdatascience.com </span>
+                    <hr class="hr-user-dropdown">
+                    
+
+                      <div class="item feedback"><i class="bullhorn icon color-blue"></i> Feedback</div>
+                      <hr class="hr-user-dropdown">
+                    <div class="item help"> <i class="question circle icon color-blue"></i>Help </div>
+                  </div>
+                </div>
+            </div>
+</div>
+
+
+        <div class="ui bottom attached  equal width left aligned padded grid stackable"> 
+              <textarea>PAGE INFO: [] </textarea>
+
+
+<table class="ui celled striped table">
+  <thead>
+    <tr><th colspan="3">
+      Test Scenarios
+    </th>
+  </tr></thead>
+  <tbody>
+
+  </tbody>
+</table>
+        </div> 
+    </div> <!-- end of pusher -->
+
+</body>
+
+<footer>
+<div class="ui modal help">
+
+  <div class="header ui compact"> <i class="help icon"></i> Key Opinion Leader (V0.100) </div>
+  <div class="scrolling content" id="page_help_scroll">
+
+    <div class="ui items">
+      <div class="item">
+        <div class="image">
+          <i class="huge icons">
+            <i class="help icon"></i>
+            <i class="corner question  icon"></i>
+          </i>  
+        </div>
+        <div class="content">
+          <a class="header"> Online Help</a>
+          <div class="description">
+            <p></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+  </div> <!-- scrolling content -->
+</div>
+
+
+        <div class="row" id="dev_bar" style="display:none;position:fixed;z-index: 1000;line-height:0;bottom: 0;width:80%;margin:0% auto;left:0;right:0">
+      <form class="ui form segment inverted grey" id="top_panel" style="display:none">
+        <h4 class="ui dividing header">RxDS Inspector</h4>
+          <div class="two fields">
+            <div id="slRegions" class="ui search selection dropdown" name="slRegions1">
+              <label>Region</label>
+              <input type="hidden" name="slRegions">
+              <div class="default text">Select Region</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+              </div>
+            </div>
+            <button class="ui disabled labeled icon button" id="dev_upd_region">
+              <i class="cog icon"></i>
+              Update Region
+            </button>
+            <button class="ui disabled labeled icon button" id="dev_query">
+              <i class="puzzle icon"></i>
+              Get SQL
+            </button>
+            <button class="ui disabled labeled icon button" id="dev_cache">
+              <i class="cog icon"></i>
+              Examine Cache
+            </button>
+          </div>
+          
+        <div class="ui fluid styled accordion">
+        
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Query Details?
+          </div>
+          <div class="content">
+
+          <div class="ui top attached tabular menu" id="data_tabs">
+            <a class="item active" data-tab="parameters">Parameters</a>
+            <a class="item" data-tab="query">Query</a>
+            <a class="item" data-tab="data">Data</a>
+            <a class="item" data-tab="url_details">URL</a>
+          </div>
+          <div class="ui bottom attached tab segment active" data-tab="parameters">
+              <div class="editor" style="height:100px"id="data_sent" data-editor="javascript" data-gutter="1"></div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="query">
+            <div class="editor" style="height:100px"id="sql_text" data-editor="javascript" data-gutter="1">Click Get SQL to populate the query</div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="data">
+              <div class="editor" style="height:100px"id="data" data-editor="javascript" data-gutter="1"></div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="url_details">
+              <div class="editor" style="height:50px"id="url_details" data-editor="text" data-gutter="1"></div>
+          </div>
+          
+          </div>
+
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Region Details?
+          </div>
+          <div class="content">
+            <div class="ui top attached tabular menu" id="data_tabs">
+              <a class="item active" data-tab="region_binding">Binding</a>
+              <a class="item" data-tab="region_transform">Transform</a>
+              <a class="item" data-tab="region_config">Configuration</a>
+              <a class="item" data-tab="region_template">Template</a>
+              <a class="item" data-tab="options">Options</a>
+            </div>
+            <div class="ui bottom attached tab segment active" data-tab="region_binding">
+                  <div class="editor" style="height:30px" id="data_binding" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_transform">
+              <div class="editor" style="height:100px"id="region_transform" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_config">
+              <div class="editor" style="height:200px" id="region_config" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_template">
+              <div class="editor" style="height:200px" id="region_template" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="options">
+              <div class="editor" style="height:200px" id="options" data-editor="javascript" data-gutter="1"></div>
+            </div>
+          </div>
+
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Widget Details?
+          </div>
+          <div class="content">
+            <div class="ui top attached tabular menu" id="data_tabs">
+              <a class="item active" data-tab="widget_config">Configuration</a>
+              <a class="item" data-tab="widget_transform">Transform</a>
+              <a class="item" data-tab="widget_template">Template</a>
+            </div>
+            <div class="ui bottom attached tab segment active" data-tab="widget_config">
+              <div class="editor" style="height:200px" id="widget_config" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="widget_transform">
+              <div class="editor" style="height:100px"id="widget_transform" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="widget_template">
+              <div class="editor" style="height:100px"id="widget_template" data-editor="javascript" data-gutter="1"></div>
+            </div>
+          </div>
+          
+        </div>
+    </form>
+    <div class="ui form">
+          <div id="develop" class="ui segment grid grey inverted center aligned mini" style="opacity:0.8;padding:0;margin-top:0;margin-bottom:0">
+    <div class="label text" style="line-height:12px" >Developer Bar - Select Control</div>
+    <div class="four wide  inline field" style="padding-top:0;padding-bottom:0">
+      <div id="slControls" class="ui fluid multiple search selection dropdown" name="slControls1">
+        <input type="hidden" name="slControls">
+        <div class="default text">Select Control</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+        </div>
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="debug_query">
+        <div class="label text" >Stop Query</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="debug_load">
+        <div class="label text" >Stop Load</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="edit_links">
+        <div class="label text" >Edit Links</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="redo_region">
+        <div class="label text" >Inspector</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+
+      <div class="ui buttons">
+        <button class="ui button" id="reload">Reload</button>
+      </div>
+    </div>
+    </div>
+  </div>  
+  <script src="../vendor/rxds/js/develop.js"></script>
+  <script type="text/javascript" src="https://cdn.rxdatascience.com/ace/ace.js"></script>
+
+
+      <div class="ui modal views">
+      <form class="ui form segment inverted grey" id="saved_views" >
+        <h4 class="ui dividing header">Saved Views</h4>
+        
+          <div class="fields">
+          
+            <div class="inline field">
+                <label>Save As</label>
+                <div class="ui left icon input">
+                  <input type="text" id="rxds_query_name" 
+                       placeholder="Enter a name for the current view..." style="width:350px">
+                  <i class="bookmark icon"></i>
+                </div>
+            </div>              
+            
+              <div class="field">
+              <div class="ui toggle checkbox" id="public_view" style="padding-top:8px">
+                <input type="checkbox" tabindex="0" class="hidden">
+                <label>Public?</label>
+              </div>
+              </div>
+              <div class="ui ">
+                <button class="ui labeled icon button" type="button" id="save_query">
+                  <i class="save icon"></i>
+                  Save
+                </button>
+                <button class="ui labeled icon button" type="button" id="delete_query">
+                  <i class="trash icon"></i>
+                  Delete
+                </button>
+              </div>
+
+          </div>
+          
+          <div id="View_Output">
+            <div class="ui top attached tabular menu" >
+              <a class="active item" data-tab="public"><i class="binoculars icon"></i>Public</a>
+              <a class="item" data-tab="private"><i class="eye icon"></i>Private</a>
+              <a class="item" data-tab="recent"><i class="clock icon"></i>Recent</a>
+            </div>
+            
+            <div class="ui bottom attached active tab segment" data-tab="public">
+                <div class="ui list">
+                  <a v-for="item in data.public" class="item" :data-md5_hash="item.md5_hash"
+                        @click="load_view('public', $event)" >
+                   <i class="binoculars icon"></i>
+                    {{item.view_name}}
+                  </a>
+                </div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="private">
+                <div class="ui list">
+                  <a v-for="item in data.private" class="item" :data-md5_hash="item.md5_hash"
+                          @click="load_view('private', $event)">
+                   <i class="eye icon"></i>
+                    {{item.view_name}}
+                  </a>
+                </div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="recent">
+                <div class="ui list">
+                  <a v-for="item in data.recent" class="item" :data-md5_hash="item.md5_hash"
+                         @click="load_view('recent', $event)">
+                   <i class="clock icon"></i>
+                    {{item.md5_hash}}
+                  </a>
+                </div>
+            </div>
+          </div>
+      </form>
+      </div>
+
+
+<!-- Annotate Modal layout goes here -->
+<div class="ui fullscreen modal transition hidden" id="annotateModal" style123="margin-top: -188px;">
+      <i class="close icon"></i>
+      <div class="header">
+          New/Update Annotation
+      </div>
+      <div class="content">
+          <div class="ui form">
+              <div class="field annotate-header">
+                  <label>Headline</label>
+                  <textarea v-model="data.headline" id="taHeadline"></textarea>
+              </div>
+              <div class="field annotate-content">
+                  <label>Content</label>
+                  <textarea v-model="data.description" id="taContent"></textarea>
+              </div>
+          </div>
+      </div>
+      <div class="actions">
+          <button class="ui button deny" @click="cancel($event)">Cancel</button>
+          <button class="ui green button deny" :data-region="data.region" @click="save('save',$event)">Save</button>
+      </div>
+</div>
+
+
+
+  
+
+<div class="ui modal no-data-message">
+    <div class="content">
+        <div class="description">
+            <i class="info circle icon"></i>
+            <span> No Data available for Export </span>
+        </div>    
+    </div>
+</div>
+
+<!-- use this as custom model if needed-->
+<div class="ui modal custom-modal">
+    <div class="scrolling content" style="text-align: center;">
+        <i class="info circle icon"></i>
+        <span class="custom-content"> No message available to show here </span>
+    </div>
+</div>
+
+<script src="../vendor/rxds/js/rxds_bundle.js"></script>
+
+<script src="../custom/rxapp.js"></script>
+<script src="../vendor/rxds/js/rxdsClient.js"></script>
+
+
+
+
+
+
+
+
+
+   <script src="../vendor/rxds/js/rxds_proto.js"></script>
+
+
+
+<!-- To include JS references from the plugin template-->
+
+
+
+
+
+
+
+<script>
+
+semantic = {};
+
+// Initialiaze Semantic UI Controls 
+
+semantic.ready = function() {
+/*
+    $('.tabular.menu .item')
+      .tab({context: 'parent',onVisible:function(t){console.log(t);debugger;}})
+     ;
+*/
+    $('.ui.checkbox')
+      .checkbox()
+    ;
+    
+    $('.ui.radio.checkbox')
+      .checkbox()
+    ;
+    $('.ui.accordion')
+      .accordion({animateChildren: false})
+    ;
+    
+    $('.custom')
+     .popup()
+     ;
+    $('.help')
+     .popup()
+     ;
+      
+    $('.ui.sidebar')
+     .sidebar({dimPage: false,transition: 'push',exclusive:false,closable:false})
+     .sidebar('attach events', '#hamburger');
+      
+    // show dropdown on hover
+    $('.main.menu .ui.dropdown').dropdown({
+      on: 'hover'
+    });
+ 
+    $('.ui.clear.button').click(function(){
+        $('form').form('clear');
+    }); //standard reset functionality
+ 
+    $('.ui.shape').shape({
+       width:'next',
+       height:'next'
+    });
+    
+    //to toggle between semantic grouped buttons
+    $(".ui.grouped.buttons .button").on('click', function() {
+      $(this)
+        .addClass('active')
+        .siblings()
+        .removeClass('active');
+    });
+  
+}; //end of semantic ready
+
+
+$(document)
+ .ready(semantic.ready)
+ ;
+
+
+rxds.page_controls = null;
+
+rxds.page_widgets = null;
+
+
+$(document)
+ .ready(rxds.ready(tests ))
+ ;
+ 
+
+
+</script>
+
+</footer>
+
+
+
+</html>

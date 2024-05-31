@@ -1,0 +1,1 @@
+Ë 2webXhr/dom-to-image/spec/resources/sheet/dom-node.html

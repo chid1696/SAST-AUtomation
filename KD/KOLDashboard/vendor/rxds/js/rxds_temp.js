@@ -1,0 +1,559 @@
+import {manager} from './rxds_manager';
+import {util} from './util';
+
+
+export var user;//Holds the User Object
+export var gDebug = true;
+export var env="client";
+export var gQueryString = {};
+export var m=manager;
+var promise_arr= {};
+
+async function get_user() {
+    /* if(localStorage.getItem("rxds-user") != null){
+      rxds.user = JSON.parse(localStorage.getItem("rxds-user"));
+    }else{ */
+      let data = await $.get("/whoami");
+      if (data && data.email) {
+            localStorage.setItem("rxds-user",JSON.stringify(data));
+            rxds.user = data;
+      } else {
+          console.log("/whoami Exception:" + data);
+          rxds.user = {name:"unknown",email:"unavilable",userRoles:"none"};
+      }
+    //}
+    $("#rxuser").html(rxds.user.name);
+    if (rxds.app.config.develop == "Y" && 
+         rxds.user.userRoles.indexOf("AB-Developer") >= 0 ) {
+            if (rxds.app.app.branch == "MASTER") {
+             $("#dev_bar").show();load_develop_controls();
+            } else {
+              $("#username").click(function() {$("#dev_bar").show();load_develop_controls();});
+            }   
+         }
+    else if (typeof develop !== "undefined" && develop.style) {develop.style.visibility="hidden";}
+}  //get_user
+
+
+export function launch_tour() {
+  if (!rxds.tour) {
+    rxds.tour = new Shepherd.Tour({
+          defaults: {
+            classes: 'shepherd-theme-arrows',
+            scrollTo: true
+          }
+        });
+        
+    rxds.tour.addStep('first', {
+      title: 'Device Info',
+      text: 'General device identification data appears on the left ...',
+      attachTo: {element: '.item.help', on: 'top left' },
+      scrollTo: false
+  });
+
+  const t=JSON.parse(rxds.app.page.config.page_tour);
+  Object.keys(t).forEach(v=>{
+    rxds.tour.addStep('step-'+v, {
+        title: 'Device Info', text: t[v],
+        attachTo: {element: document.getElementById(v), on: 'top left'}
+      });
+   });
+  }
+   rxds.tour.start();
+}
+
+export function load_feedback() {
+  const feedback_url="https://feedback.rxdatascience.com/ords/f?p=1300:1:::::P1_HOST,P1_APP_NAME,P1_PAGE_NAME,P1_REPORTED_BY,P1_PATH,P1_ORIGIN,P1_APP_URL,P1_VIEW:";
+  const variables=location.host+","+rxds.app.app.name.replace(" ",'')+","+rxds.app.page.page.page_name+","+rxds.user.name.replace(" ","")+","+location.pathname+","+location.origin.replace("https://","")+","+location.href.replace("https://","")+","+(rxds.view?rxds.view.md5_hash:"");
+  
+//  console.log(feedback_url+variables);
+  window.open(feedback_url+variables, "_blank", "")
+}
+function  removeElem(arr, elem) {
+   return arr.filter(v=>{return v!== elem}); 
+}
+function secure_page() {
+    var authRoles=rxds.app.page.auth_roles;
+    const userRoles = rxds.user.userAppRoles?rxds.user.userAppRoles.split(/:/):'ALL';
+    
+    if (authRoles && authRoles  != "" && !authRoles.match(/ALL/) ) {
+        const authArr = authRoles.split(/:/).map(v=>rxds.app.app.url+","+v);
+        let intersection = authArr.filter(x => userRoles.includes(x));
+        if (intersection.length == 0) {
+            if (rxds.is_home) { // Home page try to find first open page available
+              let p=rxds.app.pages;
+              var ind;
+              for (ind=1;ind<p.length;ind++) {
+                 var pageRole=p[ind].auth_roles;
+                 if (!pageRole || pageRole.match(/ALL/)) break;
+                 const pauthArr = pageRole.split(/:/).map(v=>rxds.app.app.url+","+v);
+                 let pinter = pauthArr.filter(x => userRoles.includes(x));
+                 if (pinter.length>0) break;
+              }
+              if (ind == p.length)
+                {document.open();document.write("Not Authorized");document.close();}
+              else {window.location.replace(window.location.href+p[ind].page.page_name+"/");}
+            } else {
+            document.open();document.write("Not Authorized");document.close();
+            }
+        }
+    }
+
+    $(".page_link").each(function( index ) {
+        var authRoles=this.dataset.roles;
+        if (authRoles&&!authRoles.match(/ALL/)) {
+            const authArr = authRoles.split(/:/).map(v=>rxds.app.app.url+","+v)
+            let intersection = authArr.filter(x => userRoles.includes(x));
+            //console.log(intersection);
+            if (intersection.length == 0) {
+                $( this ).hide();
+                $( this ).addClass("page_link_hidden");
+                $( this ).removeClass("page_link");
+            }
+        }   
+      });
+
+    $(".parent_menu").each(function( index ) {
+            var child_count=$(this).next(".content").find(".page_link").length;
+             if (child_count == 0) {$( this ).hide();}
+    });
+
+    $(".app_link").each(function( index ) {
+        var appURL=':'+this.dataset.value+':';
+        const userApps=':'+rxds.user.userApps+':';
+        if (!userApps.match(appURL)) {
+            $( this ).hide();
+        }
+      });
+
+    $(".rxds_region").each(function( index ) {
+        var authRoles=this.dataset.roles;
+        if (authRoles&&!authRoles.match(/ALL/)) {
+            const authArr = authRoles.split(/:/).map(v=>rxds.app.app.url+","+v)
+            let intersection = authArr.filter(x => userRoles.includes(x));
+            //console.log(intersection);
+            if (intersection.length > 0) {
+                $( this ).show();
+            }
+            else { // Region not shown for the current user. Remove
+              let r = this.dataset.region;
+              delete rxds.page_controls[r];
+              let pc=rxds.page_controls;
+              Object.keys(pc).forEach(v=>{let i=pc[v];
+                  if (i.children) i.children=removeElem(i.children,r);
+                  if (i.child_regions) i.child_regions=removeElem(i.child_regions,r);
+                  if (i.dependent_items) i.dependent_items=removeElem(i.dependent_items,r);
+                  if (i.dependent_regions) i.dependent_regions=removeElem(i.dependent_regions,r);
+              });
+            }
+        }   
+      });
+    $(".rxds_item").each(function( index ) {
+        var authRoles=this.dataset.roles;
+        if (authRoles&&!authRoles.match(/ALL/)) {
+            const authArr = authRoles.split(/:/).map(v=>rxds.app.app.url+","+v)
+            let intersection = authArr.filter(x => userRoles.includes(x));
+            //console.log(intersection);
+            if (intersection.length > 0) {
+                $( this ).show();
+            }
+            else { // Region not shown for the current user. Remove
+              let r = this.dataset.item;
+              delete rxds.page_controls[r];
+              let pc=rxds.page_controls;
+              Object.keys(pc).forEach(v=>{let i=pc[v];
+                  if (i.children) i.children=removeElem(i.children,r);
+                  if (i.dependent_items) i.dependent_items=removeElem(i.dependent_items,r);
+              });
+            }
+        }   
+      });
+      
+} //secure_page
+
+export function ready(page_id) {
+  
+  rxds.stats = {page_load:new Date(),start_time:new Date()};             
+  rxds.app.page = R.filter(function(i){return i.page.page_id===page_id})(rxds.app.pages)[0];
+  rxds.reqID = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)reqID\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+
+  //rxds.is_home = window.location.pathname.split('/').length===4;
+  rxds.is_home = rxds.app.pages[0].page.page_id == rxds.app.page.page.page_id;
+  rxds.db_path = rxds.is_home ? "db/":"../db/";
+  rxds.vendor = rxds.is_home ? "vendor/":"../vendor/";
+  rxds.load_completed=false;
+  rxds.page_init=true;
+  rxds.cache_dataset_id = rxds.app.page.config.cache_dataset_id?rxds.app.page.config.cache_dataset_id:rxds.app.config.cache_dataset_id;
+  // Build Query String Array
+  get_user().then(s=>{
+    var search = location.search.substring(1);
+    secure_page();
+    gQueryString = search?JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}',
+                 function(key, value) { return key===""?value:decodeURIComponent(value) }):{};
+    $(".item.help").click(v=>{$('.ui.modal.help').modal('show');});
+    $(".region_help").click(v=>{$('.ui.modal.help').modal('show');document.getElementById("help_"+ v.target.dataset.region_id).scrollIntoView();});
+    $(".menu .tour").click(v=>{launch_tour();});
+    $(".menu .views").click(v=>m.load_views());
+    $('.ui.item.powerpoint.dropdown').dropdown();
+    $('.ui.item.switch_app.dropdown').dropdown();
+    $(".item .app_link").click(v=>rxds.load_app(v));
+    $("#pptdata").click(v=>rxds.generate_ppt(true));
+    $("#pptnodata").click(v=>rxds.generate_ppt(false));
+    $(".menu .feedback").click(v=>rxds.load_feedback());
+    if (rxds.gQueryString.view)
+       m.load_view().then(v=>load());
+    else load();             
+  });
+             
+} // ready
+
+function dependent_load(depend_list) {
+    if (!rxds.load_completed &&  !rxds.conditional_regions) {
+      const dlist=depend_list.filter(v=>{return v.match(/^item/)});
+      if (dlist.length == 0) {rxds.conditional_regions=true;conditional_regions();};
+    }
+    var pc=rxds.page_controls;
+    depend_list=depend_list.filter(v=>{return pc[v]});
+    var toFire = R.reject(i=>pc[i].fired,depend_list);
+    var promise_keys = Object.keys(promise_arr);
+    var isReadyToFire = i => R.intersection(pc[i].dependent_items,promise_keys).length == pc[i].dependent_items.length;
+    var readyToFire = R.filter(isReadyToFire,toFire);
+
+    if ((toFire.length == 0) && (!rxds.load_completed)) {
+      rxds.load_completed = true;
+      Promise.all(Object.values(promise_arr))
+             .then( (v) => load_complete(v));
+    }
+
+    //Fire after resolving dependent promises
+    readyToFire.forEach(
+        (k) => {
+            var prom = R.map(i=>promise_arr[i],pc[k].dependent_items);
+            pc[k].fired=true; 
+            Promise.all(prom)
+                        .then( (values) => { 
+                                //if (pc[k].region&&pc[k].region.conditional_display)
+                                promise_arr[k] = manager.load(k);
+                                //dependent_load(depend_list);
+                                if (pc[k].children.length>0) {dependent_load(pc[k].children);}
+                        })
+                        .catch(  (reason) => {console.log(reason)} );
+            }
+    );
+}
+
+export function load_app(evt) {
+  let obj=evt.currentTarget;
+  let app=obj.dataset.value;
+  if (rxds.is_home)
+      window.location.href="../"+app+"/";
+  else     
+      window.location.href="../../"+app+"/";
+}
+
+export function load_complete() {
+  var pc=rxds.page_controls;
+  var pc_keys = Object.keys(pc);
+  var parents = R.reject(i => {return pc[i].children.length == 0}, pc_keys);
+  parents.forEach( (k) => manager.dependent_handler(k,pc[k]) );
+
+  //Replace title
+  $(".bindItem").each(function(){
+      $(this).html( rxds.m.get_param($(this).data("item")).replaceAll("_"," ")  );
+  });
+  rxds.stats.end_time = new Date();
+  rxds.stats.elapsed = rxds.stats.end_time - rxds.stats.start_time;
+
+  manager.postPageView();
+  if (rxds.page_init) {
+    //form validation
+    $('.rxds_form').form({
+       on: 'change',
+       fields:rxdsClient.genValJsonStr(rxds.page_controls),
+       inline: true
+    }); // end of form validation
+  
+    try{
+      if (rxds.app.page.config.page_onload) {
+        rxds.load_fn=new Function('rxds', 'first_load', rxds.app.page.config.page_onload);
+        rxds.load_fn(rxds, true);        
+      }
+    }catch(e){}
+    rxds.page_init=false;
+    
+  }
+  else {
+      if (rxds.app.page.config.page_onload) {
+        rxds.load_fn(rxds,false);
+      }  
+  }
+
+}
+
+function del_div(sel)  {
+    var elements = document.querySelectorAll(sel);
+    for(var i=0; i< elements.length; i++){
+        elements[i].parentNode.removeChild(elements[i]);
+    }
+};
+
+export function hide_header_footer() {
+let div_selector_to_remove= ".ui.top.fixed.menu";
+del_div(div_selector_to_remove);
+develop.style.visibility="hidden";
+}
+export function generate_ppt(include_data) {
+  //showing all hidden charts
+  var pc=rxds.page_controls;
+  Object.keys(pc).filter(v=>(pc[v].control_type==="Tabs Container")).forEach(v=>{
+    $('#'+v+' .ui.bottom.attached.tab.segment.active').addClass('keep-me-visible');
+    $('#'+v+' .ui.bottom.attached.tab.segment').addClass('active');
+  });
+  
+  var pptx = new PptxGenJS();
+  pptx.setLayout('LAYOUT_WIDE');
+  pptx.defineSlideMaster({
+    title: 'MASTER_SLIDE',
+    bkgd:  'FFFFFF',
+    objects: [
+      { 'text':  { text:'RxDataScience Inc.   |', options:{ x:10.8, y:0.1, fontFace:'Helvetica', fontSize:14, color:'1A3C65' } } },
+    //  { 'text':  { text:'Any use of this material without the permission of RxDataScience Inc. is prohibited', options:{ x:3.9, y:7.2, fontFace:'Helvetica', fontSize:10, color:'1A3C65' } } },
+      { 'image': { x:11.2, y:6.9, w:1.83, h:0.45, path:rxds.vendor+'/rxds/img/rxdsdark2.png' } },
+    ],
+    slideNumber: { x:12.8, y:0.1, fontFace:'Helvetica', fontSize:14, color:'1A3C65' }
+  });
+  
+  var slide = pptx.addNewSlide('MASTER_SLIDE');
+  slide.addText(rxds.app.app.name + ' ' + rxds.app.page.config.title, { x:2.4, y:3.6, fontSize:34, color:'1A3C65', fontFace:'Calibri(Body)' });
+  
+  Object.keys(pc).filter(v=>(pc[v].control_type==="Chart eChart")||(pc[v].control_type==="Chart G2")).forEach(v=>{
+   var title, imgHeight, imgWidth, img, qid, res, da;
+   var imgX = 1.1;
+   var imgY = 1.9;
+   //to hide scatter echarts with animation
+   if(pc[v].options && pc[v].options.baseOption) return;
+   if(pc[v].control_type === "Chart G2"){
+     title = pc[v].config.title;
+      if($('#'+v).parent().is('.one,.two,.three,.four,.five,.six')){
+        imgHeight = pc[v].chart._attrs.height/60;
+        imgWidth = pc[v].chart._attrs.width/60;
+  }
+    else if($('#'+v).parent().is('.seven,.eight,.nine,.ten,.eleven,.twelve')){
+      imgHeight = pc[v].chart._attrs.height/80;
+      imgWidth = pc[v].chart._attrs.width/80;
+      if(imgHeight>5.5){
+        imgHeight = pc[v].chart._attrs.height/110;
+        imgWidth = pc[v].chart._attrs.width/110;
+      }
+    }
+    else{
+      imgHeight = 5;//chart.getHeight()/45;
+      imgWidth = 14.34;//chart.getWidth()/45;
+      imgX = -0.7;
+    }
+      img=pc[v].chart.toDataURL();
+      qid=pc[v].query_id;
+      res=rxds.m.query_tracker[qid].data.result;
+      da=[];
+   }
+   else{
+    var chart=pc[v].chart;
+    title=pc[v].config.title;
+    //imgHeight = chart.getHeight();
+    //imgWidth = chart.getWidth();
+    //var chartType = chart.getOption().series[0].type;
+  chart.setOption({'animation':false}); // disabling animation so that chart loads immediately
+  chart.resize(); // redrawing chart
+  chart.setOption({'animation':'auto'}); // resetting animation
+    qid=pc[v].query_id;
+    res=rxds.m.query_tracker[qid].data.result;
+    da=[];
+    if($('#'+v).parent().is('.one,.two,.three,.four,.five,.six')){
+      imgHeight = chart.getHeight()/60;
+      imgWidth = chart.getWidth()/60;
+  }
+  else if($('#'+v).parent().is('.seven,.eight,.nine,.ten,.eleven,.twelve')){
+    imgHeight = chart.getHeight()/80;
+    imgWidth = chart.getWidth()/80;
+    if(imgHeight>5.5){
+      imgHeight = chart.getHeight()/110;
+      imgWidth = chart.getWidth()/110;
+    }
+  }
+  else {
+    imgHeight = 5;//chart.getHeight()/45;
+    imgWidth = 14.34;//chart.getWidth()/45;
+    imgX = -0.7;
+  }
+    
+    img=chart.getDataURL({
+      pixelRatio: 2,
+      backgroundColor: '#fff'
+    });
+   }
+   
+       var slide = pptx.addNewSlide('MASTER_SLIDE');
+      slide.addImage({ data:img, x:imgX, y:imgY, w: imgWidth, h: imgHeight });
+      slide.addText(
+         title,
+          {fontFace:'Calibri(Body)', fontSize:38, color:'ffffff', isTextBox:true, 
+          shape:pptx.shapes.RECTANGLE, align:'l', x:0.40, y:0.5, w:10, h:1.2, fill:'1A3C65'});
+        slide.addText('', { shape:pptx.shapes.RIGHT_TRIANGLE, x:9.39, y:0.9, w:1, h:0.8, fill:'00B0F0', line:'FFFFFF', flipH:true });
+    
+      if (include_data && res && res.length > 0) {
+      var cols=Object.keys(res[0]);
+      var slidedata = pptx.addNewSlide('MASTER_SLIDE');
+       slidedata.addText(
+         title,
+          {fontFace:'Calibri(Body)', fontSize:38, color:'ffffff', isTextBox:true,
+  
+      shape:pptx.shapes.RECTANGLE, align:'l', x:0.40, y:0.5, w:10, h:1.2, fill:'1A3C65'});
+        var cols_format=cols.map(v=>v.replace(/_/g, " "));
+        da.push(cols_format);
+        res.forEach(v=>{var r=[];cols.forEach(s=>{r.push(v[s]);}); da.push(r);});
+        var tabOpts = { x:0.5, y:2.0, w:9.0, fill:'F7F7F7', fontSize:18, color:'6f9fc9' };
+        slidedata.addTable( da, tabOpts );
+      }
+  });
+  
+  pptx.save();
+  
+  //hiding the charts again
+  Object.keys(pc).filter(v=>(pc[v].control_type==="Tabs Container")).forEach(v=>{
+    $('#'+v+' .ui.bottom.attached.tab.segment.active').removeClass('active');
+    $('#'+v+' .ui.bottom.attached.tab.segment.keep-me-visible').addClass('active').removeClass('keep-me-visible');
+  });
+} //generate_ppt
+
+
+function validate_form() {
+  var v=$('.rxds_form').form('validate form');
+  if (Array.isArray(v)) {
+      v=v.filter(v=> v===false).length==0;
+  }
+  if (v===false) return false; else return true;
+}
+
+
+export function conditional_regions() {
+  const eval2=eval;
+  if (!rxds.hidden_controls) rxds.hidden_controls = {};
+  const hc=rxds.hidden_controls;
+  const h_keys= Object.keys(hc);
+  const pc=rxds.page_controls;
+  const pc_keys = Object.keys(pc).filter(v=>{return  pc[v].region&&pc[v].region.conditional_display});
+  if ((pc_keys.length == 0)&&(h_keys.length==0)) return;
+
+  pc_keys.forEach(v=>{let i=pc[v];
+          if (i.children) {i.ac= i.children.slice(0);}
+          if (i.child_regions) {i.acr= i.child_regions.slice(0);}
+          if (i.dependent_items) {i.id= i.dependent_items.slice(0);}
+          if (i.dependent_regions) {i.idr=i.dependent_regions.slice(0);}
+   });
+  
+
+  h_keys.forEach(v=>{
+     let cond=hc[v].region.conditional_display; let show=true;
+     cond=cond.replace(/{{([^}]*)}}/, function (match, p1,offset, string) {return rxds.m.get_param(p1)});
+     try {show=eval2(cond)} catch(e){console.log("Unable to evaluate " + cond); console.log(e);}
+     if (show) {
+          rxds.page_controls[v]=rxds.hidden_controls[v];
+          let i=rxds.page_controls[v];
+          i.children= i.ac.slice(0);
+          i.child_regions= i.acr.slice(0);
+          i.dependent_items= i.id.slice(0);
+          i.dependent_regions=i.idr.slice(0)
+          delete rxds.hidden_controls[v];
+          $('.rxds_region[data-region="region'+v+'"]').show();
+     }
+  });
+
+  pc_keys.forEach(v=>{
+     let cond=pc[v].region.conditional_display; let show=true;
+     cond=cond.replace(/{{([^}]*)}}/, function (match, p1,offset, string) {return rxds.m.get_param(p1)});
+     try {show=eval2(cond)} catch(e){console.log("Unable to evaluate " + cond); console.log(e);}
+     if (!show) {
+          rxds.hidden_controls[v]=rxds.page_controls[v];
+          delete rxds.page_controls[v];
+          $('.rxds_region[data-region="'+v+'"]').hide();
+          Object.keys(rxds.page_controls).forEach(v=>{let i=pc[v];
+                  if (i.children) {i.children=removeElem(i.children,v)};
+                  if (i.child_regions) i.child_regions=removeElem(i.child_regions,v);
+                  if (i.dependent_items) i.dependent_items=removeElem(i.dependent_items,v);
+                  if (i.dependent_regions) i.dependent_regions=removeElem(i.dependent_regions,v);
+              });
+     }
+  });
+  
+} //conditional_regions
+
+export async function load_regions() { /* Called from button action to reload page regions */
+  if (!validate_form()) return;
+  conditional_regions();
+  rxds.stats.start_time=new Date();             
+  const pc=rxds.page_controls;
+  const pc_keys = Object.keys(pc);
+  const region_keys = R.filter(i => {return pc[i].region && pc[i].query_id > 0}, pc_keys);
+  var param={};
+  var p = region_keys.map(
+      (k) => {promise_arr[k] = manager.load(k);return promise_arr[k];}
+  );
+  await Promise.all(p);
+  rxds.stats.end_time = new Date();
+  rxds.stats.elapsed = rxds.stats.end_time - rxds.stats.start_time;
+  manager.postPageView();
+  //Replace title
+  $(".bindItem").each(function(){
+      $(this).html( rxds.m.get_param($(this).data("item")).replaceAll("_"," ")  );
+  });
+
+}
+
+export async function load_children(children) { /* Called in reactive pages to refresh dependent regions */
+    if (!validate_form()) return;
+    conditional_regions();
+    rxds.stats.start_time=new Date();             
+    const pc=rxds.page_controls;
+    const pc_keys=children;
+    pc_keys.forEach(k => {if (pc[k]) {pc[k].fired = false;delete promise_arr[k]}});
+    rxds.load_completed=false;
+    dependent_load(children);
+}
+
+export async function load() { 
+  rxds.load_completed = false;
+  rxds.conditional_regions = false;
+  $.fn.dropdown.settings.delimiter = '|';
+  $.fn.dropdown.settings.fullTextSearch = true;
+  
+  const pc=rxds.page_controls;
+  const pc_keys = Object.keys(pc);
+  //initialize page controls
+  pc_keys.forEach(
+      (k) => {pc[k].children=[]; pc[k].fired = false;}
+  );
+  
+  if (rxds.cache_dataset_id) {
+       rxds.recache_ts =  await manager.fetchAsync("cache"+rxds.cache_dataset_id,"Cache TS", rxds.cache_dataset_id,{cache:'N'});
+       if (rxds.recache_ts.result && rxds.recache_ts.result.length==1) rxds.recache_ts = rxds.recache_ts.result[0];
+       else rxds.recache_ts= '1900-01-01T00:00:00'
+  }
+
+  //Find objects with and without dependents
+  const no_depend = R.filter(i => {return pc[i].dependent_items.length == 0}, pc_keys);
+  const depend = R.reject(i => {return pc[i].dependent_items.length == 0}, pc_keys);
+  
+//Fire away and store promises if no dependents
+  no_depend.forEach(
+      (k) => {pc[k].fired=true; promise_arr[k] = manager.load(k);}
+  );
+  //debugger;
+  //Append to the children array for the parent elements to support refresh
+  depend.forEach(
+      (k) => {
+          pc[k].dependent_items.forEach(i=>{pc[i].children.push(k)});
+  });
+  dependent_load(depend);
+} //load
+
+

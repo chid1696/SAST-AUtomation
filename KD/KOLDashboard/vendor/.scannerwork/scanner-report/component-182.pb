@@ -1,0 +1,1 @@
+¶ 2jsXœhr#@antv/g2/src/geom/shape/interval.js

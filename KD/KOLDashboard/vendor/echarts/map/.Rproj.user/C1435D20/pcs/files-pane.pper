@@ -1,0 +1,9 @@
+{
+    "path" : "/rxds/app_model/rxds_dark_ui/source/vendor/echarts/map",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

@@ -1,0 +1,854 @@
+// Add a reference2 to rxds global -- version 2.0
+rxds.app.dimcharts = [];
+rxds.app.dimchart_obj = {};
+rxds.app.dcData = [];
+rxds.app.dimload = 0;
+rxds.app.log_scales = {};
+var rxdsdimchart = (function() {
+
+var colors=["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+
+
+var filters={"x_fil_state":""};
+var rxds_widgets=[];
+//var dc;
+var numberFormat = d3.format(".2f");
+
+
+function rebuildFilters() {
+   filters = _.object(_.map(rxds.app.dimcharts, function(chart) {
+                    return [chart.anchorName(), chart.filters()]
+                    }));
+  rxds_widgets.forEach(function (i) {          
+    if ((i.filter !== undefined) && (i.filter !== "")) {
+      filters[i.name] = i.filter;
+    }
+  });
+  
+  rxdsdimchart.beforeFilters(filters);                  
+}
+
+function beforeFilters(filters) {}
+
+function rescaleLog() {
+  $.each( rxds.app.log_scales, function( key, obj ) {
+  n=obj.chart.anchorName();
+  d=rxds.app.dcData[n];
+  var max = R.reduce(function(x,y){return (x.value<y.value)?y:x}, {"value":0}, d).value; 
+  if (obj.type === "rowChart") {
+      obj.chart.x(obj.axis_type.clamp(true).domain([1,max]));
+  }
+  else if (obj.type === "barChart")  {
+       obj.chart.y(obj.axis_type.clamp(true).domain([1,max]));
+
+  }
+});
+}
+function promisePost() {
+  var div = $( ".dimChartReg" );
+  return new Promise(function(resolve, reject) {
+    if (rxds.app.dimload===2) {resolve(this.responseText);return;}  
+    if (rxds.app.dimload===1){rxds.app.dimload=2;}
+    var config = $(div).data("config");
+//    rxds.fngetJSON("","","ussr", 'select from state', function(qJSON){
+      qJSON = rxds.getReqJSON(div);
+      rebuildFilters();
+      eval(config.beforequery); // Run any requested changes to qJSON
+      for (t in filters) {
+        qJSON[t] = filters[t];
+      }
+     qJSON.query_id = $(div).data("query_id");
+//      rxds.parseQSql("",qJSON, function(qJSON){
+        rxds.postReq({
+//            url : rxds.fnGetURL(div)+'/',
+            body: qJSON,
+            done: function(data){
+                    // Check for error
+                    if(data.qerr !== undefined){
+                      rxds.fnShowError($(".dimChartReg")[0],data);
+                      return;
+                    }
+                    eval(config.beforepaintchart); // Run any requested changes to data returned by KDB
+                    rxds.app.dcData = data.result;
+                    rescaleLog();
+                    resolve(this.responseText);
+                  },// End done cb
+            fail: function(err){
+                    div.innerText = "Error" + err.responseText;
+                    reject;
+                  }
+        });// End rxds.postReq
+        
+//      }); //parseQSql 
+      
+//    }); //fngetJSON 
+  }); // Promise definition
+} //promisePost
+
+    function resetChart(p_anchor) {
+      rxds.app.dimchart_obj[p_anchor].filterAll().redrawGroup();
+    }
+    function setUpChart() {
+ /*         rxds.app.dimcharts = dc.chartRegistry.list();
+             rxds.app.dimchart_obj = _.object(_.map(rxds.app.dimcharts, function(chart) {
+                    return [chart.anchorName(), chart]
+                    })); */
+    }
+    function rxds_widget_handler(widget_config){
+       var chartData=rxds.app.dcData[widget_config.anchor.substring(1)];
+       if (widget_config.filter === undefined) {widget_config.filter=[]};
+       if (widget_config.widget_type == "datatable") {
+         console.log("here we will draw a datatable");
+         console.log(chartData);
+         console.log("functionality not developed");
+       }
+       else if (widget_config.widget_type == "geoChoroplethChart") {
+         console.log("here we will draw a geoChoroplethChart");
+         console.log(chartData);
+         console.log("functionality not developed");
+       }
+       else if (widget_config.widget_type == "pieChart") {
+         console.log("here we will draw a pie");
+         console.log(chartData);
+         vegaPie(widget_config,chartData);
+       }
+       else if (widget_config.widget_type == "rowChart") {
+         console.log("here we will draw a rowChart");
+         console.log(chartData);
+         vegaRowLite(widget_config,chartData);
+       }
+       else if (widget_config.widget_type == "sankey") {
+         var sankeyData=rxds.app.dcData[widget_config.anchor.substring(1)];
+         console.log("here we will draw a sankey");
+         console.log(sankeyData);
+         try {paintSankey(widget_config, sankeyData);} catch(e){console.log(e);}
+       }
+    }
+     function commitHandler(redraw, drawCallback) {
+            var promise = promisePost();
+            
+            promise.then(function(data) {
+              /* data has returned from back-end - handle rxds widgets */
+             console.log(rxds_widgets.length);  
+            _.map(rxds_widgets,rxds_widget_handler);
+            
+          var groups = _.object(_.map(rxds.app.dimcharts, function(chart) {
+              return [chart.anchorName(), chart.group()];
+          }));
+          
+          //the magic: trick dc.js into thinking it's dealing with a crossfilter group but actually
+          //the backend has full control over each chart's group data so it can now render aggregates directly.
+          _.forEach(groups, function(group, chartAnchor) {
+            if (chartAnchor == "datatable") {
+             group = function (d) {return d.value;}
+            } else {
+              //group = function (obj) {return obj.key};
+              group.all = function() { return rxds.app.dcData[chartAnchor]; };
+              group.top = function() { return rxds.app.dcData[chartAnchor]; };
+            }
+          });
+
+                drawCallback && drawCallback();  
+            });
+            return promise;
+        }
+
+    function rxdsSankey(p_anchor, p_width, p_height) {
+      rxds_widgets.push({widget_type:"sankey",anchor:p_anchor,width:p_width,height:p_height,name:p_anchor.substring(1)});
+    }
+    function dataTable(p_anchor, p_width, p_height, p_grp_name, p_columns, p_sortby, p_order) {
+      rxds_widgets.push({widget_type:"datatable",anchor:p_anchor,width:p_width,name:p_anchor.substring(1), columns:p_columns, sortby:p_sortby, order:p_order});
+    }
+    function pieChart(p_anchor, p_width, p_height, p_radius) {
+      rxds_widgets.push({widget_type:"pieChart",anchor:p_anchor,width:p_width,height:p_height,radius:p_radius,name:p_anchor.substring(1)});
+    }
+    function barChart(p_anchor, p_width, p_height, p_yscale, p_domain) {
+      rxds_widgets.push({widget_type:"barChart",anchor:p_anchor,width:p_width,height:p_height,yscale:p_yscale,domain:p_domain,name:p_anchor.substring(1)});
+    }
+
+    function rowChart(p_anchor, p_width, p_height, p_yscale, p_domain, p_range) {
+     rxds_widgets.push({widget_type:"rowChart",anchor:p_anchor,width:p_width,height:p_height,yscale:p_yscale,domain:p_domain, range:p_range, name:p_anchor.substring(1)});
+    }
+    
+    function vegaPie(widget_config,chartData) {
+      var spec = VegaPieSpec();
+        spec.data[0].values = chartData;
+        console.log(spec);
+        var view = new vega.View(vega.parse(spec))
+          .renderer('svg')  // set renderer (canvas or svg)
+          .initialize(widget_config.anchor) // initialize view within parent DOM container
+          .hover()             // enable hover encode set processing
+          .run();              // run the dataflow and render the view
+        //view.addSignalListener('clicked', (sig, val) => {console.log(val)});
+        vegaTooltip.vega(view);
+    }
+    function vegaRowFull(widget_config,chartData) {
+        var spec = vegaSpec();
+        spec.data[0].values = chartData;
+        console.log(spec);
+        var view = new vega.View(vega.parse(spec))
+          .renderer('svg')  // set renderer (canvas or svg)
+          .initialize(widget_config.anchor) // initialize view within parent DOM container
+          .hover()             // enable hover encode set processing
+          .run();              // run the dataflow and render the view
+        view.addSignalListener('clicked', (sig, val) => {console.log(val)});
+        vegaTooltip.vega(view);
+    }    
+    function vegaRowLite(widget_config,chartData) {
+      var specvl = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+          "description": "A simple bar chart with embedded data.",
+          "width": 600,
+          "height": 400,
+          "data": {
+            "values": chartData
+          },
+          "selection": {
+            "pts": {"type": "multi"}
+          },
+          "mark": "bar",
+          "encoding": {
+            "x": {"field": "value", "type": "quantitative"},
+            "y": {"field": "key", "type": "ordinal"},
+            "color": {
+              "condition": {
+                "selection": "pts",
+                "field": "key",
+                "type": "nominal"
+              },
+              "value": "grey"
+            }
+          }
+        };
+        var spec = vl.compile(specvl).spec;
+        spec.data.push({
+          "name": "selected",
+          "on": [
+            {"trigger": "clicked", "toggle": "clicked"}
+          ]
+        });
+        
+       spec.marks[0].encode.update.fill[0].test = "(!length(data('selected')) || indata('selected', 'value', datum.key))";
+        spec.signals.push({
+          "name": "clicked", "value": null,
+          "on": [
+            {
+              "events": "@marks:click",
+              "update": "{value: datum.key}",
+              "force":  true
+            }
+          ]
+        });
+        console.log(spec);
+        var view = new vega.View(vega.parse(spec))
+          .renderer('svg')  // set renderer (canvas or svg)
+          .initialize(widget_config.anchor) // initialize view within parent DOM container
+          .hover()             // enable hover encode set processing
+          .run();              // run the dataflow and render the view
+        view.addSignalListener('clicked', (sig, val) => {console.log(val)});
+        vegaTooltip.vega(view);
+    }
+    function geoChoroplethChart(p_anchor, p_width, p_height,p_json) {
+     d3.json(p_json, function (statesJson) {
+        rxds_widgets.push({widget_type:"geoChoroplethChart",anchor:p_anchor,width:p_width,height:p_height,json:statesJson,name:p_anchor.substring(1)});
+     });
+    } //geoChoroplethChart
+    
+    function geoChoroplethqJSON(p_anchor, p_width, p_height,q_json) {
+        rxds_widgets.push({widget_type:"geoChoroplethChart",anchor:p_anchor,width:p_width,height:p_height,json:q_json,name:p_anchor.substring(1)});
+    }    
+
+    function paintSankey(widget_config, data) {
+      data.links.forEach(function (d, i) {
+       data.links[i].source = R.find(R.propEq("name",data.links[i].source),data.nodes);
+       data.links[i].target = R.find(R.propEq("name",data.links[i].target),data.nodes);
+     });
+     
+     var units = "Count";
+
+    var margin = {top: 10, right: 10, bottom: 10, left: 10},
+        width = widget_config.width - margin.left - margin.right,
+        height = widget_config.height - margin.top - margin.bottom;
+    
+    var formatNumber = d3.format(",.0f"),    // zero decimal places
+        format = function(d) { return formatNumber(d) + " " + units; },
+        color = d3.scale.category20();
+    
+    // append the svg canvas to the page
+    d3.select(widget_config.anchor).selectAll("svg").remove();
+    var svg = d3.select(widget_config.anchor).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+    
+    // Set the sankey diagram properties
+    var sankey = d3.sankey()
+        .nodeWidth(36)
+        //.nodePadding(40)
+        .size([width, height]);
+
+    function straightLine(d) {
+      var pts = [
+        [d.source.x + d.source.dx, d.source.y + d.sy],
+        [d.target.x, d.target.y + d.ty],
+        [d.target.x, d.target.y + d.ty + d.dy],
+        [d.source.x + d.source.dx, d.source.y + d.sy + d.dy]
+      ];
+      var pa = pts.map(function (d) { return d.join(",") });
+      return "M" + pa.join("L");
+    }
+
+    sankey.link = straightLine;
+    var path = sankey.link;
+    
+    var graph = data;
+    sankey
+      .nodes(graph.nodes)
+      .links(graph.links)
+      .layout(32);
+
+    // add in the links
+    var link = svg.append("g").selectAll(".link")
+      .data(graph.links)
+    .enter().append("path")
+      .attr("class", "link")
+      .attr("d", path)
+      //.style("stroke-width", function(d) { return Math.max(1, d.dy); })
+      .style("fill", "#ccc")
+      .style("stroke", "none")
+      .style("opacity", 0.7)
+      .sort(function(a, b) { return b.dy - a.dy; })
+      .on("click", function(d){
+        widget_config.filter.push(d.source.name + ";" + d.target.name);
+      })
+      .on("mouseover", function(d) {
+        d3.select(this).style("fill", "#999");
+      })
+      .on("mouseout", function(d) {
+        d3.select(this).style("fill", "#ccc");
+      });
+
+// add the link titles
+  link.append("title")
+        .text(function(d) {
+    		return d.source.name + " → " + 
+                d.target.name + "\n" + format(d.value); });
+
+function nozoom() {
+  d3.event.preventDefault();
+}
+// add in the nodes
+  var node = svg
+      .on("touchstart", nozoom)
+      .on("touchmove", nozoom)
+      .append("g").selectAll(".node")
+      .data(graph.nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { 
+		  return "translate(" + d.x + "," + d.y + ")"; })
+		  .on("click", function(d,i){
+		    if (d3.event.defaultPrevented) return; // dragged
+		    var index = widget_config.filter.indexOf(d.name);
+		    if (index === -1) {
+            widget_config.filter.push(d.name);
+		    } else
+		    {
+		      widget_config.filter.splice(index, 1);
+		    }
+        var filters=R.reduce(function(x,y){ return (x+y+"; ");},"",widget_config.filter).slice(0, -1);
+        $(widget_config.anchor).find(".filter").html(filters);
+        $(widget_config.anchor).find(".reset").css("visibility", "visible");
+               rxdsdimchart.commitHandler().then(function() {
+                dc.renderAll(); 
+          });
+      })
+/*    .call(d3.behavior.drag()
+      .origin(function(d) { return d; })
+      .on("dragstart", function() { 
+		  this.parentNode.appendChild(this); })
+      .on("drag", dragmove)) */
+;
+
+
+//class="selected"
+// add the rectangles for the nodes
+  node.append("rect")
+      .attr("height", function(d) { return d.dy; })
+      .attr("width", sankey.nodeWidth())
+      .style("fill", function(d) { 
+      if ( (widget_config.filter.indexOf(d.name) === -1) && (widget_config.filter.length > 0) ) {
+        d.color = color(d.name.replace(/ .*/, ""));
+        return d.color = "#ccc";
+      } else {
+		  return d.color = color(d.name.replace(/ .*/, ""));} })
+      .style("stroke", function(d) { 
+		  return d3.rgb(d.color).darker(2); })
+		 .attr("class", function(d) { if ( (widget_config.filter.indexOf(d.name) === -1) && (widget_config.filter.length > 0) ) {return "selected" + d.name };})
+    .append("title")
+      .text(function(d) { 
+		  return d.name + "\n" + format(d.value); });
+
+// add in the title for the nodes
+  node.append("text")
+      .attr("x", -6)
+      .attr("y", function(d) { return d.dy / 2; })
+      .attr("dy", ".35em")
+      .attr("text-anchor", "end")
+      .attr("transform", null)
+      .text(function(d) { return d.name; })
+    .filter(function(d) { return d.x < width / 2; })
+      .attr("x", 6 + sankey.nodeWidth())
+      .attr("text-anchor", "start");
+
+// the function for moving the nodes
+  function dragmove(d) {
+    d3.select(this).attr("transform", 
+        "translate(" + d.x + "," + (
+                d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
+            ) + ")");
+    sankey.relayout();
+    link.attr("d", path);
+  }         
+     
+ 
+ 
+      
+    } //paintSankey
+    
+    
+      function paintMap(geoJSON,chart,p_width, p_height) {
+          var projection = d3.geo.mercator();
+             var path = d3.geo.path().projection(projection);
+             
+             //set up scale and translate
+             var bounds, scale, offset;
+             projection.scale(1).translate([0,0]);
+             var bounds = path.bounds(geoJSON);
+             var scale = .90 / Math.max((bounds[1][0] - bounds[0][0]) / p_width, 
+                                        (bounds[1][1] - bounds[0][1]) / p_height);
+             var offset = [(p_width - scale * (bounds[1][0] + bounds[0][0])) /2, 
+                           (p_height - scale * (bounds[1][1] + bounds[0][1])) /2 ]; 
+             projection.scale(scale).translate(offset);
+
+            chart.width(p_width).height(p_height)
+                   .dimension({}).group({}).commitHandler(commitHandler)
+                    .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
+                    .colorDomain([0, 40000])
+  //                  .projection(projection)
+  //                        .scale(scale)
+  //                        .translate([p_width / 2, p_height / 2]))
+  //                  .colorCalculator(function (d) { return d ? chart.colors()(d) : '#ccc'; })
+                    .turnOnControls(true).controlsUseVisibility(true)
+                   .overlayGeoJson(geoJSON.features, "state", function (d) {
+                        if (d.properties.name === undefined) {return d.properties.geography;}
+                        else {return d.properties.name;}
+                        
+                    })
+                    .on("preRender", function(chart) {
+                       chart.colorDomain(d3.extent(chart.data(), chart.valueAccessor()));
+                     })
+                    .on("preRedraw", function(chart) {
+                        chart.colorDomain(d3.extent(chart.data(), chart.valueAccessor()));
+                     })
+                    .title(function (d) {
+                        return "State: " + d.key + "  " + d3.format(".0f")(d.value ? d.value : 0);
+                    });
+         } //paintMap
+      
+      function geoChoroplethChartOld(p_anchor, p_width, p_height,p_json) {
+         var chart  = dc.geoChoroplethChart(p_anchor);
+         d3.json(p_json, function (statesJson) {
+           paintMap(statesJson,chart,p_width, p_height)
+           });
+        } //geoChoroplethChart
+
+      function geoChoroplethqJSONOld(p_anchor, p_width, p_height,q_json) {
+         var chart  = dc.geoChoroplethChart(p_anchor);
+           paintMap(rxds.app.dcData[q_json],chart,p_width, p_height)
+        } //geoChoroplethChart
+    
+    function VegaPieSpec() {
+      return {
+        "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+        "width": 200,
+        "height": 200,
+        "autosize": "none",
+        "signals": [
+          {
+            "name": "startAngle", "value": 0
+          },
+          {
+            "name": "endAngle", "value": 6.29
+          },
+          {
+            "name": "padAngle", "value": 0
+          },
+          {
+            "name": "innerRadius", "value": 0
+          },
+          {
+            "name": "cornerRadius", "value": 0
+          }
+        ],
+      
+        "data": [
+          {
+            "name": "table",
+            "values": [
+            ],
+            "transform": [
+              {
+                "type": "pie",
+                "field": "value",
+                "startAngle": {"signal": "startAngle"},
+                "endAngle": {"signal": "endAngle"}
+              }
+            ]
+          }
+        ],
+      
+        "scales": [
+          {
+            "name": "color",
+            "type": "ordinal",
+            "range": {"scheme": "category20"}
+          }
+        ],
+      
+        "marks": [
+          {
+            "type": "arc",
+            "from": {"data": "table"},
+            "encode": {
+              "enter": {
+                "fill": {"scale": "color", "field": "key"},
+                "x": {"signal": "width / 2"},
+                "y": {"signal": "height / 2"}
+              },
+              "update": {
+                "startAngle": {"field": "startAngle"},
+                "endAngle": {"field": "endAngle"},
+                "padAngle": {"signal": "padAngle"},
+                "innerRadius": {"signal": "innerRadius"},
+                "outerRadius": {"signal": "width / 2"},
+                "cornerRadius": {"signal": "cornerRadius"}
+              }
+            }
+          }
+        ]
+      };
+
+    }
+    function vegaSpec () {
+      return {
+      "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+      "description": "A simple bar chart with embedded data.",
+      "autosize": "pad",
+      "padding": 5,
+      "style": "cell",
+      "data": [
+        {
+          "name": "source",
+          "values": []
+        },
+        {
+          "name": "selected",
+          "on": [
+            {"trigger": "clicked", "toggle": "clicked"}
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "name": "width",
+          "update": "600"
+        },
+        {
+          "name": "height",
+          "update": "400"
+        },
+        {
+          "name": "clicked", "value": null,
+          "on": [
+            {
+              "events": "@marks:click",
+              "update": "{value: datum.key}",
+              "force":  true
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "name": "marks",
+          "type": "rect",
+          "style": [
+            "bar"
+          ],
+          "from": {
+            "data": "source"
+          },
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "value"
+              },
+              "x2": {
+                "scale": "x",
+                "value": 0
+              },
+              "y": {
+                "scale": "y",
+                "field": "key"
+              },
+              "height": {
+                "scale": "y",
+                "band": true
+              },
+              "fill": [
+                {
+                  "test": "(!length(data('selected')) || indata('selected', 'value', datum.key))",
+                  "scale": "color",
+                  "field": "key"
+                },
+                {
+                  "value": "grey"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "scales": [
+        {
+          "name": "x",
+          "type": "linear",
+          "domain": {
+            "data": "source",
+            "field": "value"
+          },
+          "range": [
+            0,
+            {
+              "signal": "width"
+            }
+          ],
+          "round": true,
+          "nice": true,
+          "zero": true
+        },
+        {
+          "name": "y",
+          "type": "band",
+          "domain": {
+            "data": "source",
+            "field": "key",
+            "sort": true
+          },
+          "range": [
+            {
+              "signal": "height"
+            },
+            0
+          ],
+          "round": true,
+          "paddingInner": 0.1,
+          "paddingOuter": 0.05
+        },
+        {
+          "name": "color",
+          "type": "ordinal",
+          "domain": {
+            "data": "source",
+            "field": "key",
+            "sort": true
+          },
+          "range": "category"
+        }
+      ],
+      "axes": [
+        {
+          "scale": "x",
+          "labelOverlap": true,
+          "orient": "bottom",
+          "tickCount": {
+            "signal": "ceil(width/40)"
+          },
+          "title": "x",
+          "zindex": 1
+        },
+        {
+          "scale": "x",
+          "domain": false,
+          "grid": true,
+          "labels": false,
+          "maxExtent": 0,
+          "minExtent": 0,
+          "orient": "bottom",
+          "tickCount": {
+            "signal": "ceil(width/40)"
+          },
+          "ticks": false,
+          "zindex": 0,
+          "gridScale": "y"
+        },
+        {
+          "scale": "y",
+          "labelOverlap": true,
+          "orient": "left",
+          "title": "y",
+          "zindex": 1
+        }
+      ],
+      "config": {
+        "axis": {
+          "domainColor": "#888",
+          "tickColor": "#888"
+        },
+        "axisY": {
+          "minExtent": 30
+        }
+      }
+    };
+    } 
+    function pieChartOld(p_anchor, p_width, p_height, p_radius) {
+      var chart = dc.pieChart(p_anchor);
+      chart.width(p_width).height(p_height).slicesCap(10).innerRadius(p_radius)
+           .dimension({}).group({}).commitHandler(commitHandler)
+           .label(function(d) {  return d.key; })
+         .ordinalColors(colors)
+ //                   .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
+           .turnOnControls(true)
+           .controlsUseVisibility(true);
+    }
+    
+    function rowChartold(p_anchor, p_width, p_height, p_yscale, p_domain, p_range) {
+      var chart = dc.rowChart(p_anchor);
+      var axis_type; var elasticX;
+      if (p_yscale == "log") {
+        axis = d3.scale.log();
+        axis_type = axis.domain(p_domain).range([0,p_width]).nice();
+        rxds.app.log_scales[p_anchor] = {"domain":p_domain,"range":[0,p_width],"axis_type":axis,"chart":chart,"type":"rowChart"};
+        elasticX = false;
+      }
+      else {
+        axis_type = d3.scale.linear().domain(p_domain);
+        elasticX = true;
+      }
+        chart.width(p_width).height(p_height)
+        .useViewBoxResizing(true)
+        .margins({top: 5, left: 5, right: 5, bottom: 20})
+       .dimension({}).group({}).commitHandler(commitHandler)
+        .ordinalColors(colors)
+        .label(function (d) {
+            return d.key;
+        })
+        // Title sets the row text
+        .title(function (d) {
+            return d.value;
+        })
+        .elasticX(elasticX)
+        .x(axis_type)
+//           .turnOnControls(true)
+//           .controlsUseVisibility(true)
+        
+        chart.xAxis().scale(chart.x())
+          .ticks(8, ",.0f");
+    } //rowChart
+    
+    function dataTableold(p_anchor, p_width, p_height, p_grp_name, p_columns, p_sortby, p_order) {
+      var chart = dc.dataTable(p_anchor);
+      chart.width(p_width).height(p_height)
+        .dimension({})
+        .group(function(d) {
+            return p_grp_name;
+        })
+      .commitHandler(commitHandler)
+      .columns(p_columns)
+      .sortBy(p_sortby)
+      .order(p_order)
+      ;
+     chart.dimension().top = function() { return rxds.app.dcData["datatable"]; };
+     chart.dimension().bottom = function() { return rxds.app.dcData["datatable"]; };
+    }
+    
+    function barChartOld(p_anchor, p_width, p_height, p_yscale, p_domain) {
+      var chart = dc.barChart(p_anchor);
+      var log_type; var elasticY;
+      if (p_yscale == "log") {
+        axis = d3.scale.log();
+        log_type = axis.clamp(true).domain(p_domain);
+        rxds.app.log_scales[p_anchor] = {"domain":p_domain,"range":[0,p_width],"axis_type":axis,"chart":chart,"type":"barChart"};
+        elasticY = false;
+      }
+      else {
+        log_type = d3.scale.linear().domain(p_domain);
+        elasticY = true;
+      }
+      chart = chart.width(p_width).height(p_height)
+            .dimension({}).group({}).commitHandler(commitHandler)
+            .transitionDuration(1500)
+            .centerBar(false)    
+            .x(d3.scale.ordinal())
+            .xUnits(dc.units.ordinal)
+            .yAxisLabel(" ")
+            .brushOn(true)
+            .y(log_type)
+//            .ordering(function(d) { return parseInt(d.key); })
+            .elasticY(elasticY)
+           .turnOnControls(true)
+           .controlsUseVisibility(true);
+    
+       chart.xAxis().tickFormat(function(v) {return v;});
+       chart.yAxis().ticks(5,",.0f");
+    }
+    return {
+        beforeFilters: beforeFilters,
+        numberFormat: numberFormat,
+        pieChart: pieChart,
+        barChart: barChart,
+        rowChart: rowChart,
+        rxdsSankey:rxdsSankey,
+//        lineAreaChart: lineAreaChart,
+        dataTable: dataTable,
+        setUpChart:setUpChart,
+        resetChart: resetChart,
+        promisePost:promisePost,
+        geoChoroplethChart: geoChoroplethChart,
+        geoChoroplethqJSON:geoChoroplethqJSON,
+        commitHandler: commitHandler
+    };
+})();
+
+var datatable;
+//var chart = dc.pieChart("#test");
+var superscript = "⁰¹²³⁴⁵⁶⁷⁸⁹",
+    formatPower = function(d) { return (d + "").split("").map(function(c) { return superscript[c]; }).join(""); };
+
+//Attaching refresh event to Dim Chart
+$( ".dimChartReg" ).on( "refresh", function( event, ajaxReq ) {
+    var obj = this,
+      sel = $(this),
+       config = $(this).data("config");
+       if (rxds.app.dimload==0) {
+//         dc.chartRegistry.clear();
+         eval(config.beforechart.replace(/\`\`/g,"'"));
+         rxds.app.dimload=1;
+       }
+       else {
+          rxds.app.dimload=1;
+       }
+       rxdsdimchart.setUpChart();
+       rxdsdimchart.promisePost().then(function() {
+               rxdsdimchart.commitHandler().then(function() {
+//                dc.renderAll(); 
+          });
+          rxds.app.dimload=3; 
+         
+       });
+}); // On Refresh Dimension Chart Region
+

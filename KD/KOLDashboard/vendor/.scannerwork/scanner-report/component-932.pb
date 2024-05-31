@@ -1,0 +1,1 @@
+¤ 2webXhr0dom-to-image/spec/resources/css-bg/dom-node.html

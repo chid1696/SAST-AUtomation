@@ -1,0 +1,1 @@
+Á 2jsXFhr@antv/g2/src/scale/auto/cat.js

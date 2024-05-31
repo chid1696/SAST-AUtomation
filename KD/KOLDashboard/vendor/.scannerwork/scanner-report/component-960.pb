@@ -1,0 +1,1 @@
+À 2webXhr3dom-to-image/spec/resources/pixeldata/dom-node.html

@@ -1,0 +1,1 @@
+% 2jsXxhr@antv/g/src/core/shape.js

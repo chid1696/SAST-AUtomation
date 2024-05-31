@@ -1,0 +1,1 @@
+' 2jsXrhr@antv/g/src/shape/arc.js

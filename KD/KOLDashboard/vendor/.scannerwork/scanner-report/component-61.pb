@@ -1,0 +1,1 @@
+= 2jsXÉhr&@antv/g/src/shape/util/path-segment.js

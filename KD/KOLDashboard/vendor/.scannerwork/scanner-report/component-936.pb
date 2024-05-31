@@ -1,0 +1,1 @@
+¨ 2cssXhr0dom-to-image/spec/resources/dimensions/style.css

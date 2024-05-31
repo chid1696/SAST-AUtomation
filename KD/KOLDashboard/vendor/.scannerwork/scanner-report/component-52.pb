@@ -1,0 +1,1 @@
+4 2jsXfhr#@antv/g/src/shape/math/quadratic.js

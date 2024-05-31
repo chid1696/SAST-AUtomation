@@ -1,0 +1,1 @@
+™ 2webXhr1dom-to-image/spec/resources/bgcolor/dom-node.html

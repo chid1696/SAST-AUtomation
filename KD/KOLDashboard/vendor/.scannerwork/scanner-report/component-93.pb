@@ -1,0 +1,1 @@
+] 2jsXÁhr@antv/g2/src/attr/base.js

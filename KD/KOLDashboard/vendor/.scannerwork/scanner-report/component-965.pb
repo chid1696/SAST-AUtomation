@@ -1,0 +1,1 @@
+Å 2webXhr/dom-to-image/spec/resources/scale/dom-node.html

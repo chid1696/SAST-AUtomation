@@ -1,0 +1,1 @@
+§ 2webXhr4dom-to-image/spec/resources/dimensions/dom-node.html

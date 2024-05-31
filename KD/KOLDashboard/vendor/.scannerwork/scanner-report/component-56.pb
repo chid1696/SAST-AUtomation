@@ -1,0 +1,1 @@
+8 2jsXkhr@antv/g/src/shape/quadratic.js

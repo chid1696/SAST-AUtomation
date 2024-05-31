@@ -1,0 +1,1 @@
+ 2jsXİhr@antv/g/src/canvas.js

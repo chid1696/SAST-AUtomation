@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
+
+<title>Facility Details</title>
+
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+  <link href="../vendor/semantic/themes/bootswatch/semantic.apollo.min.css" rel="stylesheet" />
+<link href="../vendor/rxds/css/main.css" rel="stylesheet" />
+<link href="../vendor/rxds/css/ionicons.min.css" rel="stylesheet" />
+<link href="../vendor/shepherd/css/shepherd-theme-arrows.css" rel="stylesheet" />
+<style>
+.shepherd-element {
+   z-index:1001
+}
+.ui.dropdown .remove.icon {
+  font-size: 0.857143em;
+  margin:0;
+  padding:0;
+  right: 2em;
+  top: auto;
+  position: absolute;
+  opacity: 0.5;
+  z-index: 4;
+}
+.pivotcols {
+  cursor: pointer;
+}
+.ui.dropdown input[value=''] ~ .remove.icon,
+.ui.dropdown input:not([value]) ~ .remove.icon,
+.ui.dropdown.loading .remove.icon {
+  display: none;
+}
+.ui.list.draggable-container--over {
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.ag-header-cell-text {
+   white-space: pre !important;
+   
+}
+</style>
+
+      <link rel="shortcut icon" href="/rxds-logo.png" type="image/x-icon"  />
+    
+
+   <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+   <script src="../vendor/semantic/semantic.min.js"></script>
+   <script src="../vendor/vue/vue.min.js"></script>
+   <script src="../vendor/ramda/0.25.0/ramda.min.js"></script>
+
+   <!-- Page header content goes here -->
+   <!--Page Pre Loader Start-->
+
+<style>
+    #overlayer {
+        width:100%;
+        height:100%;  
+        position:fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99;
+        background:#888682;
+        opacity: 0.9;
+    }
+.activeButtonCustom
+{
+    background: #f2711c !important;
+    color: #fff !important;
+    font-weight: bold !important;
+}
+.preloader p{
+    position: fixed;
+    top: 52%;
+    width: 100%;
+    height: 90px;
+    
+    text-align: center;
+    color: #fff;
+    font-size: 24px;
+    z-index: 999;
+    color:white;
+}
+
+.svg-loader
+{
+	z-index:999;
+	position: fixed; 
+	height: 15%; 
+	width: 100%; 
+	top: 40%;
+}
+</style>
+<div id="overlayer"></div>
+<div class="preloader">
+    <div class="loader">
+        <span class="loader-inner"></span>
+    </div>
+    <svg class="svg-loader" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+    <path fill="none" stroke="#e76a24" stroke-width="8" stroke-dasharray="42.76482137044271 42.76482137044271" d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z" stroke-linecap="round" style="transform:scale(0.8);transform-origin:50px 50px">
+        <animate attributeName="stroke-dashoffset" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0;256.58892822265625"></animate>
+    </path>
+    
+    <p class="p-txt">Loading Facility details…</p>
+</div>
+<!--Page Pre Loader End-->
+</head>
+
+
+
+
+<body class="pushable light-mode" id="body">
+
+    <div class="ui inverted labeled icon left  inline vertical sidebar menu">
+        <a class="item logo">
+  <i>
+     <img src="../vendor/rxds/img/rxdsthumb.png" relative="true" alt="" />
+  </i>
+</a>
+   <a href="../." class="item page_link" 
+            data-roles="ALL"> 
+        <i class="paperclip icon"></i>
+       Key Opinion leader </a>
+
+    </div>
+    <div class="pusher">
+        <div class="ui top fixed menu ">
+            <a class="item" id="hamburger">
+              <i class="sidebar icon"></i>
+            </a>
+              <div class="item page_name" onclick='$("#version").show();'>
+                 <!-- <i class="diagnoses icon"></i> --> 
+                 Key Opinion Leader<span id="version" style="display:none">(0.100)</span>
+                 <!-- &nbsp;<i class="chevron circle right icon"></i> -->
+                 <span> &nbsp; > &nbsp; </span>
+                 <!-- <i class="hospital o icon"></i> --> 
+                 <span id="pageTitle">Facility Details</span>
+              </div>  
+                <div class="center menu margin-center">
+                  <a class="item logo vertically fitted">
+                    <img src="../vendor/rxds/img/apollo_logo.png" style="width:100px" relative="true" alt="" />
+                  </a>
+                </div>
+            <div class="right menu">
+                <!--
+                <a class="item logo vertically fitted">
+                <img src="../vendor/rxds/img/RXDSLogoOnWhite-SVG.svg" style="width:140px" relative="true" alt="" />
+                </a>
+                  <div class="ui item" id="feedback_link"></div>
+                  <a class="item feedback"> 
+                      <i class="bullhorn icon"></i> Feedback
+                  </a>  
+                -->
+
+                <!--
+                 <div class="ui item powerpoint dropdown "> 
+                    <i class="file powerpoint o icon"></i> Powerpoint
+                    <i class="dropdown icon"></i>
+                  <div class="menu">
+                    <div class="item" id="pptdata">Download with Data Table</div>
+                    <div class="item" id="pptnodata">Download without Data Table</div>
+                    <div id="pptbeta">Download PPT(Beta)</div>
+                  </div>
+                </div>  
+
+                <a class="item help"> 
+                    <i class="question circle icon"></i> Help
+                </a>
+                -->
+
+                <a class="item tour" style="display:none">
+                    <i class="hand point right icon"></i>Tour
+                </a>  
+                <div class="ui item toggle checkbox">
+                  <input type="checkbox" name="darkModeToggle" id="darkModeToggle">
+                  <label id="darkModeLabel" for="darkModeToggle">Dark Mode</label>
+                </div>
+                <div class="ui item powerpoint dropdown" id="username">
+                  <!-- <i class="user circle icon"></i> <span id="rxuser">user@rxdatascience.com</span>   -->
+                  <i class="user circle icon font-2em mr-0"></i> 
+                  <i class="dropdown icon ml-0"></i>
+                  <div class="menu">
+                    <span id="rxuser" class="rxuser item"> user@rxdatascience.com </span>
+                    <hr class="hr-user-dropdown">
+                    
+                    <div class="item" id="pptdata"> <i class="file powerpoint o icon color-blue"></i>Download PPT with Data Table</div>
+                    <div class="item" id="pptnodata"> <i class="file powerpoint o icon color-blue"></i>Download PPT without Data Table</div>
+                     <div class="item" id="pptbeta"><i class="file powerpoint o icon color-blue"></i> Download PPT(Beta)</div>
+                    <hr class="hr-user-dropdown">
+
+                      <div class="item feedback"><i class="bullhorn icon color-blue"></i> Feedback</div>
+                      <hr class="hr-user-dropdown">
+                    <div class="item help"> <i class="question circle icon color-blue"></i>Help </div>
+                  </div>
+                </div>
+            </div>
+</div>
+
+
+        <div class="ui bottom attached  equal width left aligned padded grid stackable"> 
+            
+            <div class="row no-padding mt-1">
+                <!-- 16 x 16 Form region -->
+
+<div class="sixteen wide tablet sixteen wide computer column rxds_region" data-roles="ALL"  data-region="region210004669">
+    
+        <div class="ui segments raised">
+            <div class="ui segment  blue" >
+              <h5 class="ui header  blue inverted">
+                <span style="font-weight: bold">
+                     <span><i class="filter icon blue"></i></span>
+                  FILTER
+                </span>
+              </h5>
+            </div>
+            <form id="region210004669" class="ui    rxds_form form segment width-100 no-border-top " onsubmit="event.preventDefault();window.rxds.load_regions();">
+                         <div id="item210002445" class="field hidden rxds_item" style="display:none">
+    <input name="KOL_HCO_cohort_hco_name" type="hidden" value="">
+</div>
+                         <div id="item210002447" class="field hidden rxds_item" style="display:none">
+    <input name="KOL_HCO_Cohort_HCO" type="hidden" value="">
+</div>
+                         <div id="item210002420" class="field hidden rxds_item" style="display:none">
+    <input name="KOL_COHORT_ID" type="hidden" value="">
+</div>
+                         <div id="item210002538" class="field hidden rxds_item" style="display:none">
+    <input name="KOL_HCO_SWITCH" type="hidden" value="{{FIRST}}">
+</div>
+            </form>
+        </div>
+</div>
+
+<!-- End of 16 x 16 Form region -->
+
+            </div>
+  			   <div class="row no-padding mt-1">
+  			      
+<!-- Plugin region -->
+  <div class="eight wide tablet eight wide computer column rxds_region" data-roles="ALL"  data-region="region210004670">
+      <div class="ui segments raised ">
+            <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="hospital o icon blue"></i>
+           
+           <span class="region-title">Facility Details</span> 
+           <i class="small circular help icon region_help" data-region_id="210004670" data-html="Displays Facility Details" data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+    </div>
+  </div>
+</div>
+          <div id="region210004670" class="ui equal width left aligned padded grid stackable background-white" style="overflow:visible"></div>
+          <div class="ui inverted dimmer" id="dimmerregion210004670">
+             <div class="ui centered medium loader"></div>
+          </div> 
+          <!-- Annotate section -->
+          <div id="annotate210004670"></div>
+          
+          
+      </div>
+  </div>
+<!-- Plugin region end -->
+  			      
+<!-- Plugin region -->
+  <div class="eight wide tablet eight wide computer column rxds_region" data-roles="ALL"  data-region="region210004671">
+      <div class="ui segments raised ">
+            <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="info icon blue"></i>
+           
+           <span class="region-title">Cohort Details</span> 
+           <i class="small circular help icon region_help" data-region_id="210004671" data-html="Shows selected Cohort and Cohort Name and its Description." data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+    </div>
+  </div>
+</div>
+          <div id="region210004671" class="ui equal width left aligned padded grid stackable background-white" style="overflow:visible"></div>
+          <div class="ui inverted dimmer" id="dimmerregion210004671">
+             <div class="ui centered medium loader"></div>
+          </div> 
+          <!-- Annotate section -->
+          <div id="annotate210004671"></div>
+          
+          
+      </div>
+  </div>
+<!-- Plugin region end -->
+             </div>
+            <div class="row no-padding mt-1">
+                
+<!-- Plugin region -->
+  <div class="sixteen wide tablet sixteen wide computer column rxds_region" data-roles="ALL"  data-region="region210004672">
+      <div class="ui segments raised ">
+            <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="th large icon blue"></i>
+           
+           <span class="region-title">Facility Summary</span> 
+           <i class="small circular help icon region_help" data-region_id="210004672" data-html="Shows Clinical Trial Count, Primary Providers for this Cohort,
+Total Providers for this Cohort, Primary Providers for Universe,  Total Providers for Universe." data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+        <a class="item-header color-midnight-blue"  onclick="{$('#flipregion210004672').toggleClass('hover'); $(this).find('.toggle-chart-icon').toggleClass('icon-hidden'); $(this).find('.toggle-table-icon').toggleClass('icon-hidden');$('#flipregion210004672').scrollTop(0);return false;}">
+            <i class="toggle-chart-icon table custom icon" data-html="click for data" data-variation="mini"></i>
+            <i class="toggle-chart-icon chart line custom icon icon-hidden" data-html="click for chart" data-variation="mini"></i>
+        </a>
+        <a class="export item-header color-midnight-blue">
+            <i class="share square custom icon" data-html="Data Export" data-variation="mini"></i>
+        </a>
+    </div>
+  </div>
+</div>
+          <div id="region210004672" class="ui equal width left aligned padded grid stackable background-white" style="overflow:visible"></div>
+          <div class="ui inverted dimmer" id="dimmerregion210004672">
+             <div class="ui centered medium loader"></div>
+          </div> 
+          <!-- Annotate section -->
+          <div id="annotate210004672"></div>
+          
+          
+      </div>
+  </div>
+<!-- Plugin region end -->
+            </div>
+            <div class="row no-padding mt-1">
+                
+<!-- Plugin region -->
+  <div class="sixteen wide tablet sixteen wide computer column rxds_region" data-roles="ALL"  data-region="region210004902">
+      <div class="ui segments raised no-border-top">
+          <div id="region210004902" class="ui equal width left aligned padded grid stackable background-white" style="overflow:visible"></div>
+          <div class="ui inverted dimmer" id="dimmerregion210004902">
+             <div class="ui centered medium loader"></div>
+          </div> 
+          <!-- Annotate section -->
+          <div id="annotate210004902"></div>
+          
+          
+      </div>
+  </div>
+<!-- Plugin region end -->
+            </div>
+            <div class="row no-padding mt-1">
+                <!-- DT region -->
+
+<!-- Report region, 16 grid wide table, 16 grid wide desktop -->    
+      <div class="sixteen wide tablet sixteen wide computer column rxds_region" 
+           data-roles="ALL"  data-region="region210004673">
+<!-- title region followed by individual ui segment grouped under ui segments-->
+          <div class="ui segments raised ">
+                <div class="ui segment  blue"  >
+                    <h5 class="ui header  blue inverted">
+                      <span style="font-weight: bold">
+                         <i class="table icon blue"></i>
+                       <span class="region-title">Affiliated Providers Report- <b>(<span class="bindItem" data-item="COHORT_HCO_NAME"></span>)</b></span>
+                         <i class="small circular help icon region_help"  data-region_id="210004673" data-html="Report shows Providers details for this Facility.<br>
+<b>Note:</b> <br> <b>Is Site Investigator</b> represent Provider who worked in a Clinical Trial conducted by Site in this cohort.
+<br> <b>Is Investigator</b> represent Provider who worked in a Clinical Trials" data-variation="mini"></i>
+                        </span>
+                    </h5>
+                </div>
+              <div class="content">
+              <div class="ui segment no-border no-box-shadow" 
+              id="region210004673" 
+              data-id="GRID210004673">
+                    <div class="row no-padding">
+                      <div id="CONT210004673" class="sixteen wide tablet sixteen wide computer column">
+                      <div style="padding-bottom: 10px;">
+                        <div class="AG-buttons mini ui buttons"></div>
+                      </div>
+                      <div id="GRIDregion210004673" style="height: 200px; width:100%" class="ag-theme-balham"></div>
+                          <div class="ui inverted dimmer" id="dimmerregion210004673">
+                             <div class="ui centered medium loader"></div>
+                          </div> 
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</div>
+<!-- DT region end -->
+
+            </div>
+            <div class="row no-padding mt-1">
+                <!-- DT region -->
+
+<!-- Report region, 16 grid wide table, 16 grid wide desktop -->    
+      <div class="sixteen wide tablet sixteen wide computer column rxds_region" 
+           data-roles="ALL"  data-region="region210004674">
+<!-- title region followed by individual ui segment grouped under ui segments-->
+          <div class="ui segments raised ">
+                <div class="ui segment  blue"  >
+                    <h5 class="ui header  blue inverted">
+                      <span style="font-weight: bold">
+                         <i class="table icon blue"></i>
+                       <span class="region-title">Clinical Trial Details -<b>(<span class="bindItem" data-item="COHORT_HCO_NAME"></span>)</b></span>
+                         <i class="small circular help icon region_help"  data-region_id="210004674" data-html="Report shows Clinical Trial details for this Facility." data-variation="mini"></i>
+                        </span>
+                    </h5>
+                </div>
+              <div class="content">
+              <div class="ui segment no-border no-box-shadow" 
+              id="region210004674" 
+              data-id="GRID210004674">
+                    <div class="row no-padding">
+                      <div id="CONT210004674" class="sixteen wide tablet sixteen wide computer column">
+                      <div style="padding-bottom: 10px;">
+                        <div class="AG-buttons mini ui buttons"></div>
+                      </div>
+                      <div id="GRIDregion210004674" style="height: 200px; width:100%" class="ag-theme-balham"></div>
+                          <div class="ui inverted dimmer" id="dimmerregion210004674">
+                             <div class="ui centered medium loader"></div>
+                          </div> 
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</div>
+<!-- DT region end -->
+
+            </div>
+  			   <div class="row no-padding mt-1">
+  			      
+  <div class="eight wide tablet eight wide computer column rxds_region"   data-roles="ALL"  data-region="region210004903">
+      <div class="ui segments raised " id="region210004903">
+          <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="bar chart icon blue"></i>
+           
+           <span class="region-title">Patients by Age</span> 
+           <i class="small circular help icon region_help" data-region_id="210004903" data-html="Shows Patients treated in this Facility based on their Age Group." data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+        <a class="item-header color-midnight-blue"  onclick="{$('#flipregion210004903').toggleClass('hover'); $(this).find('.toggle-chart-icon').toggleClass('icon-hidden'); $(this).find('.toggle-table-icon').toggleClass('icon-hidden');$('#flipregion210004903').scrollTop(0);return false;}">
+            <i class="toggle-chart-icon table custom icon" data-html="click for data" data-variation="mini"></i>
+            <i class="toggle-chart-icon chart line custom icon icon-hidden" data-html="click for chart" data-variation="mini"></i>
+        </a>
+        <a class="export item-header color-midnight-blue">
+            <i class="share square custom icon" data-html="Data Export" data-variation="mini"></i>
+        </a>
+    </div>
+  </div>
+</div>
+
+          <!-- check if flip report is turned on -->
+            
+<div class="flip-container" id="flipregion210004903" data-id="GRID210004903" style="width:100%;max-height:40%;overflow:hidden;">
+ <div class="flipper">
+    
+     <div class="front"> <!-- start of front -->      
+            <div class="ui segment no-border no-box-shadow">
+
+    <div id="echartregion210004903">
+    <!-- <div id="echartregion210004903"> -->
+    </div>
+  <div class="ui inverted dimmer" id="dimmerregion210004903">
+    <div class="ui centered medium loader"></div>
+  </div> 
+</div>
+     </div> <!-- end of flipper front -->
+     
+     <div class="back"> <!-- start of back --> 
+        <div class="ui segment" 
+          id="region210004903" 
+          data-id="GRID210004903">
+              <div class="row no-padding mt-1">
+                  <div id="CONT210004903" class="eight wide tablet eight wide computer column">
+                      <table id="GRIDregion210004903" class="ui celled table" cellspacing="0" width="100%">
+                      </table>
+                      <div class="ui inverted dimmer">
+                         <div class="ui centered medium loader"></div>
+                      </div> 
+                  </div>
+              </div>
+          </div>
+     </div> <!-- end of back -->
+
+  </div> <!--  end of flipper class -->
+</div> <!-- end of flipper container -->
+
+        </div>
+  </div>
+
+  			      
+  <div class="eight wide tablet eight wide computer column rxds_region"   data-roles="ALL"  data-region="region210004904">
+      <div class="ui segments raised " id="region210004904">
+          <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="pie chart icon blue"></i>
+           
+           <span class="region-title">Patients by Race</span> 
+           <i class="small circular help icon region_help" data-region_id="210004904" data-html="Shows Patients treated in this Facility based on their Race." data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+        <a class="item-header color-midnight-blue"  onclick="{$('#flipregion210004904').toggleClass('hover'); $(this).find('.toggle-chart-icon').toggleClass('icon-hidden'); $(this).find('.toggle-table-icon').toggleClass('icon-hidden');$('#flipregion210004904').scrollTop(0);return false;}">
+            <i class="toggle-chart-icon table custom icon" data-html="click for data" data-variation="mini"></i>
+            <i class="toggle-chart-icon chart line custom icon icon-hidden" data-html="click for chart" data-variation="mini"></i>
+        </a>
+        <a class="export item-header color-midnight-blue">
+            <i class="share square custom icon" data-html="Data Export" data-variation="mini"></i>
+        </a>
+    </div>
+  </div>
+</div>
+
+          <!-- check if flip report is turned on -->
+            
+<div class="flip-container" id="flipregion210004904" data-id="GRID210004904" style="width:100%;max-height:40%;overflow:hidden;">
+ <div class="flipper">
+    
+     <div class="front"> <!-- start of front -->      
+            <div class="ui segment no-border no-box-shadow">
+
+    <div id="echartregion210004904">
+    <!-- <div id="echartregion210004904"> -->
+    </div>
+  <div class="ui inverted dimmer" id="dimmerregion210004904">
+    <div class="ui centered medium loader"></div>
+  </div> 
+</div>
+     </div> <!-- end of flipper front -->
+     
+     <div class="back"> <!-- start of back --> 
+        <div class="ui segment" 
+          id="region210004904" 
+          data-id="GRID210004904">
+              <div class="row no-padding mt-1">
+                  <div id="CONT210004904" class="eight wide tablet eight wide computer column">
+                      <table id="GRIDregion210004904" class="ui celled table" cellspacing="0" width="100%">
+                      </table>
+                      <div class="ui inverted dimmer">
+                         <div class="ui centered medium loader"></div>
+                      </div> 
+                  </div>
+              </div>
+          </div>
+     </div> <!-- end of back -->
+
+  </div> <!--  end of flipper class -->
+</div> <!-- end of flipper container -->
+
+        </div>
+  </div>
+
+    	   </div>
+
+<div class="row equal width no-padding mt-1">
+ <div class="four wide tablet four wide computer column">
+    <div id="syneos-image" class="ui segment message left aligned mini" style="background: transparent!important;color: var(--secondary-storm)!important;border: none!important;box-shadow: none!important;width: 10px;height: 10px">
+      <img src="../vendor/rxds/img/syneos.svg" style="width:88.89px; height:40px" relative="true" alt="" />
+    </div>
+  </div>
+  <div class="eight wide tablet eight wide computer column">
+    <div id="copyright" class="ui segment message center aligned mini" style="font-family: Montserrat;font-style: normal;font-weight: 400;font-size: 12px;line-height: 24px;top:9px"  >
+      Copyright © 2019-2021, RxDataScience, Inc. All rights reserved. Powered by Kx® Software.
+    </div>
+  </div>
+
+  <div class="four wide tablet four wide computer column">
+    <div id="copyright" class="ui segment message right aligned mini" style="top:2px">
+      <img src="../vendor/rxds/img/RxLogoSVG.svg" style="width: 92px;height: 40px" relative="true" alt="" />
+    </div>
+   </div>
+</div>
+<!--
+<div class="row no-padding mt-1">
+   <div class="16 wide tablet 16 wide computer column">
+      <div id="copyright" class="ui segment message center aligned mini">
+        Copyright © 2019-2021, RxDataScience, Inc. All rights reserved. Powered by Kx® Software.
+      </div>
+   </div>
+</div>
+-->
+
+
+<!-- Page footer goes here -->
+<script>
+    if(!window.rxdsObj)
+        window.rxdsRegionId=[];
+</script>
+
+        </div> 
+    </div> <!-- end of pusher -->
+
+</body>
+
+<footer>
+<div class="ui modal help">
+
+  <div class="header ui compact"> <i class="hospital o icon"></i> Key Opinion Leader (V0.100) </div>
+  <div class="scrolling content" id="page_help_scroll">
+
+    <div class="ui items">
+      <div class="item">
+        <div class="image">
+          <i class="huge icons">
+            <i class="hospital o icon"></i>
+            <i class="corner question  icon"></i>
+          </i>  
+        </div>
+        <div class="content">
+          <a class="header">Facility Details Online Help</a>
+          <div class="description">
+            <p></p>
+          </div>
+        </div>
+      </div>
+    </div>
+             
+
+            <div class="ui segments raised rxds_region_help" id="help_210004670" data-region="region210004670">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="hospital o icon"></i></span>
+	      <span class="region-title">Facility Details</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Displays Facility Details</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004671" data-region="region210004671">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="info icon"></i></span>
+	      <span class="region-title">Cohort Details</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows selected Cohort and Cohort Name and its Description.</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004672" data-region="region210004672">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="th large icon"></i></span>
+	      <span class="region-title">Facility Summary</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows Clinical Trial Count, Primary Providers for this Cohort,
+Total Providers for this Cohort, Primary Providers for Universe,  Total Providers for Universe.</p>
+
+  </div>
+  </div>
+  
+
+             
+
+            <div class="ui segments raised rxds_region_help" id="help_210004673" data-region="region210004673">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="table icon"></i></span>
+	      <span class="region-title">Affiliated Providers Report- <b>(<span class="bindItem" data-item="COHORT_HCO_NAME"></span>)</b></span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Report shows Providers details for this Facility.<br>
+<b>Note:</b> <br> <b>Is Site Investigator</b> represent Provider who worked in a Clinical Trial conducted by Site in this cohort.
+<br> <b>Is Investigator</b> represent Provider who worked in a Clinical Trials</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004674" data-region="region210004674">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="table icon"></i></span>
+	      <span class="region-title">Clinical Trial Details -<b>(<span class="bindItem" data-item="COHORT_HCO_NAME"></span>)</b></span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Report shows Clinical Trial details for this Facility.</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004903" data-region="region210004903">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="bar chart icon"></i></span>
+	      <span class="region-title">Patients by Age</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows Patients treated in this Facility based on their Age Group.</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004904" data-region="region210004904">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="pie chart icon"></i></span>
+	      <span class="region-title">Patients by Race</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows Patients treated in this Facility based on their Race.</p>
+
+  </div>
+  </div>
+  
+
+
+    
+  </div> <!-- scrolling content -->
+</div>
+
+
+        <div class="row" id="dev_bar" style="display:none;position:fixed;z-index: 1000;line-height:0;bottom: 0;width:80%;margin:0% auto;left:0;right:0">
+      <form class="ui form segment inverted grey" id="top_panel" style="display:none">
+        <h4 class="ui dividing header">RxDS Inspector</h4>
+          <div class="two fields">
+            <div id="slRegions" class="ui search selection dropdown" name="slRegions1">
+              <label>Region</label>
+              <input type="hidden" name="slRegions">
+              <div class="default text">Select Region</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+              </div>
+            </div>
+            <button class="ui disabled labeled icon button" id="dev_upd_region">
+              <i class="cog icon"></i>
+              Update Region
+            </button>
+            <button class="ui disabled labeled icon button" id="dev_query">
+              <i class="puzzle icon"></i>
+              Get SQL
+            </button>
+            <button class="ui disabled labeled icon button" id="dev_cache">
+              <i class="cog icon"></i>
+              Examine Cache
+            </button>
+          </div>
+          
+        <div class="ui fluid styled accordion">
+        
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Query Details?
+          </div>
+          <div class="content">
+
+          <div class="ui top attached tabular menu" id="data_tabs">
+            <a class="item active" data-tab="parameters">Parameters</a>
+            <a class="item" data-tab="query">Query</a>
+            <a class="item" data-tab="data">Data</a>
+            <a class="item" data-tab="url_details">URL</a>
+          </div>
+          <div class="ui bottom attached tab segment active" data-tab="parameters">
+              <div class="editor" style="height:100px"id="data_sent" data-editor="javascript" data-gutter="1"></div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="query">
+            <div class="editor" style="height:100px"id="sql_text" data-editor="javascript" data-gutter="1">Click Get SQL to populate the query</div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="data">
+              <div class="editor" style="height:100px"id="data" data-editor="javascript" data-gutter="1"></div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="url_details">
+              <div class="editor" style="height:50px"id="url_details" data-editor="text" data-gutter="1"></div>
+          </div>
+          
+          </div>
+
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Region Details?
+          </div>
+          <div class="content">
+            <div class="ui top attached tabular menu" id="data_tabs">
+              <a class="item active" data-tab="region_binding">Binding</a>
+              <a class="item" data-tab="region_transform">Transform</a>
+              <a class="item" data-tab="region_config">Configuration</a>
+              <a class="item" data-tab="region_template">Template</a>
+              <a class="item" data-tab="options">Options</a>
+            </div>
+            <div class="ui bottom attached tab segment active" data-tab="region_binding">
+                  <div class="editor" style="height:30px" id="data_binding" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_transform">
+              <div class="editor" style="height:100px"id="region_transform" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_config">
+              <div class="editor" style="height:200px" id="region_config" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_template">
+              <div class="editor" style="height:200px" id="region_template" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="options">
+              <div class="editor" style="height:200px" id="options" data-editor="javascript" data-gutter="1"></div>
+            </div>
+          </div>
+
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Widget Details?
+          </div>
+          <div class="content">
+            <div class="ui top attached tabular menu" id="data_tabs">
+              <a class="item active" data-tab="widget_config">Configuration</a>
+              <a class="item" data-tab="widget_transform">Transform</a>
+              <a class="item" data-tab="widget_template">Template</a>
+            </div>
+            <div class="ui bottom attached tab segment active" data-tab="widget_config">
+              <div class="editor" style="height:200px" id="widget_config" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="widget_transform">
+              <div class="editor" style="height:100px"id="widget_transform" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="widget_template">
+              <div class="editor" style="height:100px"id="widget_template" data-editor="javascript" data-gutter="1"></div>
+            </div>
+          </div>
+          
+        </div>
+    </form>
+    <div class="ui form">
+          <div id="develop" class="ui segment grid grey inverted center aligned mini" style="opacity:0.8;padding:0;margin-top:0;margin-bottom:0">
+    <div class="label text" style="line-height:12px" >Developer Bar - Select Control</div>
+    <div class="four wide  inline field" style="padding-top:0;padding-bottom:0">
+      <div id="slControls" class="ui fluid multiple search selection dropdown" name="slControls1">
+        <input type="hidden" name="slControls">
+        <div class="default text">Select Control</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+        </div>
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="debug_query">
+        <div class="label text" >Stop Query</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="debug_load">
+        <div class="label text" >Stop Load</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="edit_links">
+        <div class="label text" >Edit Links</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="redo_region">
+        <div class="label text" >Inspector</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+
+      <div class="ui buttons">
+        <button class="ui button" id="reload">Reload</button>
+      </div>
+    </div>
+    </div>
+  </div>  
+  <script src="../vendor/rxds/js/develop.js"></script>
+  <script type="text/javascript" src="https://cdn.rxdatascience.com/ace/ace.js"></script>
+
+
+      <div class="ui modal views">
+      <form class="ui form segment inverted grey" id="saved_views" >
+        <h4 class="ui dividing header">Saved Views</h4>
+        
+          <div class="fields">
+          
+            <div class="inline field">
+                <label>Save As</label>
+                <div class="ui left icon input">
+                  <input type="text" id="rxds_query_name" 
+                       placeholder="Enter a name for the current view..." style="width:350px">
+                  <i class="bookmark icon"></i>
+                </div>
+            </div>              
+            
+              <div class="field">
+              <div class="ui toggle checkbox" id="public_view" style="padding-top:8px">
+                <input type="checkbox" tabindex="0" class="hidden">
+                <label>Public?</label>
+              </div>
+              </div>
+              <div class="ui ">
+                <button class="ui labeled icon button" type="button" id="save_query">
+                  <i class="save icon"></i>
+                  Save
+                </button>
+                <button class="ui labeled icon button" type="button" id="delete_query">
+                  <i class="trash icon"></i>
+                  Delete
+                </button>
+              </div>
+
+          </div>
+          
+          <div id="View_Output">
+            <div class="ui top attached tabular menu" >
+              <a class="active item" data-tab="public"><i class="binoculars icon"></i>Public</a>
+              <a class="item" data-tab="private"><i class="eye icon"></i>Private</a>
+              <a class="item" data-tab="recent"><i class="clock icon"></i>Recent</a>
+            </div>
+            
+            <div class="ui bottom attached active tab segment" data-tab="public">
+                <div class="ui list">
+                  <a v-for="item in data.public" class="item" :data-md5_hash="item.md5_hash"
+                        @click="load_view('public', $event)" >
+                   <i class="binoculars icon"></i>
+                    {{item.view_name}}
+                  </a>
+                </div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="private">
+                <div class="ui list">
+                  <a v-for="item in data.private" class="item" :data-md5_hash="item.md5_hash"
+                          @click="load_view('private', $event)">
+                   <i class="eye icon"></i>
+                    {{item.view_name}}
+                  </a>
+                </div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="recent">
+                <div class="ui list">
+                  <a v-for="item in data.recent" class="item" :data-md5_hash="item.md5_hash"
+                         @click="load_view('recent', $event)">
+                   <i class="clock icon"></i>
+                    {{item.md5_hash}}
+                  </a>
+                </div>
+            </div>
+          </div>
+      </form>
+      </div>
+
+
+<!-- Annotate Modal layout goes here -->
+<div class="ui fullscreen modal transition hidden" id="annotateModal" style123="margin-top: -188px;">
+      <i class="close icon"></i>
+      <div class="header">
+          New/Update Annotation
+      </div>
+      <div class="content">
+          <div class="ui form">
+              <div class="field annotate-header">
+                  <label>Headline</label>
+                  <textarea v-model="data.headline" id="taHeadline"></textarea>
+              </div>
+              <div class="field annotate-content">
+                  <label>Content</label>
+                  <textarea v-model="data.description" id="taContent"></textarea>
+              </div>
+          </div>
+      </div>
+      <div class="actions">
+          <button class="ui button deny" @click="cancel($event)">Cancel</button>
+          <button class="ui green button deny" :data-region="data.region" @click="save('save',$event)">Save</button>
+      </div>
+</div>
+
+
+
+  
+
+<div class="ui modal no-data-message">
+    <div class="content">
+        <div class="description">
+            <i class="info circle icon"></i>
+            <span> No Data available for Export </span>
+        </div>    
+    </div>
+</div>
+
+<!-- use this as custom model if needed-->
+<div class="ui modal custom-modal">
+    <div class="scrolling content" style="text-align: center;">
+        <i class="info circle icon"></i>
+        <span class="custom-content"> No message available to show here </span>
+    </div>
+</div>
+
+<script src="../vendor/rxds/js/rxds_bundle.js"></script>
+
+<script src="../custom/rxapp.js"></script>
+<script src="../vendor/rxds/js/rxdsClient.js"></script>
+
+    <script src="../vendor/datatables/datatables.min.js"></script>
+    <link href="../vendor/datatables/datatables.min.css" rel="stylesheet" />
+    <script src="../vendor/datatables/Scroller-1.4.3/js/dataTables.scroller.min.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/dataTables.buttons.min.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/buttons.semanticui.min.js"></script>
+    <script src="../vendor/datatables/JSZip-2.5.0/jszip.min.js"></script>
+    <script src="../vendor/datatables/pdfmake-0.1.32/pdfmake.min.js"></script>
+    <script src="../vendor/datatables/pdfmake-0.1.32/vfs_fonts.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/buttons.html5.min.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/buttons.print.min.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/buttons.colVis.min.js"></script>
+    <script src="../vendor/jquery-sparklines/jquery.sparkline.min.js"></script>
+    <script src="../vendor/yadcf/jquery.dataTables.yadcf.js"></script>
+    <link href="../vendor/yadcf/jquery.dataTables.yadcf.css" rel="stylesheet" />
+
+   <link href="../vendor/ag-grid/dist/styles/bootstrap-datepicker.min.css" rel="stylesheet" />
+   <link href="../vendor/ag-grid/dist/styles/datepicker3.css" rel="stylesheet" />
+   
+   <script src="../vendor/ag-grid/dist/ag-grid-enterprise.min.js"></script>
+   <script src="../vendor/ag-grid/dist/bootstrap-datepicker.min.js"></script>
+   <script src="../vendor/ag-grid/dist/jquery.mask.js"></script>
+   <script src="../vendor/ag-grid/dist/AGcustomDateComponent.js"></script>
+
+
+    <script src="../vendor/pptxgen/jszip.min.js"></script>
+    <script src="../vendor/pptxgen/pptxgen.min.js"></script>
+    <script src="../vendor/pptxgen/pptxgen.shapes.js"></script>
+    <script src="../vendor/pptxgen/pptxgen.colors.js"></script>
+    <script src="../vendor/pptxgen/html2canvas.min.js"></script>
+
+
+
+
+
+   <script src="../vendor/rxds/js/rxds_proto.js"></script>
+
+
+
+<!-- To include JS references from the plugin template-->
+
+
+    <script src="../vendor/echarts/echarts.min.js"></script>
+  
+  <script src="../vendor/echarts/echarts-gl.min.js"></script>
+  <script src="../vendor/echarts/echarts-wordcloud.min.js"></script>
+  <script src="../vendor/echarts/themes.js"></script>
+  <script src="../vendor/echarts/ecStat.js"></script>
+
+
+
+
+
+<script>
+
+semantic = {};
+
+// Initialiaze Semantic UI Controls 
+
+semantic.ready = function() {
+/*
+    $('.tabular.menu .item')
+      .tab({context: 'parent',onVisible:function(t){console.log(t);debugger;}})
+     ;
+*/
+    $('.ui.checkbox')
+      .checkbox()
+    ;
+    
+    $('.ui.radio.checkbox')
+      .checkbox()
+    ;
+    $('.ui.accordion')
+      .accordion({animateChildren: false})
+    ;
+    
+    $('.custom')
+     .popup()
+     ;
+    $('.help')
+     .popup()
+     ;
+      
+    $('.ui.sidebar')
+     .sidebar({dimPage: false,transition: 'push',exclusive:false,closable:false})
+     .sidebar('attach events', '#hamburger');
+      
+    // show dropdown on hover
+    $('.main.menu .ui.dropdown').dropdown({
+      on: 'hover'
+    });
+ 
+    $('.ui.clear.button').click(function(){
+        $('form').form('clear');
+    }); //standard reset functionality
+ 
+    $('.ui.shape').shape({
+       width:'next',
+       height:'next'
+    });
+    
+    //to toggle between semantic grouped buttons
+    $(".ui.grouped.buttons .button").on('click', function() {
+      $(this)
+        .addClass('active')
+        .siblings()
+        .removeClass('active');
+    });
+  
+}; //end of semantic ready
+
+
+$(document)
+ .ready(semantic.ready)
+ ;
+
+
+rxds.page_controls = {"region210004669":{"control_type":"Form","query_id":0,"dataset_format":"","region":{"region_id":210004669,"region_type":"Form","region_seq":1,"group":"NONE","conditional_display":"(\"{{COHORT_HCO}}\"==\"\")","group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-filter","name":"KOL_HCO_Filter","title":"FILTER","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":"Standard","data_binding":"{\"cols\":\"four\",\"metric\":\"metric\",\"label\":\"label\",\"icons\":[\"ion-android-people\",\"ion-compose\",\"ion-person-add\",\"ion-ios-plus\"],\"colors\":[\"teal\",\"blue\",\"purple\",\"red\"]}","export":"CSVDB:ExcelDB","template":"<div v-if=\"!data.Error\" class=\"ui equal width padded grid stackable\" style=\"width:100%\">\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header small\" style=\"font-weight: 600;margin-top: 0.5em;margin-bottom: 0.3em;\">\r\n                    <i class=\"ion-android-people icon large orange\" style=\"display:inline\"></i>\r\n                  <a id=\"link_to_apex\" href=\"#\" style=\"display:inline;color:#00f\" target=\"_blank\"> Cohort ID - {{data.cohort_id.format()}}\r\n                  \r\n                  <i class=\"edit icon  orange\" style=\"display:inline\"></i>\r\n                  </a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header small\" style=\"font-weight: 600;margin-top: 0.5em;margin-bottom: 0.3em;\">\r\n                   <a id=\"link_to_apex\" href=\"#\" style=\"display:inline;color:#00f\" target=\"_blank\"> <i class=\"clipboard icon large orange\"></i>\r\n                    Cohort Name - {{data.name}} </a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        {{data.description}}\r\n    </div>\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n     <strong>Note: </strong>Data are shown between {{data.mindt}} to  {{data.maxdt}}.\r\n     </div>\r\n</div>    \r\n","column_filter":"N","server_filter":"N","modal_region":"N","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"35","help":null,"help_detail":null,"region_config":"//To include the region in ppt download\r\nobj.config.include_in_ppt=\"Y\";\r\n"},"dependent_items":[],"dependent_regions":[],"child_regions":[]},"region210004670":{"control_type":"Plugin","query_id":210007413,"dataset_format":"JSON","region":{"region_id":210004670,"region_type":"Plugin","region_seq":2,"group":"G1","conditional_display":null,"group_count":"two"},"auth_roles":"ALL","config":{"icon":"fa-hospital-o","name":"KOLHCOHospitalDetailsPlugin","title":"Facility Details","cols":"eight","equal_width":"N","form_size":null,"inverted":"N","region_style":"Standard","data_binding":"{\"label1\":\"NAME\",\"label2\":\"ADDRESS_LINE_1\",\"label3\":\"CITY\",\"label4\":\"STATE\",\"label5\":\"ZIP_CODE\",\"label6\":\"STATE_DESCRIPTION\",\"label7\":\"SPECIALIZATION\",\"label8\":\"LOCATION_NPI\"}","template":"<div class=\"ui  segment\">\r\n    <div id=\"example-3\" class=\"ui two cards\">\r\n       <div v-for=\"item in data\">\r\n            <div class=\"ui equal width grid\" style=\"padding:15px;\">\r\n                <div class=\"ui row\" style=\"align-items:left;\">\r\n                    <div class=\"fifty wide column\" style=\"font-color:rgb(0,0,0);\">\r\n                        <div class=\"fifty wide column\">\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Name: </b></span>{{item[db.label1]}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Address: </b></span>{{item[db.label2]}}\r\n                        <div class=\"label\" >{{item[db.label3]}},  {{item[db.label4]}} -  {{item[db.label6]}}</div>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>ZIP: </b></span>{{item[db.label5]}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"label\"><span><b>LOCATION NPI: </b></span>\r\n                            <strong><a id=\"CMS_Page\" target =\"_blank\" :href=\"'https://www.hipaaspace.com/medical_billing/coding/national_provider_identifier/codes/npi_'+item[db.label8]+'.aspx'\" >{{item[db.label8]}}</a></strong></div>\r\n                        </div>\r\n                        <div class=\"label\"><span><b>Specialization: </b></span>{{item[db.label7]}}\r\n                    \r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n","modal_region":"N","aggrid_options":null,"height":"35","help":"Displays Facility Details","help_detail":null},"dependent_items":["item210002420","item210002447"],"dependent_regions":[],"child_regions":[]},"region210004671":{"control_type":"Plugin","query_id":210007402,"dataset_format":"JSON","region":{"region_id":210004671,"region_type":"Plugin","region_seq":3,"group":"G1","conditional_display":null,"group_count":"two"},"auth_roles":"ALL","config":{"icon":"fa-info","name":"KOL_HCO_Cohort_Badge","title":"Cohort Details","cols":"eight","equal_width":"N","form_size":null,"inverted":"N","region_style":"Standard","data_binding":"{}","template":"<div class=\"ui  segment\">\r\n    <div id=\"example-3\" class=\"ui two cards\">\r\n            <div class=\"ui equal width grid\" style=\"padding:15px;\">\r\n                <div class=\"ui row\" style=\"align-items:left;\">\r\n                    <div class=\"twenty wide column\" style=\"font-color:rgb(0,0,0);\">\r\n                        <div class=\"twenty wide column\">\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"font-size:20px;\"><span><b>Cohort Id:  </b></span><a id=\"link_to_apex\" href=\"#\" target=\"_blank\" class=\"ui right floated orange circular label\" style=\"font-size:21px;\">{{data.cohort_id}}</a>\r\n                        </div>\r\n                        </div>\r\n                        <br>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Cohort Name: </b></span>{{data.name}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Description: </b></span>{{data.description}}\r\n                        </div>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Note: </b></span>Data are shown between {{data.mindt}} & {{data.maxdt}}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n","modal_region":"N","aggrid_options":null,"height":"35","help":"Shows selected Cohort and Cohort Name and its Description.","help_detail":null,"region_config":"//To include the region in ppt download\r\nobj.config.include_in_ppt=\"Y\";\r\n"},"dependent_items":["item210002420"],"dependent_regions":[],"child_regions":[]},"region210004672":{"control_type":"Plugin","query_id":210007404,"dataset_format":"JSON","region":{"region_id":210004672,"region_type":"Plugin","region_seq":4,"group":"NONE","conditional_display":null,"group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-th-large","name":"KOLHCOSummaryBadge","title":"Facility Summary","cols":"sixteen","equal_width":"Y","form_size":null,"inverted":"N","region_style":"Standard","region_transform":"//To restrict this plugin from ppt\r\nobj.config.include_in_ppt = \"Y\";\r\n\r\n ","data_binding":"{}","template":"<!--*******************************************************************************************************************************************************-->\r\n<div v-if=\"!data.Error\" class=\"ui equal width padded grid stackable\" style=\"width:100%\">\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Clinical_Trails.format()}}\r\n                </div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.7em;margin-bottom: 0.5em;\">\r\n                   Clinical Trials\r\n                   <br>\r\n                   <br>\r\n                </div>\r\n            </div>\r\n        </div>\r\n       <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Patients.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Facility Patients<br>\r\n                    <small>(Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 35px;color: #0099dc;\">{{data.Male.format()}}/{{data.Female.format()}}</div>\r\n                <div id=\"genderPopulation\" class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                   Male/Female<br>\r\n                    <small>(Gender)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Primary_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Primary Providers<br>\r\n                    <small>(For this Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Total Providers<br>\r\n                    <small>(For this Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n            <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.TOTAL_Primary_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Primary Providers<br>\r\n                    <small>(Full Universe)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.TOTAL_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Total Providers<br>\r\n                    <small>(Full Universe)</small>\r\n                </div>\r\n                \r\n            </div>\r\n        </div>\r\n        <br>\r\n    </div>\r\n</div>","modal_region":"N","flip_report":"Y","annotate":"N","limit_rows":"1000","aggrid_options":null,"height":"35","help":"Shows Clinical Trial Count, Primary Providers for this Cohort,\r\nTotal Providers for this Cohort, Primary Providers for Universe,  Total Providers for Universe.","help_detail":null},"dependent_items":["item210002420","item210002447"],"dependent_regions":[],"child_regions":[]},"region210004902":{"control_type":"Plugin","query_id":210007621,"dataset_format":"JSON","region":{"region_id":210004902,"region_type":"Plugin","region_seq":5,"group":"NONE","conditional_display":null,"group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-button-group","name":"KOL_HCO_SWITCH","title":"HCO Details Switch","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":"No Header or border","region_transform":"//To restrict this plugin from ppt\r\nobj.config.include_in_ppt = \"N\";\r\n\r\n/** FUNCTION TO SET PARAMETER **/\r\nwindow.rxds.setSwitchParameter = (data) => {\r\n   rxds.m.set_param(\"HCP_SWITCH\",data,true);\r\n   //rxds.load_regions();\r\n  \r\n   if (rxds.m.get_param(\"HCP_SWITCH\") === \"Patient Summary\"){\r\n        $(\"#PATSwitchButton\").addClass(\"activeButtonCustom\");\r\n        $(\"#HCOSwitchButton\").removeClass(\"activeButtonCustom\");\r\n        $(\"#CTSwitchButton\").removeClass(\"activeButtonCustom\");\r\n    }\r\n    else if(rxds.m.get_param(\"HCP_SWITCH\") === \"Affiliation/Referral\"){\r\n        $(\"#PATSwitchButton\").removeClass(\"activeButtonCustom\");\r\n        $(\"#HCOSwitchButton\").addClass(\"activeButtonCustom\");\r\n        $(\"#CTSwitchButton\").removeClass(\"activeButtonCustom\");\r\n    }\r\n    else if(rxds.m.get_param(\"HCP_SWITCH\") === \"Clinical Trials\"){\r\n        $(\"#PATSwitchButton\").removeClass(\"activeButtonCustom\");\r\n        $(\"#HCOSwitchButton\").removeClass(\"activeButtonCustom\");\r\n        $(\"#CTSwitchButton\").addClass(\"activeButtonCustom\");\r\n    }\r\n    else {\r\n        $(\"#PATSwitchButton\").addClass(\"activeButtonCustom\");\r\n        $(\"#HCOSwitchButton\").removeClass(\"activeButtonCustom\");\r\n        $(\"#CTSwitchButton\").removeClass(\"activeButtonCustom\");\r\n    }\r\n}","data_binding":"{}","template":"<div class=\"ui basic segment width-100 flex-align-center-important\" style=\"border-top:none;padding-left:0;padding-right:0\">    <div class=\"ui buttons three column grid\" >\r\n        <button onclick=\"window.rxds.setSwitchParameter('Patient Summary')\" id=\"PATSwitchButton\" class=\"column ui card primary button flex-align-center\" style=\"background:#ededed;color:#f2711c\">Patient Summary</button>\r\n        <button onclick=\"window.rxds.setSwitchParameter('Affiliation/Referral')\" id=\"HCOSwitchButton\" class=\"column ui card primary button flex-align-center\" style=\"background:#ededed;color:#f2711c\">Affiliation</button>\r\n        <button onclick=\"window.rxds.setSwitchParameter('Clinical Trials')\" id=\"CTSwitchButton\" class=\"column ui card primary button flex-align-center\" style=\"background:#ededed;color:#f2711c\">Clinical Trials</button>\r\n    </div>\r\n</div>\r\n","modal_region":"N","aggrid_options":null,"height":"35","width":"35","help":null,"help_detail":null},"dependent_items":["item210002420"],"dependent_regions":[],"child_regions":[]},"region210004673":{"control_type":"AG Grid","query_id":210007408,"dataset_format":"JSON","region":{"region_id":210004673,"region_type":"AG Grid","region_seq":6,"group":"NONE","conditional_display":"(\"{{HCP_SWITCH}}\".match(\"Affiliation/Referral\"))","group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-table","name":"KOLHCOHCPAffiliation","title":"Affiliated Providers Report- <b>({{COHORT_HCO_NAME}})</b>","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":null,"data_binding":"{}","export":"CSVDB:ExcelDB","template":"<div class=\"ui basic segment width-100 flex-align-center-important\" style=\"border-top:none;padding-left:0;padding-right:0\">    <div class=\"ui buttons three column grid\" >\r\n        <button onclick=\"window.rxds.setSwitchParameter('Patients')\" id=\"PATSwitchButton\" class=\"column ui card primary button flex-align-center\" style=\"background:#f2711c\"  >Patients</button>\r\n        <button onclick=\"window.rxds.setSwitchParameter('Affiliation')\" id=\"HCOSwitchButton\" class=\"column ui card primary button flex-align-center\" style=\"background:#f2711c\">Affiliation</button>\r\n        <button onclick=\"window.rxds.setSwitchParameter('Clinical Trials')\" id=\"CTSwitchButton\" class=\"column ui card primary button flex-align-center\" style=\"background:#f2711c\">Clinical Trials</button>\r\n    </div>\r\n</div>\r\n","column_filter":"N","server_filter":"Y","modal_region":"N","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"35","width":"35","help":"Report shows Providers details for this Facility.<br>\r\n<b>Note:</b> <br> <b>Is Site Investigator</b> represent Provider who worked in a Clinical Trial conducted by Site in this cohort.\r\n<br> <b>Is Investigator</b> represent Provider who worked in a Clinical Trials","help_detail":null,"region_config":"opts.columnDefs.map(function(v)\r\n{\r\n     \r\nif(v.headerName==\"Location NPI 1 link\" || v.headerName==\"Location NPI 2 link\"|| v.headerName==\"Location NPI 3 link\"||v.headerName==\"Location NPI 4 link\"){\r\n v.hide=true;\r\nif(v.headerName==\"Location NPI 1 link\" || v.headerName==\"Location NPI 2 link\"|| v.headerName==\"Location NPI 3 link\"||v.headerName==\"Location NPI 4 link\")\r\n{\r\n  v.suppressToolPanel= true\r\n}\r\n}\r\n});\r\n\r\n\r\ncol=opts.columnDefs.filter(v=>v.field.match(/(^Provider_NPI)/));\r\nlet cohort_id = rxds.get_param(\"COHORT_ID\");\r\n\r\ncol.forEach(v=>{\r\n//v.width = 100;\r\nif (col.length > 0) {\r\nv.cellRenderer = (params) => {\r\n    let a=params.value.split(\".\");\r\nif (params.data.Location_NPI_1_link==\"TRUE\"){\r\nreturn \"<a target='_blank' href=\\\"../ProviderDetails/?COHORT_ID=\"+cohort_id+\"&COHORT_NPI=\"+a[0]+\"\\\"> \" + a[0] + \"</a>\" ;\r\n}\r\nelse {\r\n  return \"<div> \" + a[0] + \"</div>\" ;  \r\n}\r\n};  \r\n}\r\n});\r\n\r\n\r\nopts.columnDefs.filter(v=>{\r\nif(v.headerName==\"Latitude\" || v.headerName==\"Longitude\" || v.headerName==\"HCO_Latitude\" || v.headerName==\"HCO_Longitude\" ||v.headerName==\"HCP_Latitude\" || v.headerName==\"HCP_Longitude\")\r\n{\r\nv.cellStyle=function(params)\r\n{\r\nreturn{textAlign:'right'};\r\n};\r\n}\r\n});\r\n\r\nvar id = rxds.get_param(\"COHORT_ID\");\r\nvar id2 =rxds.get_param(\"COHORT_HCO_NAME\");\r\n//var reg_title = obj.config.title + \"_\"+ id;\r\n\r\nobj.config.title=((obj.config.title).split(\"-\"))[0] ;\r\n\r\n//Replace file name with new name\r\n\r\n\r\n\r\nobj.config.title = obj.config.title + \"_\"+ id2+\"_COHORT_\"+ id;\r\nconsole.log(\"obj\",obj)\r\n\r\nlet agRegionId=\"region\"+obj.region.region_id;\r\nopts.onGridReady=function()\r\n{\r\n    window.rxdsRegionId.push(agRegionId);\r\n}"},"dependent_items":["item210002420","item210002447"],"dependent_regions":[],"child_regions":[]},"region210004674":{"control_type":"AG Grid","query_id":210007411,"dataset_format":"JSON","region":{"region_id":210004674,"region_type":"AG Grid","region_seq":7,"group":"NONE","conditional_display":"(\"{{HCP_SWITCH}}\".match(\"Clinical Trials\"))","group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-table","name":"KOLHCOClinicalTrials","title":"Clinical Trial Details -<b>({{COHORT_HCO_NAME}})</b>","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":null,"data_binding":"{}","export":"CSVDB:ExcelDB","template":"<!--*******************************************************************************************************************************************************-->\r\n<div v-if=\"!data.Error\" class=\"ui equal width padded grid stackable\" style=\"width:100%\">\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Clinical_Trails.format()}}\r\n                </div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.7em;margin-bottom: 0.5em;\">\r\n                   Clinical Trials\r\n                   <br>\r\n                   <br>\r\n                </div>\r\n            </div>\r\n        </div>\r\n       <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Patients.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Facility Patients<br>\r\n                    <small>(Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 35px;color: #0099dc;\">{{data.Male.format()}}/{{data.Female.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 1.6em;margin-bottom: 0.5em;\">\r\n                   Male/Female<br>\r\n                    <small>(Gender)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Primary_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Primary Providers<br>\r\n                    <small>(For this Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Total Providers<br>\r\n                    <small>(For this Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n            <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.TOTAL_Primary_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Primary Providers<br>\r\n                    <small>(Full Universe)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.TOTAL_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Total Providers<br>\r\n                    <small>(Full Universe)</small>\r\n                </div>\r\n                \r\n            </div>\r\n        </div>\r\n        <br>\r\n    </div>\r\n</div>","column_filter":"N","server_filter":"Y","modal_region":"N","flip_report":"Y","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"35","help":"Report shows Clinical Trial details for this Facility.","help_detail":null,"region_config":"col=opts.columnDefs.filter(v=>v.field.match(/(^NCT_ID)/));\r\nlet cohort_id = rxds.get_param(\"COHORT_ID\");\r\n\r\ncol.forEach(v=>{\r\n//v.width = 100;\r\nif (col.length > 0) {\r\nv.cellRenderer = (params) => {\r\n\r\nreturn \"<a target='_blank' href=\\\"../ClinicalTrialDetails/?COHORT_ID=\"+cohort_id+\"&COHORT_NCT=\"+params.value+\"\\\"> \" + params.value + \"</a>\" ;\r\n\r\n};  \r\n}\r\n});\r\n\r\n\r\nopts.columnDefs.filter(v=>{\r\nif(v.headerName==\"Latitude\" || v.headerName==\"Longitude\" || v.headerName==\"HCO_Latitude\" || v.headerName==\"HCO_Longitude\" ||v.headerName==\"HCP_Latitude\" || v.headerName==\"HCP_Longitude\")\r\n{\r\nv.cellStyle=function(params)\r\n{\r\nreturn{textAlign:'right'};\r\n};\r\n}\r\n});\r\n\r\nvar id = rxds.get_param(\"COHORT_ID\");\r\nvar id2 =rxds.get_param(\"COHORT_HCO_NAME\");\r\n//var reg_title = obj.config.title + \"_\"+ id;\r\n\r\nobj.config.title=((obj.config.title).split(\"-\"))[0] ;\r\n\r\n//Replace file name with new name\r\n\r\n\r\n\r\nobj.config.title = obj.config.title + \"_\"+ id2+\"_COHORT_\"+ id;\r\nconsole.log(\"obj\",obj)\r\n\r\nlet agRegionId=\"region\"+obj.region.region_id;\r\nopts.onGridReady=function()\r\n{\r\n    window.rxdsRegionId.push(agRegionId);\r\n}"},"dependent_items":["item210002420","item210002447"],"dependent_regions":[],"child_regions":[]},"region210004903":{"control_type":"Chart eChart","query_id":210007620,"dataset_format":"JSON","region":{"region_id":210004903,"region_type":"Chart eChart","region_seq":8,"group":"G2","conditional_display":"(\"{{HCP_SWITCH}}\".match(\"Patient Summary\"))","group_count":"two"},"auth_roles":"ALL","config":{"icon":"fa-bar-chart","name":"KOL_HCO_PAT_AGE","title":"Patients by Age","cols":"eight","equal_width":"N","form_size":null,"inverted":"N","region_style":"Standard","region_transform":"if (db.y_axis_src) db.y_axis = db.y_axis_src;\r\ndata = data.filter(v=>v[db.x_axis] !== \"Grand Total\");\r\nvar series = data.map(v=>new Object({\"name\":v[db.x_axis],\"value\":v[db.y_axis]})) ;\r\nvar legend=data.map(v=>v[db.x_axis]);\r\nvar categories=data.map(v=>v[db.x_axis]);\r\nvar sum=(data.reduce((s,v)=>s+v[db.y_axis],0)).format();\r\nreturn {\"series\":series,\"legend\":legend,\"categories\":categories,\"sum\":sum};","data_binding":"{\"x_axis\":\"Age Group\",\"y_axis\":\"Patients\",\"x_axis_title\":\"Age Group\",\"y_axis_title\":\"Patients\",\"saveAsTitle\":true}","export":"CSVDB:ExcelDB","template":"<!--*******************************************************************************************************************************************************-->\r\n<div v-if=\"!data.Error\" class=\"ui equal width padded grid stackable\" style=\"width:100%\">\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Clinical_Trails.format()}}\r\n                </div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.7em;margin-bottom: 0.5em;\">\r\n                   Clinical Trials\r\n                   <br>\r\n                   <br>\r\n                </div>\r\n            </div>\r\n        </div>\r\n       <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Patients.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Facility Patients<br>\r\n                    <small>(Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 35px;color: #0099dc;\">{{data.Male.format()}}/{{data.Female.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 1.6em;margin-bottom: 0.5em;\">\r\n                   Male/Female<br>\r\n                    <small>(Gender)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Primary_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Primary Providers<br>\r\n                    <small>(For this Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Total Providers<br>\r\n                    <small>(For this Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n            <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.TOTAL_Primary_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Primary Providers<br>\r\n                    <small>(Full Universe)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.TOTAL_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Total Providers<br>\r\n                    <small>(Full Universe)</small>\r\n                </div>\r\n                \r\n            </div>\r\n        </div>\r\n        <br>\r\n    </div>\r\n</div>","column_filter":"N","server_filter":"Y","modal_region":"N","flip_report":"Y","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"40","help":"Shows Patients treated in this Facility based on their Age Group.","help_detail":null,"widget_id":"23","region_config":"var wconfig = {\r\n    backgroundColor: \"transparent\",\r\n\r\n    xAxis: [{\r\n        \"axisLabel\":{\r\n            \"rotate\":20\r\n            \r\n        },\r\n        \"nameGap\":40,\r\n        \"type\": \"category\",\r\n        \"boundaryGap\": true,\r\n        \"data\":data.categories,\r\n         nameLocation: \"middle\",\r\n        nameTextStyle: {\r\n        align: \"right\",\r\n    padding: [6, 6, 6, 6]\r\n    },\r\n    }],\r\n    \r\n    yAxis: [{\r\n        \"type\": \"value\",\r\n        \"position\": \"left\",\r\n        \"scale\": true,\r\n        \"minInterval\":1\r\n    }],\r\n    \r\n    legend: {\r\n        bottom:-5,\r\n        left: 'center',\r\n        data: data.legend\r\n    },\r\n    \r\n    tooltip : {\r\n        trigger: 'item',\r\n        formatter: \"{a}{b} : {c} \"\r\n    },\r\n    \r\n    toolbox: {\r\n        show: true,\r\n        right: \"15px\",\r\n        top:\"-5px\",\r\n        color: [ \"#1e90ff\",\"#22bb22\",\"#4b0082\",\"#d2691e\" ],\r\n        backgroundColor: \"rgba(0,0,0,0)\",\r\n        borderColor: \"#ccc\",\r\n        borderWidth: 0,\r\n        padding: 5,\r\n        showTitle: true,\r\n        feature: {\r\n            \"mark\": {\r\n                \"show\": false,\r\n                \"title\": {\r\n                  \"mark\": \"Mark\",\r\n                  \"markUndo\": \"Undo\",\r\n                  \"markClear\": \"Clear\"\r\n                },\r\n                \"lineStyle\": {\r\n                  \"width\": 1,\r\n                  \"color\": \"#1e90ff\",\r\n                  \"type\": \"dashed\"\r\n                }\r\n            },\r\n            \"dataView\": {\r\n                \"title\": \"Data View\",\r\n                \"show\": false,\r\n                \"readOnly\": true,\r\n                \"lang\": [\r\n                  \"Data\",\r\n                  \"Close\",\r\n                  \"Open\"\r\n                ]\r\n            },\r\n            \"restore\": {\r\n                \"show\": false,\r\n                \"title\": \"Restore\"\r\n            },\r\n            \"saveAsImage\": {\r\n                \"show\": true,\r\n                \"title\": \"Download\\nImage\",\r\n                \"excludeComponents\": ['toolbox','dataZoom'],\r\n                \"name\": db.saveAsTitle ? ($( \"<span>\" + obj.config.title + \"</span>\").text().replace(/\\s+/g,\" \")) : \"rxdsCharts\",\r\n                \"backgroundColor\": (window.rxds.theme_mode === \"dark\" ? \"#242424\" : \"#fff\")\r\n            },\r\n            \"magicType\": {\r\n                \"show\": true,\r\n                \"type\": [\r\n                  \"pie\",\r\n                  \"funnel\"\r\n                ],\r\n                \"option\": {\r\n                  \"funnel\": {\r\n                    \"x\": \"25%\",\r\n                    \"width\": \"50%\",\r\n                    \"funnelAlign\": \"center\",\r\n                    \"max\": 40757\r\n                  }\r\n                }\r\n            }\r\n        },\r\n        \"magicType\": {\r\n          \"show\": true,\r\n          \"title\": {\r\n            \"line\": \"line\",\r\n            \"bar\": \"bar\",\r\n            \"stack\": \"stack\",\r\n            \"tiled\": \"tiled\",\r\n            \"force\": \"force\",\r\n            \"chord\": \"chord\",\r\n            \"pie\": \"pie\",\r\n            \"funnel\": \"funnel\"\r\n          },\r\n          \"type\": [\r\n            \"line\",\r\n            \"bar\",\r\n            \"stack\",\r\n            \"tiled\"\r\n          ]\r\n        }\r\n    },\r\n  \r\n    events: {\r\n      click: function (param) {\r\n       if (typeof param.seriesIndex != 'undefined') {\r\n            // rxds.toggleSelection(param.data.name,obj,db,data);\r\n        }            \r\n      }\r\n    },\r\n\r\n    //series: data.series,\r\n    series : [{\r\n        name: db.series_name?db.series_name:\"\",\r\n        type: db.chart_type?db.chart_type:\"bar\",\r\n        selectedMode: 'single',\r\n        data:data.series,\r\n        itemStyle: {\r\n                 color: function(params) {\r\n                    // build a color map as your need.\r\n                    var colorList = obj.chart._theme.color;\r\n                    var noOfColors = colorList.length;\r\n                    if(obj.filters.length === 0) {\r\n                      return colorList[params.dataIndex%noOfColors];\r\n                    }\r\n                    if (obj.filters.indexOf(params.data.name) > -1) {\r\n                      return colorList[params.dataIndex%noOfColors];\r\n                    }\r\n                    return 'gray';\r\n                },\r\n            emphasis: {\r\n                shadowBlur: 10,\r\n                shadowOffsetX: 0,\r\n                shadowColor: 'rgba(0, 0, 0, 0.5)'\r\n            }\r\n        }\r\n    }],\r\n    \r\n    \"dataZoom\": [\r\n    {\r\n      \"show\":false,\r\n      \"start\": 0,\r\n      \"end\": 100\r\n    },\r\n    {\r\n      \"show\": false,\r\n      \"yAxisIndex\": 0,\r\n      \"filterMode\": \"empty\",\r\n      \"width\": 30,\r\n      \"height\": \"60%\",\r\n      \"showDataShadow\": false,\r\n      \"left\": \"93%\"\r\n    }\r\n  ]\r\n};\r\n\r\nif (db.title) wconfig.title={text:db.title};\r\nif (db.x_axis_title) wconfig.xAxis[0].name=db.x_axis_title;\r\nif (db.y_axis_title) wconfig.yAxis[0].name=db.y_axis_title;\r\nif (db.series_labels_position) {\r\n    wconfig.series.forEach(v => {\r\n        v.label = {\r\n            \"show\": true,\r\n            \"position\": db.series_labels_position,\r\n            \"formatter\": (params) => params.value ? Number(params.value).toLocaleString() : \"\",\r\n        };\r\n    });\r\n}\r\nif (db.minZoomLevel && data.categories) {\r\n    var len=data.categories.length;\r\n    var startIndex=0,endIndex=len-1;\r\n    if(  (db.minZoomLevel > 0) && ((len-db.minZoomLevel)>0)  ){\r\n        startIndex=len-db.minZoomLevel; \r\n        //endIndex=len-1;\r\n    }\r\n    else if(  (db.minZoomLevel < 0) && ( (len-(db.minZoomLevel*(-1)))>0 )  ) {\r\n        //startIndex=len-minZoomLevel; \r\n        endIndex=(db.minZoomLevel*(-1))-1;\r\n    }\r\n    wconfig.dataZoom = [{\r\n        show: true,\r\n        bottom:18,\r\n        // height:20\r\n    }];\r\n    startIndex ? ( wconfig.dataZoom[0].startValue = startIndex ) : true;\r\n    endIndex ? ( wconfig.dataZoom[0].endValue = endIndex ) : true;\r\n}\r\n$.extend(config, wconfig);\r\n\r\nconfig.series[0].label={\r\n            \"show\": true,\r\n            \"position\": \"top\",\r\n        };\r\n        \r\n//Last Update is bugfix on minZoomLevel.(Line numbers:169)\r\n//Last Update by udhayakumaran, added number conversion for labels to work for strings also.(Line numbers:171)\r\nconfig.grid={\r\n      top :\"15%\",\r\n      bottom:\"35%\",\r\n      right:\"8%\",\r\n      left:\"15%\"\r\n    }\r\n    \r\n    config.title = {\r\n        text: \"Total Patients : \"+(data.sum),\r\n        textStyle:{\r\n            fontSize:12\r\n        },\r\n        right: '50px',\r\n        padding:['2','0','10','0']\r\n    }      "},"dependent_items":["item210002420","item210002447","item210002538"],"dependent_regions":[],"child_regions":[]},"region210004904":{"control_type":"Chart eChart","query_id":210007619,"dataset_format":"JSON","region":{"region_id":210004904,"region_type":"Chart eChart","region_seq":9,"group":"G2","conditional_display":"(\"{{HCP_SWITCH}}\".match(\"Patient Summary\"))","group_count":"two"},"auth_roles":"ALL","config":{"icon":"fa-pie-chart","name":"KOL_HCO_PAT_RACE","title":"Patients by Race","cols":"eight","equal_width":"N","form_size":null,"inverted":"N","region_style":"Standard","data_binding":"{\"x_axis\":\"Race\",\"y_axis\":\"Patients\",\"x_axis_title\":\"Race\",\"y_axis_title\":\"Claim Count\",\"resource_url\":\"\",\"saveAsTitle\":true,\"grand_total_name\":\"Grand Total\",\"label_for_total\":\"Total Patients\"}","export":"CSVDB:ExcelDB","template":"<!--*******************************************************************************************************************************************************-->\r\n<div v-if=\"!data.Error\" class=\"ui equal width padded grid stackable\" style=\"width:100%\">\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Clinical_Trails.format()}}\r\n                </div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.7em;margin-bottom: 0.5em;\">\r\n                   Clinical Trials\r\n                   <br>\r\n                   <br>\r\n                </div>\r\n            </div>\r\n        </div>\r\n       <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Patients.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Facility Patients<br>\r\n                    <small>(Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 35px;color: #0099dc;\">{{data.Male.format()}}/{{data.Female.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 1.6em;margin-bottom: 0.5em;\">\r\n                   Male/Female<br>\r\n                    <small>(Gender)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.Primary_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Primary Providers<br>\r\n                    <small>(For this Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Total Providers<br>\r\n                    <small>(For this Cohort)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n            <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.TOTAL_Primary_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Primary Providers<br>\r\n                    <small>(Full Universe)</small>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.TOTAL_HCPs.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    Total Providers<br>\r\n                    <small>(Full Universe)</small>\r\n                </div>\r\n                \r\n            </div>\r\n        </div>\r\n        <br>\r\n    </div>\r\n</div>","column_filter":"N","server_filter":"Y","modal_region":"N","flip_report":"Y","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"40","help":"Shows Patients treated in this Facility based on their Race.","help_detail":null,"widget_id":"130","region_config":"if(data.categories.length<=1){\r\nconfig.legend= {\r\nshow:false\r\n}\r\n}\r\nelse {\r\nconfig.legend= {\r\nshow:true,\r\nbottom:40,\r\nleft: 'center'\r\n}\r\n}\r\n    \r\nconfig.tooltip = {\r\n        trigger: 'item',\r\n        formatter: \"{a}{b} : {c} ({d}%)\"\r\n    }"},"dependent_items":["item210002420","item210002447","item210002538"],"dependent_regions":[],"child_regions":[]},"item210002445":{"control_type":"hiddenitem","query_id":210007417,"dataset_format":"JSON","parameter":"COHORT_HCO_NAME","item":{"item_id":210002445,"item_type":"hiddenitem"},"auth_roles":"ALL","config":{"name":"KOL_HCO_cohort_hco_name","label":null,"inline":null,"limit_rows":null,"icon":null,"required":null,"def":null,"basic":null,"help":null,"validation":null},"dependent_items":["item210002420","item210002447"]},"item210002538":{"control_type":"hiddenitem","query_id":210007828,"dataset_format":"JSON","parameter":"HCP_SWITCH","item":{"item_id":210002538,"item_type":"hiddenitem"},"auth_roles":"ALL","config":{"name":"KOL_HCO_SWITCH","label":null,"inline":null,"limit_rows":null,"icon":null,"required":null,"def":"{{FIRST}}","basic":null,"help":null,"validation":null},"dependent_items":[]},"item210002420":{"control_type":"hiddenitem","query_id":0,"dataset_format":"","parameter":"COHORT_ID","item":{"item_id":210002420,"item_type":"hiddenitem"},"auth_roles":"ALL","config":{"name":"KOL_COHORT_ID","label":null,"inline":null,"limit_rows":null,"icon":null,"required":null,"def":null,"basic":null,"help":null,"validation":null},"dependent_items":[]},"item210002447":{"control_type":"hiddenitem","query_id":0,"dataset_format":"","parameter":"COHORT_HCO","item":{"item_id":210002447,"item_type":"hiddenitem"},"auth_roles":"ALL","config":{"name":"KOL_HCO_Cohort_HCO","label":null,"inline":null,"limit_rows":null,"icon":null,"required":null,"def":null,"basic":null,"help":null,"validation":null},"dependent_items":[]}};
+
+rxds.page_widgets = {"23":{"widget_name":"eChart Column ","widget_transform":"var sum=data.reduce((s,v)=>s+v[db.y_axis],0);\r\nreturn {...(rxds.getSeries(data,db,\"bar\")),sum};\r\n\r\n//Last Update Adding sum to the transformed data 17.05.2019","widget_config":"var wconfig = {\r\n    backgroundColor: \"transparent\",\r\n  \"legend\": {\r\n    \"x\": \"left\",\"y\": \"bottom\",\"data\": data.legend,\r\n    \"show\": data.series.length > 1\r\n  },\r\n  //\"tooltip\": {\"trigger\": \"axis\"},\r\n  tooltip : {\r\n       trigger: 'axis',//'item','axis'\r\n        axisPointer: {\r\n            type: 'cross',\r\n            label: {\r\n                backgroundColor: '#6a7985'\r\n            }\r\n        } \r\n    },\r\n  \"calculable\": true,\r\n  \"xAxis\": [{\"type\": \"category\",\"boundaryGap\": true,\"data\": data.categories}],\r\n  \"yAxis\": [{\"type\": \"value\",\"position\": \"left\",\"scale\": true}],\r\n  \"toolbox\": {\r\n    \"show\": true,\r\n    \"orient\": \"horizontal\",\r\n    \"x\": \"right\",\r\n    \"y\": \"top\",\r\n    \"color\": [\r\n      \"#1e90ff\",\r\n      \"#22bb22\",\r\n      \"#4b0082\",\r\n      \"#d2691e\"\r\n    ],\r\n    \"backgroundColor\": \"rgba(0,0,0,0)\",\r\n    \"borderColor\": \"#ccc\",\r\n    \"borderWidth\": 0,\r\n    \"padding\": 5,\r\n    \"showTitle\": true,\r\n    \"feature\": {\r\n      \"mark\": {\r\n        \"show\": false,\r\n        \"title\": {\r\n          \"mark\": \"Mark\",\r\n          \"markUndo\": \"Undo\",\r\n          \"markClear\": \"Clear\"\r\n        },\r\n        \"lineStyle\": {\r\n          \"width\": 1,\r\n          \"color\": \"#1e90ff\",\r\n          \"type\": \"dashed\"\r\n        }\r\n      },\r\n      \"dataZoom\": {\r\n        \"show\": false,\r\n        \"title\": {\r\n          \"dataZoom\": \"Zoom\",\r\n          \"dataZoomReset\": \"Reset\"\r\n        }\r\n      },\r\n      \"dataView\": {\r\n        \"title\": \"Data View\",\r\n        \"show\": false,\r\n        \"readOnly\": true,\r\n        \"lang\": [\r\n          \"Data\",\r\n          \"Close\",\r\n          \"Open\"\r\n        ]\r\n      },\r\n      \"restore\": {\r\n        \"show\": false,\r\n        \"title\": \"Restore\"\r\n      },\r\n      saveAsImage: {\r\n            show: true,\r\n            title:\"Download\\nImage\",\r\n            excludeComponents: ['toolbox','dataZoom'],\r\n            //name: db.saveAsTitle ? obj.config.title : \"rxdsCharts\",\r\n            //to parse the title from html to text\r\n            name: db.saveAsTitle ? ($( \"<span>\" + obj.config.title + \"</span>\").text().replace(/\\s+/g,\" \")) : \"rxdsCharts\",\r\n            backgroundColor: (window.rxds.theme_mode === \"dark\" ? \"#242424\" : \"#fff\")\r\n        },\r\n      \"magicType\": {\r\n        \"show\": true,\r\n        \"type\": [\r\n          \"pie\",\r\n          \"funnel\"\r\n        ],\r\n        \"option\": {\r\n          \"funnel\": {\r\n            \"x\": \"25%\",\r\n            \"width\": \"50%\",\r\n            \"funnelAlign\": \"center\",\r\n            \"max\": 40757\r\n          }\r\n        }\r\n      }\r\n    },\r\n    \"magicType\": {\r\n      \"show\": true,\r\n      \"title\": {\r\n        \"line\": \"line\",\r\n        \"bar\": \"bar\",\r\n        \"stack\": \"stack\",\r\n        \"tiled\": \"tiled\",\r\n        \"force\": \"force\",\r\n        \"chord\": \"chord\",\r\n        \"pie\": \"pie\",\r\n        \"funnel\": \"funnel\"\r\n      },\r\n      \"type\": [\r\n        \"line\",\r\n        \"bar\",\r\n        \"stack\",\r\n        \"tiled\"\r\n      ]\r\n    }\r\n  },\r\n  \"series\": data.series,\r\n  \"dataZoom\": [\r\n    {\r\n      \"show\": true,\r\n      \"start\": 0,\r\n      \"end\": 100\r\n    },\r\n    {\r\n      \"show\": true,\r\n      \"yAxisIndex\": 0,\r\n      \"filterMode\": \"empty\",\r\n      \"width\": 30,\r\n      \"height\": \"80%\",\r\n      \"showDataShadow\": false,\r\n      \"left\": \"93%\"\r\n    }\r\n  ]\r\n};\r\n\r\nif (db.title) wconfig.title={text:db.title};\r\nif (db.x_axis_title) wconfig.xAxis[0].name=db.x_axis_title;\r\nif (db.y_axis_title) wconfig.yAxis[0].name=db.y_axis_title;\r\n\r\nif (db.series_labels_position) {\r\n    wconfig.series.forEach(v => {\r\n        v.label = {\r\n            \"show\": true,\r\n            \"position\": db.series_labels_position,\r\n            \"formatter\": (params) => params.value ? params.value.format() : \"\",\r\n        };\r\n    });\r\n}\r\nif (db.minZoomLevel && data.categories) {\r\n    var len=data.categories.length;\r\n    var startIndex=0,endIndex=len-1;\r\n    if(  (db.minZoomLevel > 0) && ((len-db.minZoomLevel)>0)  ){\r\n        startIndex=len-db.minZoomLevel; \r\n        //endIndex=len-1;\r\n    }\r\n    else if(  (db.minZoomLevel < 0) && ( (len-(db.minZoomLevel*(-1)))>0 )  ) {\r\n        //startIndex=len-minZoomLevel; \r\n        endIndex=(db.minZoomLevel*(-1))-1;\r\n    }\r\n    wconfig.dataZoom = [{\r\n        show: true,\r\n        bottom:18,\r\n        // height:20\r\n    }];\r\n    startIndex ? ( wconfig.dataZoom[0].startValue = startIndex ) : true;\r\n    endIndex ? ( wconfig.dataZoom[0].endValue = endIndex ) : true;\r\n}\r\n\r\nif(db.barColors) {                       //To make the bars to use different colors\r\n    wconfig.series[0].itemStyle = {\r\n        color: function(params) {\r\n            // build a color map as your need.\r\n            var colorList = obj.chart._theme.color;\r\n            var noOfColors = colorList.length;\r\n            if(obj.filters.length === 0) {\r\n              return colorList[params.dataIndex%noOfColors];\r\n            }\r\n            if (obj.filters.indexOf(params.data.name) > -1) {\r\n              return colorList[params.dataIndex%noOfColors];\r\n            }\r\n            return 'gray';\r\n        }\r\n    };\r\n}\r\n$.extend(config, wconfig);\r\n//Last Update is bugfix on minZoomLevel.(Line numbers:143)","widget_template":""},"130":{"widget_name":"eChart Standard Pie Chart","widget_transform":"if(db.grand_total_name)     //To exclude the Total number entry from the data\r\n    var data = data.filter(v => !( db.grand_total_name.toString().split(\",\").includes(v[db.x_axis]) ) );\r\nvar series_data = data.map(v=>new Object({\"name\":v[db.x_axis],\"value\":v[db.y_axis]})) ;\r\nvar categories = data.map(v=>v[db.x_axis]);\r\nvar sum=data.reduce((s,v)=>s+v[db.y_axis],0);\r\nreturn {series_data, categories, sum, data};","widget_config":"var region_width_map = { \"one\": 1,\"two\": 2,\"three\": 3,\"four\": 4,\"five\": 5,\"six\": 6,\"seven\": 7,\"eight\": 8,\"nine\": 9,\"ten\": 10,\"eleven\": 11,\"twelve\": 12,\"thirteen\": 13,\"fourteen\": 14,\"fifteen\": 15,\"sixteen\": 16 };\r\nconst g2_colors = [\"#1890FF\", \"#13C2C2\", \"#2FC25B\", \"#FACC14\", \"#F04864\", \"#8543E0\", \"#3436C7\", \"#223273\"];\r\n\r\nif(db.tooltip_round_percentage === undefined) {\r\n    db.tooltip_round_percentage = db.round_percentage;\r\n}\r\n\r\n//to parse the title from html to text\r\nlet regTitle = $( \"<span>\" + obj.config.title + \"</span>\").text().replace(/\\s+/g,\" \");\r\nlet params = regTitle.match(/{{[^}}]+}}/g);\r\nif(params) {    //Automatically detect the parameters and replacing those with actual values\r\n    params.forEach(v => {\r\n        let param_value = rxds.get_param(v.replace(/{|}/g,\"\"));\r\n        if(param_value) \r\n            regTitle = regTitle.replace(v,param_value);\r\n    });\r\n}\r\nif(db.save_image_as) {\r\n    if(db.save_image_as === \"header\")\r\n        regTitle = $(\"#region\" + obj.region.region_id + \" .item-header .header\").text().trim();\r\n    else\r\n        regTitle = db.save_image_as;\r\n}\r\n\r\n//let defaultColors = db.color_list ? (db.color_list.toString().split(\",\")): obj.chart._theme.color;\r\nlet defaultColors = obj.chart._theme.color;\r\nif(db.color_list) {\r\n    defaultColors = (db.color_list === \"g2\") ? g2_colors : (db.color_list.toString().split(\",\"));\r\n}\r\n\r\nvar wconfig = {\r\n    backgroundColor: \"transparent\",\r\n    title : [{\r\n        text: ( db.label_for_total ? ( db.label_for_total + \": \" + Number(data.sum).format() ) : \"\" ),\r\n        textStyle:{ fontSize:12 },\r\n        right: '50px',\r\n        padding:['10','0','10','0']\r\n    }],\r\n    legend: {\r\n        show: (db.show_legend !== undefined) ? db.show_legend : true,\r\n        type: (db.legend_type ? db.legend_type : ( data.categories.length >= 10 ? \"scroll\" : \"plain\")),\r\n        bottom: 40\r\n    },\r\n    tooltip : {\r\n        trigger: 'item',\r\n        confine: true,\r\n        formatter: (params) => {\r\n            let percent = (params.value/data.sum)*100;;\r\n            //let percent = params.percent;\r\n            let _10pow = (digits) => (Math.pow(10,digits));\r\n            let round_num = (num,_10pow) => (Math.round(num*_10pow)/_10pow);\r\n            if(window.rxds.app.app.branch.match(\"MASTER|UI\")) {\r\n                round_num = (num,_10pow) => (Math.round(num*_10pow)/_10pow).toLocaleString();\r\n            }\r\n            return (params.seriesName ? (params.seriesName + \"<br>\") : \"\") + params.name + \" : \" +\r\n                (db.round_numbers >= 0 ? round_num(params.value, _10pow(db.round_numbers)) : round_num(params.value,1))  + \r\n                \" (\" + ( db.tooltip_round_percentage >= 0 ? round_num(percent, _10pow(db.tooltip_round_percentage)) : round_num(percent, 100))+ \"%)\";\r\n            //return params.name + \" : \" +\"<br>\"+ params.value.format() + \" (\" + params.percent.format(1) + \"%)\";\r\n            /*\r\n            return (params.seriesName ? (params.seriesName + \"<br>\") : \"\") + params.name + \" : \" +\r\n                (db.round_numbers >= 0 ? params.value.format(db.round_numbers) : params.value.format())  + \r\n                \" (\" + ( db.tooltip_round_percentage >= 0 ? params.percent.format(db.tooltip_round_percentage) : params.percent)+ \"%)\";\r\n            */\r\n        }\r\n    },\r\n    toolbox: {\r\n        right:'15px',\r\n        top:'0',\r\n        show: true,\r\n        feature: {\r\n            saveAsImage: {\r\n                show: true,\r\n                title:\"Download\\nImage\",\r\n                pixelRatio: 10,\r\n                excludeComponents: ['toolbox','dataZoom'],\r\n                //name: ( db.save_image_as ? db.save_image_as : ($( \"<span>\" + obj.config.title + \"</span>\").text().replace(/\\s+/g,\" \")) ),\r\n                name: regTitle,\r\n                backgroundColor: (window.rxds.theme_mode === \"dark\" ? \"#242424\" : \"#fff\")\r\n            }\r\n        }\r\n    },\r\n    events: ( db.clickable ? ({\r\n        click: function (param) {\r\n            if (typeof param.seriesIndex != 'undefined') {\r\n                rxds.toggleSelection(param.data.name,obj,db,data);\r\n            }            \r\n        }\r\n    }) : {}),\r\n    series : [\r\n        {\r\n            name: db.series_name ? db.series_name : \"\",\r\n            type: \"pie\",\r\n            radius : '40%',\r\n            center: ['50%', '40%'],\r\n            selectedMode: 'single',\r\n            data:data.series_data,\r\n            label:{\r\n                formatter: (params) => {\r\n                    //To replace '/'' with new line if the label length exceeds 20 characters\r\n                    let percent = (params.value/data.sum)*100;;\r\n                    //let percent = params.percent;\r\n                    let _10pow = (digits) => (Math.pow(10,digits));\r\n                    let round_num = (num,_10pow) => (Math.round(num*_10pow)/_10pow);\r\n                    if(window.rxds.app.app.branch.match(\"MASTER|UI\")) {\r\n                        round_num = (num,_10pow) => (Math.round(num*_10pow)/_10pow).toLocaleString();\r\n                    }\r\n                    var name = params.name;\r\n                    let add_dots_at = 23;\r\n                    let dots;\r\n                    var rtn = \" : \" + (db.round_numbers >= 0 ? round_num(params.value, _10pow(db.round_numbers)) : round_num(params.value, 1))  + \r\n                    \" (\" + ( db.round_percentage >= 0 ? round_num(percent, _10pow(db.round_percentage)) : round_num(percent, 100))+ \"%)\";\r\n                    /*\r\n                    var rtn = \" : \" + (db.round_numbers >= 0 ? params.value.format(db.round_numbers) : params.value.format())  + \r\n                    \" (\" + ( db.round_percentage >= 0 ? params.percent.format(db.round_percentage) : params.percent)+ \"%)\";\r\n                    */\r\n                    if(db.break_labels) {\r\n                        name = (params.name.length > 20 ? params.name.replace(/\\//,\"/\\n\") : params.name);\r\n                        return name + rtn + \"\\n\";\r\n                    }\r\n                    else if(db.show_label_dots_after)\r\n                        add_dots_at = db.show_label_dots_after;\r\n                        \r\n                    dots = name.length > add_dots_at ? \"...\" : \"\";\r\n                    //name = name.substr(0,add_dots_at) + dots;\r\n                    name = (obj.config.cols.match(/sixteen/g) ? name : name.substr(0,add_dots_at) + dots);\r\n                    return name + rtn;\r\n                }\r\n            },\r\n            itemStyle: {\r\n                color: function(params) {\r\n                    var color = \"\";\r\n                    if(db.color_mapping && db.color_mapping.constructor === Object)\r\n                        color = db.color_mapping[params.name];\r\n                    if(!color)\r\n                        color = defaultColors[params.dataIndex % defaultColors.length];\r\n                    if(obj.filters.length === 0) {\r\n                      return color;\r\n                    }\r\n                    if (obj.filters.indexOf(params.data.name) > -1) {\r\n                      return color;\r\n                    }\r\n                    return 'gray';\r\n                },\r\n                emphasis: {\r\n                    shadowBlur: 10,\r\n                    shadowOffsetX: 0,\r\n                    shadowColor: 'rgba(0, 0, 0, 0.5)'\r\n                }\r\n            }\r\n        }\r\n    ]\r\n};\r\n\r\nif(db.legend_position === \"top\") {   //to put the legend on top\r\n    wconfig.legend.top = 30;\r\n    wconfig.series[0].center = [\"50%\", \"55%\"];\r\n}\r\nif(db.show_legend !== undefined && !db.show_legend) {\r\n    wconfig.series[0].radius = \"55%\";\r\n    wconfig.series[0].center = [\"50%\",\"50%\"];\r\n}\r\nif(db.pie_radius && region_width_map[obj.config.cols] < 8) {\r\n    wconfig.series[0].radius = db.pie_radius+\"%\";\r\n}\r\nif(db.static_legends)\r\n    wconfig.legend.data = db.static_legends.toString().split(\",\");\r\n\r\nif(db.sort_legends)\r\n    wconfig.legend.data = data.categories.sort();\r\n\r\nif(window.rxds.app.app.branch.match(/MASTER|QA/))\r\n    wconfig.legend.pageTextStyle = { color: (window.rxds.theme_mode === \"dark\" ? \"#fff\" : \"#242424\") };\r\n\r\n$.extend(config, wconfig); \r\n\r\n/*{\r\n    \"x_axis\": \"category_field\",\r\n    \"y_axis\": \"number_field\",\r\n    \"clickable\": true,                      // default: false (true,false) \r\n    \"show_legend\": false,                   // default: true (true, false) to show or hide the legends\r\n    \"legend_type\": \"plain\",                 // default: scroll if records > 10 (plain,scroll)\r\n    \"legend_position\": \"top\".               // default: bottom (top,bottom)\r\n    \"static_legends\": \"legend1.legend2\",    // default: none (array or comma separated string) - to put static legends\r\n    \"sort_legends\": false,                  // default: false (true,false) - to sort the legends\r\n    \"grand_total_name\": \"Grand Total\",      // (array or comma separated string) - To exclude specific records from the chart\r\n    \"show_label_dots_after\": 30,            // default: 25 (numeric property) to add dots (...) at the end of the labels if it exceeds certain limit\r\n    \"break_labels\": false,                  // default: false (true, false) to break the labels (replacing '/' with '\\n')if it is too long\r\n    \"label_for_total\": \"Total Count\",       // default: false - to show total count on top right of the chart with specific label\r\n    \"round_numbers\": 2,                     // default: show as it is (numeric property) to round values to specific digits for both label and tooltip\r\n    \"round_percentage\": 2,                  // default: 2 decimal points - to round percentage values to specific digits for label\r\n    \"tooltip_round_percentage\",             // default: 2 decimal points - to round percentage values to specific digits for tooltip\r\n    \"save_image_as\": \"This is eChart\",      // (header, any string) 'header' -> get name from header\r\n    \"series_name\": \"Pie Chart\",             // to show series/data category if needed\r\n    \"pie_radius\": 30,                       // default: 50, number or string\r\n    \"color_list\": \"orange,green,yellow\",    // default: default colors ('g2' or array or comma separated string) custom colorList for the chart, 'g2' will use G2 theme colors\r\n    \"color_mapping\": {                      // default: default colors (object) mapping colors for the specific categories\r\n        \"category1\": \"orange\",\r\n        \"category2\": \"green\"\r\n        \"category3\": \"blue\"\r\n    }\r\n}*/","widget_template":""}};
+
+
+$(document)
+ .ready(rxds.ready(210000770 ))
+ ;
+ 
+   $(document)
+     .ready(function() {
+       agGrid.LicenseManager.setLicenseKey("CompanyName=RxDataScience Inc,LicensedGroup=RxDataScience Inc,LicenseType=MultipleApplications,LicensedConcurrentDeveloperCount=3,LicensedProductionInstancesCount=2,AssetReference=AG-008842,ExpiryDate=8_July_2021_[v2]_MTYyNTY5ODgwMDAwMA==d5c97b489a089434d3c9eba962efab90");
+     });
+
+
+</script>
+
+</footer>
+
+
+
+</html>

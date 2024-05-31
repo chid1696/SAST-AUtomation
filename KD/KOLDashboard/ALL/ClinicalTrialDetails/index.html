@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
+
+<title>Clinical Trial Details</title>
+
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+  <link href="../vendor/semantic/themes/bootswatch/semantic.apollo.min.css" rel="stylesheet" />
+<link href="../vendor/rxds/css/main.css" rel="stylesheet" />
+<link href="../vendor/rxds/css/ionicons.min.css" rel="stylesheet" />
+<link href="../vendor/shepherd/css/shepherd-theme-arrows.css" rel="stylesheet" />
+<style>
+.shepherd-element {
+   z-index:1001
+}
+.ui.dropdown .remove.icon {
+  font-size: 0.857143em;
+  margin:0;
+  padding:0;
+  right: 2em;
+  top: auto;
+  position: absolute;
+  opacity: 0.5;
+  z-index: 4;
+}
+.pivotcols {
+  cursor: pointer;
+}
+.ui.dropdown input[value=''] ~ .remove.icon,
+.ui.dropdown input:not([value]) ~ .remove.icon,
+.ui.dropdown.loading .remove.icon {
+  display: none;
+}
+.ui.list.draggable-container--over {
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.ag-header-cell-text {
+   white-space: pre !important;
+   
+}
+</style>
+
+      <link rel="shortcut icon" href="/rxds-logo.png" type="image/x-icon"  />
+    
+
+   <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+   <script src="../vendor/semantic/semantic.min.js"></script>
+   <script src="../vendor/vue/vue.min.js"></script>
+   <script src="../vendor/ramda/0.25.0/ramda.min.js"></script>
+
+   <!-- Page header content goes here -->
+   <!--Page Pre Loader Start-->
+
+<style>
+    #overlayer {
+        width:100%;
+        height:100%;  
+        position:fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99;
+        background:#888682;
+        opacity: 0.9;
+    }
+
+.preloader p{
+    position: fixed;
+    top: 52%;
+    width: 100%;
+    height: 90px;
+    
+    text-align: center;
+    color: #fff;
+    font-size: 24px;
+    z-index: 999;
+    color:white;
+}
+
+.svg-loader
+{
+	z-index:999;
+	position: fixed; 
+	height: 15%; 
+	width: 100%; 
+	top: 40%;
+}
+</style>
+<div id="overlayer"></div>
+<div class="preloader">
+    <div class="loader">
+        <span class="loader-inner"></span>
+    </div>
+    <svg class="svg-loader" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+    <path fill="none" stroke="#e76a24" stroke-width="8" stroke-dasharray="42.76482137044271 42.76482137044271" d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z" stroke-linecap="round" style="transform:scale(0.8);transform-origin:50px 50px">
+        <animate attributeName="stroke-dashoffset" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0;256.58892822265625"></animate>
+    </path>
+    
+    <p class="p-txt">Loading Clinical Trial details…</p>
+</div>
+<!--Page Pre Loader End-->
+
+<script>
+        
+function redirectLink(){
+    let cohort_id = rxds.m.get_param("COHORT_ID");
+    if (window.location.href.includes("apollodev")){
+        link_data="https://apollodev-apex.rxdatascience.com/ords/f?p=150:3::::3:P3_COHORT_ID:"+cohort_id;
+    }
+    else if (window.location.href.includes("MASTER")){
+        link_data="https://apollodev-apex.rxdatascience.com/ords/f?p=150:3::::3:P3_COHORT_ID:"+cohort_id;
+    }
+    else {
+        link_data="https://apollo-apex.rxdatascience.com/ords/f?p=150:3::::3:P3_COHORT_ID:"+cohort_id;
+    }
+    $("#link_to_apex").attr("href",link_data);
+    console.log(link_data);
+    return true;
+}
+    </script>
+</head>
+
+
+
+
+<body class="pushable light-mode" id="body">
+
+    <div class="ui inverted labeled icon left  inline vertical sidebar menu">
+        <a class="item logo">
+  <i>
+     <img src="../vendor/rxds/img/rxdsthumb.png" relative="true" alt="" />
+  </i>
+</a>
+   <a href="../." class="item page_link" 
+            data-roles="ALL"> 
+        <i class="paperclip icon"></i>
+       Key Opinion leader </a>
+
+    </div>
+    <div class="pusher">
+        <div class="ui top fixed menu ">
+            <a class="item" id="hamburger">
+              <i class="sidebar icon"></i>
+            </a>
+              <div class="item page_name" onclick='$("#version").show();'>
+                 <!-- <i class="diagnoses icon"></i> --> 
+                 Key Opinion Leader<span id="version" style="display:none">(0.100)</span>
+                 <!-- &nbsp;<i class="chevron circle right icon"></i> -->
+                 <span> &nbsp; > &nbsp; </span>
+                 <!-- <i class="search icon"></i> --> 
+                 <span id="pageTitle">Clinical Trial Details</span>
+              </div>  
+                <div class="center menu margin-center">
+                  <a class="item logo vertically fitted">
+                    <img src="../vendor/rxds/img/apollo_logo.png" style="width:100px" relative="true" alt="" />
+                  </a>
+                </div>
+            <div class="right menu">
+                <!--
+                <a class="item logo vertically fitted">
+                <img src="../vendor/rxds/img/RXDSLogoOnWhite-SVG.svg" style="width:140px" relative="true" alt="" />
+                </a>
+                  <div class="ui item" id="feedback_link"></div>
+                  <a class="item feedback"> 
+                      <i class="bullhorn icon"></i> Feedback
+                  </a>  
+                -->
+
+                <!--
+                 <div class="ui item powerpoint dropdown "> 
+                    <i class="file powerpoint o icon"></i> Powerpoint
+                    <i class="dropdown icon"></i>
+                  <div class="menu">
+                    <div class="item" id="pptdata">Download with Data Table</div>
+                    <div class="item" id="pptnodata">Download without Data Table</div>
+                    <div id="pptbeta">Download PPT(Beta)</div>
+                  </div>
+                </div>  
+
+                <a class="item help"> 
+                    <i class="question circle icon"></i> Help
+                </a>
+                -->
+
+                <a class="item tour" style="display:none">
+                    <i class="hand point right icon"></i>Tour
+                </a>  
+                <div class="ui item toggle checkbox">
+                  <input type="checkbox" name="darkModeToggle" id="darkModeToggle">
+                  <label id="darkModeLabel" for="darkModeToggle">Dark Mode</label>
+                </div>
+                <div class="ui item powerpoint dropdown" id="username">
+                  <!-- <i class="user circle icon"></i> <span id="rxuser">user@rxdatascience.com</span>   -->
+                  <i class="user circle icon font-2em mr-0"></i> 
+                  <i class="dropdown icon ml-0"></i>
+                  <div class="menu">
+                    <span id="rxuser" class="rxuser item"> user@rxdatascience.com </span>
+                    <hr class="hr-user-dropdown">
+                    
+                    <div class="item" id="pptdata"> <i class="file powerpoint o icon color-blue"></i>Download PPT with Data Table</div>
+                    <div class="item" id="pptnodata"> <i class="file powerpoint o icon color-blue"></i>Download PPT without Data Table</div>
+                     <div class="item" id="pptbeta"><i class="file powerpoint o icon color-blue"></i> Download PPT(Beta)</div>
+                    <hr class="hr-user-dropdown">
+
+                      <div class="item feedback"><i class="bullhorn icon color-blue"></i> Feedback</div>
+                      <hr class="hr-user-dropdown">
+                    <div class="item help"> <i class="question circle icon color-blue"></i>Help </div>
+                  </div>
+                </div>
+            </div>
+</div>
+
+
+        <div class="ui bottom attached  equal width left aligned padded grid stackable"> 
+            
+            <div class="row no-padding mt-1">
+                <!-- 16 x 16 Form region -->
+
+<div class="sixteen wide tablet sixteen wide computer column rxds_region" data-roles="ALL"  data-region="region210004675">
+    
+        <div class="ui segments raised">
+            <div class="ui segment  blue" >
+              <h5 class="ui header  blue inverted">
+                <span style="font-weight: bold">
+                     <span><i class="filter icon blue"></i></span>
+                  FILTER
+                    <i class="small circular help icon region_help" data-html="Shows selected Cohort and Cohort Name and its Description." data-variation="mini"></i>
+                </span>
+              </h5>
+            </div>
+            <form id="region210004675" class="ui    rxds_form form segment width-100 no-border-top " onsubmit="event.preventDefault();window.rxds.load_regions();">
+                         <div id="item210002449" class="field hidden rxds_item" style="display:none">
+    <input name="KOL_CT_NCT" type="hidden" value="">
+</div>
+                         <div id="item210002420" class="field hidden rxds_item" style="display:none">
+    <input name="KOL_COHORT_ID" type="hidden" value="">
+</div>
+            </form>
+        </div>
+</div>
+
+<!-- End of 16 x 16 Form region -->
+
+            </div>
+  			   <div class="row no-padding mt-1">
+  			      
+<!-- Plugin region -->
+  <div class="six wide tablet six wide computer column rxds_region" data-roles="ALL"  data-region="region210004676">
+      <div class="ui segments raised ">
+            <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="search icon blue"></i>
+           
+           <span class="region-title">Clinical Trial Details</span> 
+           <i class="small circular help icon region_help" data-region_id="210004676" data-html="Shows Clinical Trial Details" data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+    </div>
+  </div>
+</div>
+          <div id="region210004676" class="ui equal width left aligned padded grid stackable background-white" style="overflow:visible"></div>
+          <div class="ui inverted dimmer" id="dimmerregion210004676">
+             <div class="ui centered medium loader"></div>
+          </div> 
+          <!-- Annotate section -->
+          <div id="annotate210004676"></div>
+          
+          
+      </div>
+  </div>
+<!-- Plugin region end -->
+  			      
+<!-- Plugin region -->
+  <div class="four wide tablet four wide computer column rxds_region" data-roles="ALL"  data-region="region210004677">
+      <div class="ui segments raised ">
+            <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="th large icon blue"></i>
+           
+           <span class="region-title">Clinical Trial Summary</span> 
+           <i class="small circular help icon region_help" data-region_id="210004677" data-html="Shows Number of Investigators and Number of Sites involved in this Clinical Trials." data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+    </div>
+  </div>
+</div>
+          <div id="region210004677" class="ui equal width left aligned padded grid stackable background-white" style="overflow:visible"></div>
+          <div class="ui inverted dimmer" id="dimmerregion210004677">
+             <div class="ui centered medium loader"></div>
+          </div> 
+          <!-- Annotate section -->
+          <div id="annotate210004677"></div>
+          
+          
+      </div>
+  </div>
+<!-- Plugin region end -->
+  			      
+<!-- Plugin region -->
+  <div class="six wide tablet six wide computer column rxds_region" data-roles="ALL"  data-region="region210004679">
+      <div class="ui segments raised ">
+            <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="info icon blue"></i>
+           
+           <span class="region-title">Cohort Details</span> 
+           <i class="small circular help icon region_help" data-region_id="210004679" data-html="Shows selected Cohort and Cohort Name and its Description." data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+    </div>
+  </div>
+</div>
+          <div id="region210004679" class="ui equal width left aligned padded grid stackable background-white" style="overflow:visible"></div>
+          <div class="ui inverted dimmer" id="dimmerregion210004679">
+             <div class="ui centered medium loader"></div>
+          </div> 
+          <!-- Annotate section -->
+          <div id="annotate210004679"></div>
+          
+          
+      </div>
+  </div>
+<!-- Plugin region end -->
+             </div>
+            <div class="row no-padding mt-1">
+                <!-- DT region -->
+
+<!-- Report region, 16 grid wide table, 16 grid wide desktop -->    
+      <div class="sixteen wide tablet sixteen wide computer column rxds_region" 
+           data-roles="ALL"  data-region="region210004680">
+<!-- title region followed by individual ui segment grouped under ui segments-->
+          <div class="ui segments raised ">
+                <div class="ui segment  blue"  >
+                    <h5 class="ui header  blue inverted">
+                      <span style="font-weight: bold">
+                         <i class="user md icon blue"></i>
+                       <span class="region-title">Investigators Report</span>
+                         <i class="small circular help icon region_help"  data-region_id="210004680" data-html="Report shows Investigators details for this Clinical Trial." data-variation="mini"></i>
+                        </span>
+                    </h5>
+                </div>
+              <div class="content">
+              <div class="ui segment no-border no-box-shadow" 
+              id="region210004680" 
+              data-id="GRID210004680">
+                    <div class="row no-padding">
+                      <div id="CONT210004680" class="sixteen wide tablet sixteen wide computer column">
+                      <div style="padding-bottom: 10px;">
+                        <div class="AG-buttons mini ui buttons"></div>
+                      </div>
+                      <div id="GRIDregion210004680" style="height: 200px; width:100%" class="ag-theme-balham"></div>
+                          <div class="ui inverted dimmer" id="dimmerregion210004680">
+                             <div class="ui centered medium loader"></div>
+                          </div> 
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</div>
+<!-- DT region end -->
+
+            </div>
+            <div class="row no-padding mt-1">
+                <!-- DT region -->
+
+<!-- Report region, 16 grid wide table, 16 grid wide desktop -->    
+      <div class="sixteen wide tablet sixteen wide computer column rxds_region" 
+           data-roles="ALL"  data-region="region210004681">
+<!-- title region followed by individual ui segment grouped under ui segments-->
+          <div class="ui segments raised ">
+                <div class="ui segment  blue"  >
+                    <h5 class="ui header  blue inverted">
+                      <span style="font-weight: bold">
+                         <i class="hospital o icon blue"></i>
+                       <span class="region-title">Sites Report</span>
+                         <i class="small circular help icon region_help"  data-region_id="210004681" data-html="Shows Site Information for this Clinical Trial." data-variation="mini"></i>
+                        </span>
+                    </h5>
+                </div>
+              <div class="content">
+              <div class="ui segment no-border no-box-shadow" 
+              id="region210004681" 
+              data-id="GRID210004681">
+                    <div class="row no-padding">
+                      <div id="CONT210004681" class="sixteen wide tablet sixteen wide computer column">
+                      <div style="padding-bottom: 10px;">
+                        <div class="AG-buttons mini ui buttons"></div>
+                      </div>
+                      <div id="GRIDregion210004681" style="height: 200px; width:100%" class="ag-theme-balham"></div>
+                          <div class="ui inverted dimmer" id="dimmerregion210004681">
+                             <div class="ui centered medium loader"></div>
+                          </div> 
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</div>
+<!-- DT region end -->
+
+            </div>
+            <div class="row no-padding mt-1">
+                
+<div class=" sixteen wide tablet sixteen wide computer column rxds_region leaflet-map-region"  data-roles="ALL"  data-region="region210004682">
+    <div class="ui segments raised" id="region210004682">
+          <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="map icon blue"></i>
+           
+           <span class="region-title">Investigator Map</span> 
+           <i class="small circular help icon region_help" data-region_id="210004682" data-html="Shows Investigator Locations and Investigator Details for the selected Clinical Trial." data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+    </div>
+  </div>
+</div>
+
+        <!-- check if flip report is turned on -->
+          <div class="ui segment no-border no-box-shadow">
+
+    <div id="leafletregion210004682" style="z-index:0">
+    <!-- <div id="leafletregion210004682"> -->
+    </div>
+  <div class="ui inverted dimmer" id="dimmerregion210004682">
+    <div class="ui centered medium loader"></div>
+  </div> 
+</div>
+
+      </div>
+</div>
+
+            </div>
+            <div class="row no-padding mt-1">
+                
+<div class=" sixteen wide tablet sixteen wide computer column rxds_region leaflet-map-region"  data-roles="ALL"  data-region="region210004683">
+    <div class="ui segments raised" id="region210004683">
+          <div class="ui segment no-padding   blue" >
+
+    <div class="ui menu no-radius borderless stackable">
+      <div class="item-header">
+       <h5 class="ui header  blue inverted">
+       <span style="font-weight: bold">
+           <i class="map icon blue"></i>
+           
+           <span class="region-title">Site Map</span> 
+           <i class="small circular help icon region_help" data-region_id="210004683" data-html="Shows Site locations and its details for the selected Clinical Trial." data-variation="mini"></i>
+       </h5>
+    </div>
+    <div class="right menu">
+    </div>
+  </div>
+</div>
+
+        <!-- check if flip report is turned on -->
+          <div class="ui segment no-border no-box-shadow">
+
+    <div id="leafletregion210004683" style="z-index:0">
+    <!-- <div id="leafletregion210004683"> -->
+    </div>
+  <div class="ui inverted dimmer" id="dimmerregion210004683">
+    <div class="ui centered medium loader"></div>
+  </div> 
+</div>
+
+      </div>
+</div>
+
+            </div>
+
+<div class="row equal width no-padding mt-1">
+ <div class="four wide tablet four wide computer column">
+    <div id="syneos-image" class="ui segment message left aligned mini" style="background: transparent!important;color: var(--secondary-storm)!important;border: none!important;box-shadow: none!important;width: 10px;height: 10px">
+      <img src="../vendor/rxds/img/syneos.svg" style="width:88.89px; height:40px" relative="true" alt="" />
+    </div>
+  </div>
+  <div class="eight wide tablet eight wide computer column">
+    <div id="copyright" class="ui segment message center aligned mini" style="font-family: Montserrat;font-style: normal;font-weight: 400;font-size: 12px;line-height: 24px;top:9px"  >
+      Copyright © 2019-2021, RxDataScience, Inc. All rights reserved. Powered by Kx® Software.
+    </div>
+  </div>
+
+  <div class="four wide tablet four wide computer column">
+    <div id="copyright" class="ui segment message right aligned mini" style="top:2px">
+      <img src="../vendor/rxds/img/RxLogoSVG.svg" style="width: 92px;height: 40px" relative="true" alt="" />
+    </div>
+   </div>
+</div>
+<!--
+<div class="row no-padding mt-1">
+   <div class="16 wide tablet 16 wide computer column">
+      <div id="copyright" class="ui segment message center aligned mini">
+        Copyright © 2019-2021, RxDataScience, Inc. All rights reserved. Powered by Kx® Software.
+      </div>
+   </div>
+</div>
+-->
+
+
+<!-- Page footer goes here -->
+<script>
+    if(!window.rxdsObj)
+        window.rxdsRegionId=[];
+</script>
+
+        </div> 
+    </div> <!-- end of pusher -->
+
+</body>
+
+<footer>
+<div class="ui modal help">
+
+  <div class="header ui compact"> <i class="search icon"></i> Key Opinion Leader (V0.100) </div>
+  <div class="scrolling content" id="page_help_scroll">
+
+    <div class="ui items">
+      <div class="item">
+        <div class="image">
+          <i class="huge icons">
+            <i class="search icon"></i>
+            <i class="corner question  icon"></i>
+          </i>  
+        </div>
+        <div class="content">
+          <a class="header">Clinical Trial Details Online Help</a>
+          <div class="description">
+            <p></p>
+          </div>
+        </div>
+      </div>
+    </div>
+            <div class="ui segments raised rxds_region_help" id="help_210004675" data-region="region210004675">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="filter icon"></i></span>
+	      <span class="region-title">FILTER</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows selected Cohort and Cohort Name and its Description.</p>
+
+<table class="ui celled table"><tbody>
+</tbody></table>
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004676" data-region="region210004676">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="search icon"></i></span>
+	      <span class="region-title">Clinical Trial Details</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows Clinical Trial Details</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004677" data-region="region210004677">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="th large icon"></i></span>
+	      <span class="region-title">Clinical Trial Summary</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows Number of Investigators and Number of Sites involved in this Clinical Trials.</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004679" data-region="region210004679">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="info icon"></i></span>
+	      <span class="region-title">Cohort Details</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows selected Cohort and Cohort Name and its Description.</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004680" data-region="region210004680">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="user md icon"></i></span>
+	      <span class="region-title">Investigators Report</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Report shows Investigators details for this Clinical Trial.</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004681" data-region="region210004681">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="hospital o icon"></i></span>
+	      <span class="region-title">Sites Report</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows Site Information for this Clinical Trial.</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004682" data-region="region210004682">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="map icon"></i></span>
+	      <span class="region-title">Investigator Map</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows Investigator Locations and Investigator Details for the selected Clinical Trial.</p>
+
+  </div>
+  </div>
+  
+
+            <div class="ui segments raised rxds_region_help" id="help_210004683" data-region="region210004683">
+ <div class="ui segment  blue"" >
+    <h5 class="ui header" style="font-weight: bold">
+           <span><i class="map icon"></i></span>
+	      <span class="region-title">Site Map</span>
+    </h5>
+  </div>  
+  <div class="ui segment">
+      <p>Shows Site locations and its details for the selected Clinical Trial.</p>
+
+  </div>
+  </div>
+  
+
+
+    
+  </div> <!-- scrolling content -->
+</div>
+
+
+        <div class="row" id="dev_bar" style="display:none;position:fixed;z-index: 1000;line-height:0;bottom: 0;width:80%;margin:0% auto;left:0;right:0">
+      <form class="ui form segment inverted grey" id="top_panel" style="display:none">
+        <h4 class="ui dividing header">RxDS Inspector</h4>
+          <div class="two fields">
+            <div id="slRegions" class="ui search selection dropdown" name="slRegions1">
+              <label>Region</label>
+              <input type="hidden" name="slRegions">
+              <div class="default text">Select Region</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+              </div>
+            </div>
+            <button class="ui disabled labeled icon button" id="dev_upd_region">
+              <i class="cog icon"></i>
+              Update Region
+            </button>
+            <button class="ui disabled labeled icon button" id="dev_query">
+              <i class="puzzle icon"></i>
+              Get SQL
+            </button>
+            <button class="ui disabled labeled icon button" id="dev_cache">
+              <i class="cog icon"></i>
+              Examine Cache
+            </button>
+          </div>
+          
+        <div class="ui fluid styled accordion">
+        
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Query Details?
+          </div>
+          <div class="content">
+
+          <div class="ui top attached tabular menu" id="data_tabs">
+            <a class="item active" data-tab="parameters">Parameters</a>
+            <a class="item" data-tab="query">Query</a>
+            <a class="item" data-tab="data">Data</a>
+            <a class="item" data-tab="url_details">URL</a>
+          </div>
+          <div class="ui bottom attached tab segment active" data-tab="parameters">
+              <div class="editor" style="height:100px"id="data_sent" data-editor="javascript" data-gutter="1"></div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="query">
+            <div class="editor" style="height:100px"id="sql_text" data-editor="javascript" data-gutter="1">Click Get SQL to populate the query</div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="data">
+              <div class="editor" style="height:100px"id="data" data-editor="javascript" data-gutter="1"></div>
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="url_details">
+              <div class="editor" style="height:50px"id="url_details" data-editor="text" data-gutter="1"></div>
+          </div>
+          
+          </div>
+
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Region Details?
+          </div>
+          <div class="content">
+            <div class="ui top attached tabular menu" id="data_tabs">
+              <a class="item active" data-tab="region_binding">Binding</a>
+              <a class="item" data-tab="region_transform">Transform</a>
+              <a class="item" data-tab="region_config">Configuration</a>
+              <a class="item" data-tab="region_template">Template</a>
+              <a class="item" data-tab="options">Options</a>
+            </div>
+            <div class="ui bottom attached tab segment active" data-tab="region_binding">
+                  <div class="editor" style="height:30px" id="data_binding" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_transform">
+              <div class="editor" style="height:100px"id="region_transform" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_config">
+              <div class="editor" style="height:200px" id="region_config" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="region_template">
+              <div class="editor" style="height:200px" id="region_template" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="options">
+              <div class="editor" style="height:200px" id="options" data-editor="javascript" data-gutter="1"></div>
+            </div>
+          </div>
+
+          <div class="title">
+            <i class="dropdown icon"></i>
+            What were Widget Details?
+          </div>
+          <div class="content">
+            <div class="ui top attached tabular menu" id="data_tabs">
+              <a class="item active" data-tab="widget_config">Configuration</a>
+              <a class="item" data-tab="widget_transform">Transform</a>
+              <a class="item" data-tab="widget_template">Template</a>
+            </div>
+            <div class="ui bottom attached tab segment active" data-tab="widget_config">
+              <div class="editor" style="height:200px" id="widget_config" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="widget_transform">
+              <div class="editor" style="height:100px"id="widget_transform" data-editor="javascript" data-gutter="1"></div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="widget_template">
+              <div class="editor" style="height:100px"id="widget_template" data-editor="javascript" data-gutter="1"></div>
+            </div>
+          </div>
+          
+        </div>
+    </form>
+    <div class="ui form">
+          <div id="develop" class="ui segment grid grey inverted center aligned mini" style="opacity:0.8;padding:0;margin-top:0;margin-bottom:0">
+    <div class="label text" style="line-height:12px" >Developer Bar - Select Control</div>
+    <div class="four wide  inline field" style="padding-top:0;padding-bottom:0">
+      <div id="slControls" class="ui fluid multiple search selection dropdown" name="slControls1">
+        <input type="hidden" name="slControls">
+        <div class="default text">Select Control</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+        </div>
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="debug_query">
+        <div class="label text" >Stop Query</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="debug_load">
+        <div class="label text" >Stop Load</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="edit_links">
+        <div class="label text" >Edit Links</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+    <div class="inline field">
+      <div class="ui toggle checkbox" id="redo_region">
+        <div class="label text" >Inspector</div>
+        <input type="checkbox" tabindex="0" class="hidden">
+      </div>
+    </div>
+
+      <div class="ui buttons">
+        <button class="ui button" id="reload">Reload</button>
+      </div>
+    </div>
+    </div>
+  </div>  
+  <script src="../vendor/rxds/js/develop.js"></script>
+  <script type="text/javascript" src="https://cdn.rxdatascience.com/ace/ace.js"></script>
+
+
+      <div class="ui modal views">
+      <form class="ui form segment inverted grey" id="saved_views" >
+        <h4 class="ui dividing header">Saved Views</h4>
+        
+          <div class="fields">
+          
+            <div class="inline field">
+                <label>Save As</label>
+                <div class="ui left icon input">
+                  <input type="text" id="rxds_query_name" 
+                       placeholder="Enter a name for the current view..." style="width:350px">
+                  <i class="bookmark icon"></i>
+                </div>
+            </div>              
+            
+              <div class="field">
+              <div class="ui toggle checkbox" id="public_view" style="padding-top:8px">
+                <input type="checkbox" tabindex="0" class="hidden">
+                <label>Public?</label>
+              </div>
+              </div>
+              <div class="ui ">
+                <button class="ui labeled icon button" type="button" id="save_query">
+                  <i class="save icon"></i>
+                  Save
+                </button>
+                <button class="ui labeled icon button" type="button" id="delete_query">
+                  <i class="trash icon"></i>
+                  Delete
+                </button>
+              </div>
+
+          </div>
+          
+          <div id="View_Output">
+            <div class="ui top attached tabular menu" >
+              <a class="active item" data-tab="public"><i class="binoculars icon"></i>Public</a>
+              <a class="item" data-tab="private"><i class="eye icon"></i>Private</a>
+              <a class="item" data-tab="recent"><i class="clock icon"></i>Recent</a>
+            </div>
+            
+            <div class="ui bottom attached active tab segment" data-tab="public">
+                <div class="ui list">
+                  <a v-for="item in data.public" class="item" :data-md5_hash="item.md5_hash"
+                        @click="load_view('public', $event)" >
+                   <i class="binoculars icon"></i>
+                    {{item.view_name}}
+                  </a>
+                </div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="private">
+                <div class="ui list">
+                  <a v-for="item in data.private" class="item" :data-md5_hash="item.md5_hash"
+                          @click="load_view('private', $event)">
+                   <i class="eye icon"></i>
+                    {{item.view_name}}
+                  </a>
+                </div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="recent">
+                <div class="ui list">
+                  <a v-for="item in data.recent" class="item" :data-md5_hash="item.md5_hash"
+                         @click="load_view('recent', $event)">
+                   <i class="clock icon"></i>
+                    {{item.md5_hash}}
+                  </a>
+                </div>
+            </div>
+          </div>
+      </form>
+      </div>
+
+
+<!-- Annotate Modal layout goes here -->
+<div class="ui fullscreen modal transition hidden" id="annotateModal" style123="margin-top: -188px;">
+      <i class="close icon"></i>
+      <div class="header">
+          New/Update Annotation
+      </div>
+      <div class="content">
+          <div class="ui form">
+              <div class="field annotate-header">
+                  <label>Headline</label>
+                  <textarea v-model="data.headline" id="taHeadline"></textarea>
+              </div>
+              <div class="field annotate-content">
+                  <label>Content</label>
+                  <textarea v-model="data.description" id="taContent"></textarea>
+              </div>
+          </div>
+      </div>
+      <div class="actions">
+          <button class="ui button deny" @click="cancel($event)">Cancel</button>
+          <button class="ui green button deny" :data-region="data.region" @click="save('save',$event)">Save</button>
+      </div>
+</div>
+
+
+
+  
+
+<div class="ui modal no-data-message">
+    <div class="content">
+        <div class="description">
+            <i class="info circle icon"></i>
+            <span> No Data available for Export </span>
+        </div>    
+    </div>
+</div>
+
+<!-- use this as custom model if needed-->
+<div class="ui modal custom-modal">
+    <div class="scrolling content" style="text-align: center;">
+        <i class="info circle icon"></i>
+        <span class="custom-content"> No message available to show here </span>
+    </div>
+</div>
+
+<script src="../vendor/rxds/js/rxds_bundle.js"></script>
+
+<script src="../custom/rxapp.js"></script>
+<script src="../vendor/rxds/js/rxdsClient.js"></script>
+
+    <script src="../vendor/datatables/datatables.min.js"></script>
+    <link href="../vendor/datatables/datatables.min.css" rel="stylesheet" />
+    <script src="../vendor/datatables/Scroller-1.4.3/js/dataTables.scroller.min.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/dataTables.buttons.min.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/buttons.semanticui.min.js"></script>
+    <script src="../vendor/datatables/JSZip-2.5.0/jszip.min.js"></script>
+    <script src="../vendor/datatables/pdfmake-0.1.32/pdfmake.min.js"></script>
+    <script src="../vendor/datatables/pdfmake-0.1.32/vfs_fonts.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/buttons.html5.min.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/buttons.print.min.js"></script>
+    <script src="../vendor/datatables/Buttons-1.5.1/js/buttons.colVis.min.js"></script>
+    <script src="../vendor/jquery-sparklines/jquery.sparkline.min.js"></script>
+    <script src="../vendor/yadcf/jquery.dataTables.yadcf.js"></script>
+    <link href="../vendor/yadcf/jquery.dataTables.yadcf.css" rel="stylesheet" />
+
+   <link href="../vendor/ag-grid/dist/styles/bootstrap-datepicker.min.css" rel="stylesheet" />
+   <link href="../vendor/ag-grid/dist/styles/datepicker3.css" rel="stylesheet" />
+   
+   <script src="../vendor/ag-grid/dist/ag-grid-enterprise.min.js"></script>
+   <script src="../vendor/ag-grid/dist/bootstrap-datepicker.min.js"></script>
+   <script src="../vendor/ag-grid/dist/jquery.mask.js"></script>
+   <script src="../vendor/ag-grid/dist/AGcustomDateComponent.js"></script>
+
+
+    <script src="../vendor/pptxgen/jszip.min.js"></script>
+    <script src="../vendor/pptxgen/pptxgen.min.js"></script>
+    <script src="../vendor/pptxgen/pptxgen.shapes.js"></script>
+    <script src="../vendor/pptxgen/pptxgen.colors.js"></script>
+    <script src="../vendor/pptxgen/html2canvas.min.js"></script>
+
+    <div class="ui small modal leaflet-marker-modal">
+        <div class="header">Marker Details</div>
+        <div class="content"><p>data</p></div>
+    </div>
+    <div class="ui small modal leaflet leaflet-selected-modal">
+      <div class="header"> Selected </div>
+      <div class="content"></div>
+    </div>
+    <div class="ui small modal leaflet leaflet-selected-locations-modal">
+      <div class="header"> Selected Locations </div>
+      <div class="content"></div>
+    </div>
+    <link href="../vendor/leaflet/leaflet.css" rel="stylesheet" />
+    <link href="../vendor/leaflet/MarkerCluster.css" rel="stylesheet" />
+    <link href="../vendor/leaflet/MarkerCluster.Default.css" rel="stylesheet" />
+    <link href="../vendor/leaflet/Control.FullScreen.css" rel="stylesheet" />
+    <link href="../vendor/leaflet/leaflet-gesture-handling.min.css" rel="stylesheet" />
+    <link href="../vendor/leaflet/easy-button.css" rel="stylesheet" />
+    <script src="../vendor/leaflet/leaflet.js"></script>
+    <script src="../vendor/leaflet/leaflet.markercluster.js"></script>
+    <script src="../vendor/leaflet/Control.FullScreen.js"></script>
+    <script src="../vendor/leaflet/leaflet-gesture-handling.min.js"></script>
+    <script src="../vendor/leaflet/Leaflet.Control.Custom.js"></script>
+    <script src="../vendor/leaflet/easy-print/bundle.js"></script>
+    <script src="../vendor/leaflet/easy-button.js"></script>
+
+
+
+
+   <script src="../vendor/rxds/js/rxds_proto.js"></script>
+
+
+
+<!-- To include JS references from the plugin template-->
+
+
+
+<script src="../vendor/d3/d3.v4.min.js"></script>
+
+
+
+
+<script>
+
+semantic = {};
+
+// Initialiaze Semantic UI Controls 
+
+semantic.ready = function() {
+/*
+    $('.tabular.menu .item')
+      .tab({context: 'parent',onVisible:function(t){console.log(t);debugger;}})
+     ;
+*/
+    $('.ui.checkbox')
+      .checkbox()
+    ;
+    
+    $('.ui.radio.checkbox')
+      .checkbox()
+    ;
+    $('.ui.accordion')
+      .accordion({animateChildren: false})
+    ;
+    
+    $('.custom')
+     .popup()
+     ;
+    $('.help')
+     .popup()
+     ;
+      
+    $('.ui.sidebar')
+     .sidebar({dimPage: false,transition: 'push',exclusive:false,closable:false})
+     .sidebar('attach events', '#hamburger');
+      
+    // show dropdown on hover
+    $('.main.menu .ui.dropdown').dropdown({
+      on: 'hover'
+    });
+ 
+    $('.ui.clear.button').click(function(){
+        $('form').form('clear');
+    }); //standard reset functionality
+ 
+    $('.ui.shape').shape({
+       width:'next',
+       height:'next'
+    });
+    
+    //to toggle between semantic grouped buttons
+    $(".ui.grouped.buttons .button").on('click', function() {
+      $(this)
+        .addClass('active')
+        .siblings()
+        .removeClass('active');
+    });
+  
+}; //end of semantic ready
+
+
+$(document)
+ .ready(semantic.ready)
+ ;
+
+
+rxds.page_controls = {"region210004675":{"control_type":"Form","query_id":0,"dataset_format":"","region":{"region_id":210004675,"region_type":"Form","region_seq":1,"group":"NONE","conditional_display":"((\"{{COHORT_NCT}}\") === \"\")","group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-filter","name":"KOL_CT_Filter","title":"FILTER","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":"Standard","data_binding":"{\"cols\":\"four\",\"metric\":\"metric\",\"label\":\"label\",\"icons\":[\"ion-android-people\",\"ion-compose\",\"ion-person-add\",\"ion-ios-plus\"],\"colors\":[\"teal\",\"blue\",\"purple\",\"red\"]}","export":"CSVDB:ExcelDB","template":"<div v-if=\"!data.Error\" class=\"ui equal width padded grid stackable\" style=\"width:100%\">\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header small\" style=\"font-weight: 600;margin-top: 0.5em;margin-bottom: 0.3em;\">\r\n                    <i class=\"ion-android-people icon large orange\" style=\"display:inline\"></i>\r\n                  <a id=\"link_to_apex\" href=\"#\" style=\"display:inline;color:#00f\" target=\"_blank\"> Cohort ID - {{data.cohort_id.format()}}\r\n                  \r\n                  <i class=\"edit icon  orange\" style=\"display:inline\"></i>\r\n                  </a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header small\" style=\"font-weight: 600;margin-top: 0.5em;margin-bottom: 0.3em;\">\r\n                   <a id=\"link_to_apex\" href=\"#\" style=\"display:inline;color:#00f\" target=\"_blank\"> <i class=\"clipboard icon large orange\"></i>\r\n                    Cohort Name - {{data.name}} </a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        {{data.description}}\r\n    </div>\r\n      <div class=\"ui equal width row no-padding-top background-white\">\r\n     <strong>Note: </strong>Data are shown between {{data.mindt}} to  {{data.maxdt}}\r\n      </div>\r\n</div>    \r\n","column_filter":"N","server_filter":"N","modal_region":"N","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"35","help":"Shows selected Cohort and Cohort Name and its Description.","help_detail":null,"region_config":"//To include the region in ppt download\r\nobj.config.include_in_ppt=\"Y\";\r\n"},"dependent_items":[],"dependent_regions":[],"child_regions":[]},"region210004676":{"control_type":"Plugin","query_id":210007419,"dataset_format":"JSON","region":{"region_id":210004676,"region_type":"Plugin","region_seq":2,"group":"G1","conditional_display":null,"group_count":"three"},"auth_roles":"ALL","config":{"icon":"fa-search","name":"KOL_CT_ClinicalTrialsDetailsPlugin","title":"Clinical Trial Details","cols":"six","equal_width":"Y","form_size":null,"inverted":"N","region_style":"Standard","data_binding":"{\"label1\":\"Id\",\"label2\":\"Title\",\"label3\":\"Date\",\"label4\":\"Status\"}","template":"<div class=\"ui  segment\">\r\n    <div id=\"example-3\" class=\"ui two cards\">\r\n       <div v-for=\"item in data\">\r\n            <div class=\"ui equal width grid\" style=\"padding:15px;\">\r\n                <div class=\"ui row\" style=\"align-items:left;\">\r\n                    <div class=\"fifty wide column\" style=\"font-color:rgb(0,0,0);\">\r\n                        <div class=\"fifty wide column\">\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>NCT ID: </b></span>\r\n                            <strong><a id=\"CMS_Page\" target =\"_blank\" :href=\"'https://clinicaltrials.gov/ct2/show/results/'+item[db.label1]\" >{{item[db.label1]}}</a></strong></div>\r\n                        </div>\r\n                        <div class=\"label\"><span><b>Trial Name: </b></span>{{item[db.label2]}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Trial Date: </b></span>{{item[db.label3]}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Trial Status: </b></span>{{item[db.label4]}}\r\n                        </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n","modal_region":"N","flip_report":"N","annotate":"N","aggrid_options":null,"height":"35","help":"Shows Clinical Trial Details","help_detail":null},"dependent_items":["item210002449"],"dependent_regions":[],"child_regions":[]},"region210004677":{"control_type":"Plugin","query_id":210007418,"dataset_format":"JSON","region":{"region_id":210004677,"region_type":"Plugin","region_seq":3,"group":"G1","conditional_display":null,"group_count":"three"},"auth_roles":"ALL","config":{"icon":"fa-th-large","name":"KOL_CT_ClinicalTrialBadge","title":"Clinical Trial Summary","cols":"four","equal_width":"Y","form_size":null,"inverted":"N","region_style":"Standard","region_transform":"//To restrict this plugin from ppt\r\nobj.config.include_in_ppt = \"Y\";\r\n\r\n ","data_binding":"{}","template":"<!--*******************************************************************************************************************************************************-->\r\n<div v-if=\"!data.Error\" class=\"ui equal width padded grid stackable\" style=\"width:100%\">\r\n    <div class=\"ui equal width row no-padding-top background-white\">\r\n        <br>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.HCP.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                    <strong>Investigators</strong>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"column\" style=\"padding: 0 0.5em;\">\r\n            <div class=\"ui segment center aligned pluginBadgeBorder\" style=\"border: 1px solid rgba(221, 221, 221, 1);box-shadow: none;\">\r\n                <div class=\"ui header huge\" style=\"font-weight: 300;font-size: 48px;margin-bottom: 0;color: #0099dc;\">{{data.HCO.format()}}</div>\r\n                <div class=\"ui header small\" style=\"font-weight: bold;margin-top: 0.6em;margin-bottom: 0.5em;\">\r\n                   <strong>Sites</strong>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>","modal_region":"N","flip_report":"N","annotate":"N","aggrid_options":null,"height":"35","help":"Shows Number of Investigators and Number of Sites involved in this Clinical Trials.","help_detail":null},"dependent_items":["item210002420","item210002449"],"dependent_regions":[],"child_regions":[]},"region210004679":{"control_type":"Plugin","query_id":210007402,"dataset_format":"JSON","region":{"region_id":210004679,"region_type":"Plugin","region_seq":4,"group":"G1","conditional_display":null,"group_count":"three"},"auth_roles":"ALL","config":{"icon":"fa-info","name":"KOL_CT_Cohort_Badge","title":"Cohort Details","cols":"six","equal_width":"N","form_size":null,"inverted":"N","region_style":"Standard","data_binding":"{}","template":"<div class=\"ui  segment\">\r\n    <div id=\"example-3\" class=\"ui two cards\">\r\n            <div class=\"ui equal width grid\" style=\"padding:15px;\">\r\n                <div class=\"ui row\" style=\"align-items:left;\">\r\n                    <div class=\"twenty wide column\" style=\"font-color:rgb(0,0,0);\">\r\n                        <div class=\"twenty wide column\">\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"font-size:20px;\"><span><b>Cohort Id:  </b></span><a id=\"link_to_apex\" href=\"#\" target=\"_blank\" class=\"ui right floated orange circular label\" style=\"font-size:21px;\" onclick=\"redirectLink()\">{{data.cohort_id}}</a>\r\n                        </div>\r\n                        </div>\r\n                        <br>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Cohort Name: </b></span>{{data.name}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Description: </b></span>{{data.description}}\r\n                        </div>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Note: </b></span>Data are shown between {{data.mindt}} & {{data.maxdt}}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n","modal_region":"N","flip_report":"N","annotate":"N","aggrid_options":null,"height":"35","help":"Shows selected Cohort and Cohort Name and its Description.","help_detail":null,"region_config":"//To include the region in ppt download\r\nobj.config.include_in_ppt=\"Y\";\r\n"},"dependent_items":["item210002420"],"dependent_regions":[],"child_regions":[]},"region210004680":{"control_type":"AG Grid","query_id":210007420,"dataset_format":"JSON","region":{"region_id":210004680,"region_type":"AG Grid","region_seq":5,"group":"NONE","conditional_display":null,"group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-user-md","name":"KOL_CT_Investigator_Report","title":"Investigators Report","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":null,"data_binding":"{}","export":"CSVDB:ExcelDB","template":"<div class=\"ui  segment\">\r\n    <div id=\"example-3\" class=\"ui two cards\">\r\n            <div class=\"ui equal width grid\" style=\"padding:15px;\">\r\n                <div class=\"ui row\" style=\"align-items:left;\">\r\n                    <div class=\"twenty wide column\" style=\"font-color:rgb(0,0,0);\">\r\n                        <div class=\"twenty wide column\">\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"font-size:20px;\"><span><b>Cohort Id:  </b></span><a id=\"link_to_apex\" href=\"#\" target=\"_blank\" class=\"ui right floated orange circular label\" style=\"font-size:21px;\">{{data.cohort_id}}</a>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Cohort Name: </b></span>{{data.name}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Description: </b></span>{{data.description}}\r\n                        </div>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Note: </b></span>Data are shown between {{data.mindt}} & {{data.maxdt}}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n","column_filter":"N","server_filter":"Y","modal_region":"N","flip_report":"N","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"35","help":"Report shows Investigators details for this Clinical Trial.","help_detail":null,"region_config":"col=opts.columnDefs.filter(v=>v.field.match(/(^Provider_NPI)/));\r\nlet cohort_id = rxds.get_param(\"COHORT_ID\");\r\n\r\ncol.forEach(v=>{\r\n//v.width = 100;\r\nif (col.length > 0) {\r\nv.cellRenderer = (params) => {\r\n\r\nreturn \"<a target='_blank' href=\\\"../ProviderDetails/?COHORT_ID=\"+cohort_id+\"&COHORT_NPI=\"+params.value+\"\\\"> \" + params.value + \"</a>\" ;\r\n\r\n};  \r\n}\r\n});\r\n\r\nopts.columnDefs.filter(v=>{\r\nif(v.headerName==\"Latitude\" || v.headerName==\"Longitude\" || v.headerName==\"HCO_Latitude\" || v.headerName==\"HCO_Longitude\" ||v.headerName==\"HCP_Latitude\" || v.headerName==\"HCP_Longitude\")\r\n{\r\nv.cellStyle=function(params)\r\n{\r\nreturn{textAlign:'right'};\r\n};\r\n}\r\n});\r\n\r\nvar id = rxds.get_param(\"COHORT_ID\");\r\n//var reg_title = obj.config.title + \"_\"+ id;\r\n\r\n\r\n\r\n//Replace file name with new name\r\n\r\n\r\n\r\nobj.config.title = obj.config.title + \"_COHORT_\"+ id;\r\nconsole.log(\"obj\",obj)\r\n\r\nlet agRegionId=\"region\"+obj.region.region_id;\r\nopts.onGridReady=function()\r\n{\r\n    window.rxdsRegionId.push(agRegionId);\r\n}"},"dependent_items":["item210002420","item210002449"],"dependent_regions":[],"child_regions":[]},"region210004681":{"control_type":"AG Grid","query_id":210007421,"dataset_format":"JSON","region":{"region_id":210004681,"region_type":"AG Grid","region_seq":6,"group":"NONE","conditional_display":null,"group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-hospital-o","name":"KOL_CT_cohort_site_report-","title":"Sites Report","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":null,"data_binding":"{}","export":"CSVDB:ExcelDB","template":"<div class=\"ui  segment\">\r\n    <div id=\"example-3\" class=\"ui two cards\">\r\n            <div class=\"ui equal width grid\" style=\"padding:15px;\">\r\n                <div class=\"ui row\" style=\"align-items:left;\">\r\n                    <div class=\"twenty wide column\" style=\"font-color:rgb(0,0,0);\">\r\n                        <div class=\"twenty wide column\">\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"font-size:20px;\"><span><b>Cohort Id:  </b></span><a id=\"link_to_apex\" href=\"#\" target=\"_blank\" class=\"ui right floated orange circular label\" style=\"font-size:21px;\">{{data.cohort_id}}</a>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Cohort Name: </b></span>{{data.name}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Description: </b></span>{{data.description}}\r\n                        </div>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Note: </b></span>Data are shown between {{data.mindt}} & {{data.maxdt}}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n","column_filter":"N","server_filter":"Y","modal_region":"N","flip_report":"N","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"35","help":"Shows Site Information for this Clinical Trial.","help_detail":null,"region_config":"col=opts.columnDefs.filter(v=>v.field.match(/(^Location_NPI)/));\r\nlet cohort_id = rxds.get_param(\"COHORT_ID\");\r\n\r\ncol.forEach(v=>{\r\n//v.width = 100;\r\nif (col.length > 0) {\r\nv.cellRenderer = (params) => {\r\n\r\nreturn \"<a target='_blank' href=\\\"../FacilityDetails/?COHORT_ID=\"+cohort_id+\"&COHORT_HCO=\"+params.value+\"\\\"> \" + params.value + \"</a>\" ;\r\n\r\n};  \r\n}\r\n});\r\n\r\n\r\nopts.columnDefs.filter(v=>{\r\nif(v.headerName==\"Latitude\" || v.headerName==\"Longitude\" || v.headerName==\"HCO_Latitude\" || v.headerName==\"HCO_Longitude\" ||v.headerName==\"HCP_Latitude\" || v.headerName==\"HCP_Longitude\")\r\n{\r\nv.cellStyle=function(params)\r\n{\r\nreturn{textAlign:'right'};\r\n};\r\n}\r\n});\r\n\r\n\r\nvar id = rxds.get_param(\"COHORT_ID\");\r\n//var reg_title = obj.config.title + \"_\"+ id;\r\n\r\n\r\n\r\n//Replace file name with new name\r\n\r\n\r\n\r\nobj.config.title = obj.config.title + \"_COHORT_\"+ id;\r\nconsole.log(\"obj\",obj)\r\n\r\nlet agRegionId=\"region\"+obj.region.region_id;\r\nopts.onGridReady=function()\r\n{\r\n    window.rxdsRegionId.push(agRegionId);\r\n}"},"dependent_items":["item210002420","item210002449"],"dependent_regions":[],"child_regions":[]},"region210004682":{"control_type":"Map Leaflet","query_id":210007423,"dataset_format":"JSON","region":{"region_id":210004682,"region_type":"Map Leaflet","region_seq":7,"group":"NONE","conditional_display":null,"group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-map","name":"KOL_CT_Investigator_leaf_maplet","title":"Investigator Map","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":null,"region_transform":"let chart_data = db.chart_data_obj ? data[db.chart_data_obj] : data; //if the dataset result is dictionary instead of table or array Object\r\nif(db.map_data)     //if the dataset has data as dictionary instead of table\r\n    chart_data = db.chart_data_obj ? data[db.chart_data_obj][db.map_data] : data[db.map_data];\r\nif(db.map_data === \"none\")\r\n    chart_data =[];\r\n\r\nlet values_arr = chart_data.map(v => v[db.value_field]);\r\nlet sum = values_arr.reduce((s,v)=>s+v,0);\r\nlet min = (values_arr.length)?Math.min(...values_arr):0; \r\nlet max = (values_arr.length)?Math.max(...values_arr):0;\r\nlet data_arr = [];\r\n\r\n// min = min >=0 ? min : 0;\r\n\r\nlet HCP = chart_data.map(v => v[db.HCP_count]);\r\nlet HCP_dist_count = (HCP.length)?Math.min(...HCP):0; \r\n// console.log(HCP_dist_count)\r\n\r\n\r\nif(db.name_field && db.value_field) {\r\n    data_arr = chart_data.map(v => {\r\n        let obj = {...v};\r\n        obj.name =  (v[db.name_field] === \"\" ? \"-\" : v[db.name_field]);\r\n        obj.value=v[db.value_field];\r\n        return obj;\r\n    });\r\n}\r\n\r\nvar a =data_arr.sort(function (a, b) {\r\nreturn a.value - b.value\r\n});\r\nvar min1 = a[0];\r\nvar max1 = a[a.length - 1];\r\nlet minstate = (min1)?(min1.value+\" (\"+ min1.name +\")\"):0;\r\nlet maxstate = (max1)?(max1.value+\" (\"+ max1.name +\")\"):0;\r\n\r\nlet rtn = {data, chart_data, data_arr, sum, max, min, minstate, maxstate,HCP_dist_count};\r\n\r\nif(db.show_markers && db.point_data) {     //to show the pushpins\r\n\r\n//*****Code to convert the data stucture from array to object array as a part of perf. tuning.*****************************/    \r\n    //let point_data = db.chart_data_obj ? data[db.chart_data_obj][db.point_data] : data[db.point_data];\r\n    let point_data_array = db.chart_data_obj ? data[db.chart_data_obj][db.point_data_arr] : data[db.point_data_arr];\r\n    let point_data = [];\r\n    for(v of point_data_array){\r\n        var item={}; \r\n        for (var i=0; i <= data[db.point_data_keys].length; i++){\r\n            item[data[db.point_data_keys][i]]=v[i]\r\n        }\r\n        \r\n        point_data.push(item);\r\n    }\r\n     \r\n    if(db.chart_data_obj)\r\n        data[db.chart_data_obj][db.point_data] = point_data;\r\n    else\r\n        data[db.point_data]= point_data;\r\n//*****************************************************************************************************************************/        \r\n\r\n    let lat_field = db.point_data_lat ? db.point_data_lat : \"Latitude\";\r\n    let long_field = db.point_data_long ? db.point_data_long : \"Longtitude\";\r\n    let sum = 0;\r\n    let min = 0;\r\n    let max = 0;\r\n    \r\n    /*if(db.point_data_y_axis) {\r\n        let values_arr = point_data.map(v => v[db.point_data_y_axis]);\r\n        sum = values_arr.reduce((s,v)=>s+v,0);\r\n        min = Math.min(...values_arr);\r\n        max = Math.max(...values_arr);\r\n        min = min >=0 ? min : 0;\r\n    }*/\r\n    let data_arr = point_data.map(v => { \r\n        //if (db.point_data_y_axis && v[db.point_data_y_axis] > max) max=v[db.point_data_y_axis];\r\n        let obj = {...v};\r\n        let val = v[db.point_data_y_axis];\r\n        obj.name = v[db.point_data_x_axis];\r\n        obj.value = ( db.latlong_field ? [...v[db.latlong_field]] : [v[long_field], v[lat_field]] );\r\n        if(db.point_data_y_axis)    obj.value.push(v[db.point_data_y_axis]);\r\n        if(db.point_data_y_axis)    obj.value.push(v[db.point_data_y_axis]);\r\n        if(val < min) min = val;\r\n        if(val > max) max = val;\r\n        sum += val;\r\n        return obj;\r\n    });\r\n    min = min >=0 ? min : 0;\r\n    rtn.point_data = {point_data, data_arr, sum, max, min, minstate, maxstate,HCP_dist_count};\r\n}\r\nreturn rtn;\r\n\r\n\r\n/*{\r\n  \"start_lat\": 41.850033,\r\n  \"start_lng\": -87.6500523,\r\n  \"start_zoom\": 4,\r\n  \"lat_column\": \"LATITUDE\",\r\n  \"lng_column\": \"LONGITUDE\",\r\n  \"title_column\": \"Account_Name\"\r\n}*/","data_binding":"{\"map_data\":\"map_data\",\"point_data\":\"markers\",\"point_data_arr\":\"markers_array\",\"point_data_keys\":\"keys\",\"name_field\":\"Provider_State\",\"value_field\":\"COUNT\",\"HCP_count\":\"Provider_Count\",\"start_lat\":38.50985839504626,\"start_lng\":-96.59179687500001,\"start_zoom\":4,\"show_markers\":true,\"point_data_lat\":\"Provider_Latitude\",\"point_data_long\":\"Provider_Longitude\",\"point_data_Address\":\"Provider_Address\",\"point_data_City\":\"Provider_City\",\"point_data_y_axis\":\"NPI\",\"point_data_x_axis\":\"Provider_Zip\",\"point_data_pres_name\":\"Provider_Name\",\"point_data_HCO_name\":\"Primary_Facility_Name\",\"point_data_speciality\":\"Provider_Specialization\",\"point_data_Flag\":\"FLAG\",\"point_data_StateCount\":\"State_Count\",\"point_data_State\":\"Provider_State\",\"resource_url\":\"{{vendor}}/echarts/map/USA.json\"}","export":"CSVDB:ExcelDB","template":"<div class=\"ui  segment\">\r\n    <div id=\"example-3\" class=\"ui two cards\">\r\n            <div class=\"ui equal width grid\" style=\"padding:15px;\">\r\n                <div class=\"ui row\" style=\"align-items:left;\">\r\n                    <div class=\"twenty wide column\" style=\"font-color:rgb(0,0,0);\">\r\n                        <div class=\"twenty wide column\">\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"font-size:20px;\"><span><b>Cohort Id:  </b></span><a id=\"link_to_apex\" href=\"#\" target=\"_blank\" class=\"ui right floated orange circular label\" style=\"font-size:21px;\">{{data.cohort_id}}</a>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Cohort Name: </b></span>{{data.name}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Description: </b></span>{{data.description}}\r\n                        </div>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Note: </b></span>Data are shown between {{data.mindt}} & {{data.maxdt}}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n","column_filter":"N","server_filter":"Y","modal_region":"N","flip_report":"N","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"50","help":"Shows Investigator Locations and Investigator Details for the selected Clinical Trial.","help_detail":null,"region_config":"//chart optionns with default values\r\nlet geo_json = JSON.parse(db.resource); //parsingn the geo_json\r\nlet start_lat = db.start_lat ? db.start_lat : 38.50985839504626;\r\nlet start_lng = db.start_lng ? db.start_lng : -96.59179687500001;\r\nlet start_zoom = db.start_zoom ? db.start_zoom : 4;\r\nlet totalCountLabel = \"Total # of Flags\";\r\n// let color_range = db.color_range ? db.color_range : [d3.rgb(\"#73ccf3\"), d3.rgb(\"#009adf\")];\r\nlet color_range = db.color_range ? db.color_range : [d3.rgb(\"#ffbc72\"), d3.rgb(\"#ff8b0c\")];\r\nlet marker_color_range = db.marker_color_range ? db.marker_color_range : [\"#ffbc72\", \"#ff8b0c\"];\r\nlet tile_layer = \"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\";  //default layer\r\nlet layer_attribution = '© <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, Points © 2012 LINZ';\r\nlet layers = [{\r\n    name: \"openStreet\",\r\n    label: \"Open Street\",\r\n    show: true,\r\n    mapUrl: tile_layer,\r\n    param: {\r\n        \"attribution\": layer_attribution\r\n    }\r\n},{\r\n    name: \"Mapbox-light-v9\",\r\n    label: \"Mapbox Light\",\r\n    show: true,\r\n    mapUrl: \"https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw\",\r\n    param: { id: 'mapbox/light-v9', attribution: 'Map data © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, ' +\r\n\t\t\t'Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>' }\r\n},{\r\n    name: \"Mapbox-streets-v11\",\r\n    label: \"Mapbox streets\",\r\n    show: true,\r\n    mapUrl: \"https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw\",\r\n    param: { id: 'mapbox/streets-v11', attribution: 'Map data © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, ' +\r\n\t\t\t'Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>' }\r\n}];\r\nlet baseLayers = {};\r\n\r\n//to adjust the chart initial zoom level correctly for different devices or resolutions - Not Working\r\n//start_zoom = ((start_zoom/4)/100)*obj.chartContainerHeight;\r\nlayers.forEach(v => {   //adding the layers to baseLayers object for the layer switching from layer control panel\r\n    if(v.show)  baseLayers[v.label] = L.tileLayer(v.mapUrl, v.param);\r\n});\r\n\r\n//adding value into the geo_json properties itself\r\n//this is because in leaflet it is easy to access or use the values if they are part of the geojson itself\r\ngeo_json.features.forEach(v => {\r\n    let data_indx = data.data_arr.find(v1 => v1.name == v.properties.name);\r\n    if(data_indx)   v.properties.value = data_indx.value;\r\n});\r\n\r\n//Creating the tiles (map geography type)\r\n//background layer - default: open street tile layer \r\nlet tiles = L.tileLayer(tile_layer, { maxZoom: 18, attribution: layer_attribution });\r\n\r\n//Initializing the map object\r\nobj.map = L.map(obj.map_id, {\r\n    layers: [tiles],\r\n    center: L.latLng(start_lat, start_lng), \r\n    zoom: start_zoom, \r\n    // zoomSnap: 3,\r\n    // zoomDelta: 1,\r\n    // touchZoom: false,\r\n    // wheelPxPerZoomLevel: 150,\r\n    scrollWheelZoom: true,\r\n    gestureHandling: true,  //controls the scroll whell zooming\r\n    fullscreenControl: true, //adding new option on top left to enter to show the map in fullscreen\r\n\tfullscreenControlOptions: { // optional\r\n\t\ttitle:\"Show me the fullscreen !\",\r\n\t\ttitleCancel:\"Exit fullscreen mode\"\r\n\t}\r\n});\r\n\r\n/******************* creating the geojson layer *******************/\r\n// make color scale for the geojson state choropleth\r\nlet color = d3.interpolateHsl(...color_range);  //returns the color based on the passed number\r\nlet colorScale = d3.scaleLinear().domain([0, data.max]); //returns the value between 0 to 1 based on the given min and max values\r\n\r\n//style for each feature in the geojson, will be called seperately for each geojson\r\nfunction style(feature) {\r\n    let fillColor = feature.properties.value ? color(colorScale(feature.properties.value)) : 'grey';\r\n    if(obj.filters.includes(feature.properties.name))\r\n        fillColor = \"#299918\";      //show this color when the area is selected\r\n    return {\r\n        fillColor: fillColor,   //feature / area color\r\n        weight: 1,\r\n        opacity: 1,\r\n        color: 'white',     //border color\r\n        fillOpacity: 0.6\r\n    };\r\n}\r\n\r\n//creating geo Json layer object\r\nlet gj = L.geoJson(geo_json, {style:style})\r\n    .bindPopup(function (layer) {   //binding default small leaflet popup on click\r\n        let value = layer.feature.properties.value ? (\": \" + layer.feature.properties.value) : \"\";\r\n        return layer.feature.properties.name + value;\r\n    })\r\n    .bindTooltip((params) => {  //binding tooltip\r\n        let value = params.feature.properties.value ? (\": \" + params.feature.properties.value) : \"\";\r\n        return params.feature.properties.name + value;\r\n    });\r\n\r\n//functions to execute while clicking on the geoJson areas\r\ngj.on(\"click\", function(e) {\r\n    // console.log(e);\r\n    if(obj.map.clickable) {    //select area if the clickable flag is enabled\r\n        // let value = \"$GJV\" + e.layer.feature.properties.name; //optional if multiple parameters are passed on click event\r\n        let value = e.layer.feature.properties.name;\r\n        \r\n        e.targetElement = \"geoJson\";    //should be passed to identify the click target\r\n        if (data && e.layer.feature.properties.value !== undefined) {\r\n            let region = \"region\" + obj.region.region_id;\r\n            let query_id = obj.query_id;\r\n            let query_data = window.rxds.m.query_tracker[query_id].data;\r\n            //rxds.toggleSelection(value,obj,db,data,\"highlight\",e);\r\n            //gj.resetStyle();    //resetting style (highlight colors) after the click event\r\n        }\r\n    } else {    //binding the semantic ui modal popup with the markers\r\n        if(e.layer.feature.properties.value !== undefined) {\r\n            //updating the content in the semantic ui modal and showing it\r\n            $('.leaflet-marker-modal > .header').html(e.layer.feature.properties.name);\r\n            $('.leaflet-marker-modal > .content').html(\r\n                [\r\n                    '<div class=\"ui items\">',\r\n                        '<div class=\"ui item\">',\r\n                            '<div class=\"content\">',\r\n                                '<div>',\r\n                                    '<b>Count: ' + e.layer.feature.properties.value+'</b',\r\n                                '</div>',\r\n                                '<div class=\"description\">',\r\n                                    '<p>Latitude: ' + e.latlng.lat + '</p>',\r\n                                    '<p>Longitude: ' + e.latlng.lng + '</p>',\r\n                                '</div>',\r\n                            '</div>',\r\n                        '</div>',\r\n                    '</div>'\r\n                ].join(\"\")\r\n            );\r\n            $('.leaflet-marker-modal').modal('show');\r\n        }\r\n    }\r\n});\r\n\r\nobj.map.addLayer(gj);   //adds the geojson layer into the map and map object\r\n/******************* End - creating the geojson layer *******************/\r\n\r\n/* ****************** Adding Markers ************************ */\r\n// Color scale for markers\r\nlet markerColor = d3.interpolateHsl(...marker_color_range);  //returns the color based on the passed number\r\nlet markerColorScale = d3.scaleLinear().domain([data.point_data.min, data.point_data.sum]); //returns the value between 0 to 1 based on the given min and max values\r\n\r\n// creating marker cluster object\r\n//let markers = L.markerClusterGroup();     //without options\r\nlet markers = L.markerClusterGroup({\r\n    zoomToBoundsOnClick: true,  //zoom while clicking on clusters\r\n    iconCreateFunction: function(cluster) {     //custom icon with custom label\r\n        let c = cluster;\r\n\t    c.childMarkers = cluster.getAllChildMarkers();\r\n\t    c.childMarkersData = c.childMarkers.map(v => (v.options.data[db.point_data_y_axis] || 0));\r\n\t    //c.childMarkersData = c.childMarkers.map(v => (v.options.data[db.point_data_records] || 0));\r\n\t    c.childMarkersSum = c.childMarkersData.reduce((s,v) => s+v, 0);\r\n        c.childMarkersCount = cluster.getChildCount();\r\n        c.clusterColor = markerColor(markerColorScale(c.childMarkersSum));\r\n        c.clusterStyle = `background-color: rgb(255, 227, 0)`;//${c.clusterColor}`;\r\n        \r\n        let selected_count = c.childMarkersData.map(v => obj.filters.includes(v)).filter(v => v).length;\r\n        if(selected_count == c.childMarkersData.length) {\r\n            c.clusterStyle = `background-color: #24a630`;\r\n        } else if (selected_count > 0) {\r\n            c.clusterStyle = `background-color: #a6a024`;\r\n        }\r\n        \r\n\t\treturn L.divIcon({ \r\n\t\t    html: '<div title=\"' + '\" style=\"' + c.clusterStyle + '\"><span>' + c.childMarkersCount + '</span></div>',\r\n\t\t    className: 'marker-cluster',\r\n\t\t    iconSize: new L.Point(40,40)\r\n\t\t});\r\n\t}\r\n});\r\n\r\nmarkers.on('clustermouseover', function (a) {   //for POC, can be utilized later\r\n\t// a.layer is actually a cluster\r\n});\r\n\r\n// Functions to run when cluster is clicked\r\nmarkers.on('clusterclick', function (e) {\r\n\t// a.layer is actually a cluster\r\n\r\n\t/* to show bounds / spiderify polygon after enpading the cluster */\r\n\tobj.clusterBounds = e.layer.getBounds();\r\n\tif(obj.spiderify_polygon)   obj.map.removeLayer(obj.spiderify_polygon);\r\n\tobj.spiderify_polygon = L.polygon(e.layer.getConvexHull());\r\n\tobj.map.addLayer(obj.spiderify_polygon);\r\n\t/* end - to show bounds / spiderify polygon after enpading the cluster */\r\n\t\r\n\t//if(obj.map.clickable) {   //uncomment this to disable selection when clicking on cluster by default\r\n\t    // appending $MCV to the value to identify this selected marker cluster values from other clicked values\r\n        // let values = e.layer.childMarkers.map(v => \"$MCV\" + v.options.data[db.point_data_y_axis]);\r\n        \r\n        let values = e.layer.childMarkers.map(v => v.options.data[db.point_data_y_axis]);\r\n        \r\n        /****************************To show Min and Max Count dynamically based on the selected cluster********************************************/\r\n        let state = e.layer.childMarkers.map(v => v.options.data[db.point_data_State]);  \r\n         \r\n        const arrToInstanceCountObj = state.reduce((obj, e) => { \r\n            obj[e] = (obj[e] || 0) + 1; \r\n            return obj; \r\n        }, {}); \r\n        \r\n        let entries = Object.entries(arrToInstanceCountObj); \r\n        let entriesdesc = Object.entries(arrToInstanceCountObj); \r\n        let sortedasc = entries.sort((a, b) => a[1] - b[1]); \r\n        let sorteddesc = entriesdesc.sort((a, b) => b[1] - a[1]);                \r\n        \r\n        //If the Min and max count by state is same then show the min and max count by flag                        \r\n        if(sortedasc[0][0] === sorteddesc[0][0]){\r\n        if(db.point_data_Flag && db.point_data_Flag_Count) { \r\n            data_arr2 = e.layer.childMarkers.map(v => { \r\n                let obj2 = {...v}; \r\n                obj2.name =  (v.options.data[db.point_data_Flag] === \"\" ? \"-\" : v.options.data[db.point_data_Flag]); \r\n                obj2.value=v.options.data[db.point_data_Flag_Count]; \r\n                return obj2; \r\n            }); \r\n        } \r\n         \r\n        let FlagCnt_Sort =data_arr2.sort(function (a, b) { \r\n                        return a.value - b.value \r\n                        });   \r\n        let Min_FlagCnt = FlagCnt_Sort[0]; \r\n        let Max_FlagCnt = FlagCnt_Sort[FlagCnt_Sort.length - 1]; \r\n        let MinState=\"\";\r\n        let MaxState=\"\";\r\n        \r\n        //If the min and max count of flag is same then show only the min and max count without flag names in the brackets.\r\n        if(Min_FlagCnt.value === Max_FlagCnt.value){\r\n            MinState = (Min_FlagCnt)?(Min_FlagCnt.value):0; \r\n            MaxState = (Max_FlagCnt)?(Max_FlagCnt.value):0; \r\n        }\r\n        else {\r\n            MinState = (Min_FlagCnt)?(Min_FlagCnt.value+\" (\"+ Min_FlagCnt.name +\")\"):0; \r\n            MaxState = (Max_FlagCnt)?(Max_FlagCnt.value+\" (\"+ Max_FlagCnt.name +\")\"):0; \r\n        }\r\n        messagebox.Min_State_Count(MinState)  \r\n        messagebox.Max_State_Count(MaxState) \r\n        }  \r\n        else {\r\n        let Min_State_Cluster = sortedasc[0]; \r\n        let Max_State_Cluster = sorteddesc[0];     \r\n        let MinState = (Min_State_Cluster)?(Min_State_Cluster[1]+\" (\"+ Min_State_Cluster[0] +\")\"):0; \r\n        let MaxState = (Max_State_Cluster)?(Max_State_Cluster[1]+\" (\"+ Max_State_Cluster[0] +\")\"):0; \r\n        messagebox.Min_State_Count(MinState) \r\n        messagebox.Max_State_Count(MaxState)    \r\n        }\r\n        /****************************End of Min, Max dynamic count code********************************/\r\n    \r\n        /**********************To show the HCP's distinct count dynamically **************************/\r\n        //let HCPCnt = e.layer.childMarkers.map(v => v.options.data[db.point_data_pres_name]); \r\n        let HCPCnt = values; \r\n        HCPCnt = HCPCnt.filter((c, index) => {\r\n            return HCPCnt.indexOf(c) === index;\r\n        });\r\n        HCPCnt = (HCPCnt.length)\r\n        messagebox.HCP_Count_Details(HCPCnt)\r\n       /***********************************************************************************************/ \r\n        \r\n       /**********************To show the Total # of Flags count dynamically **************************/\r\n        //let HCPCnt = e.layer.childMarkers.map(v => v.options.data[db.point_data_pres_name]); \r\n        let TotCnt = values; \r\n        TotCnt = (TotCnt.length)\r\n        messagebox.Total_Count_Details(TotCnt)\r\n       /***********************************************************************************************/ \r\n        \r\n        e.targetElement = \"markerCluster\";  //should be passed to identify the click target\r\n        \r\n        if (values.length) {\r\n            let region = \"region\" + obj.region.region_id;\r\n            let query_id = obj.query_id;\r\n            let query_data = window.rxds.m.query_tracker[query_id].data;\r\n            rxds.toggleSelection(values,obj,db,data,\"highlight\",e);\r\n            e.layer.childMarkers.forEach(v => {\r\n                v.setIcon(getMarkerIcon(v.options.data.NPI));\r\n            });\r\n        }\r\n\tmarkers.refreshClusters(e.target);  // refreshing clusters (colors) after clicked\r\n});\r\n\r\n// Adding markers into the marker cluster object\r\ndata.point_data.data_arr.forEach( v =>{\r\n    if(v[db.point_data_lat] && v[db.point_data_long]) {\r\n        let title =   `Investigator Name: ${v[db.point_data_pres_name]}<br>  \r\n                       NPI ID: ${v[db.point_data_y_axis]}<br>\r\n                       Specialty:${v[db.point_data_speciality]}<br> \r\n                       Primary Facility Name:${v[db.point_data_HCO_name]}<br> \r\n                       Address:${v[db.point_data_Address]}<br>\r\n                       City:${v[db.point_data_City]}<br>\r\n                       Zip Code: ${v[db.point_data_x_axis]}`;\r\n        let icon = getMarkerIcon(v[db.point_data_y_axis]);\r\n    \tlet marker = L.marker(\r\n    \t    new L.LatLng(v[db.point_data_lat], v[db.point_data_long]),\r\n    \t    {\r\n    \t        icon: icon,\r\n    \t        data: v     // data is not a supported option but we can use to pass information - leaflet will ignore\r\n            }\r\n        );\r\n    \tmarker\r\n    \t//.bindPopup(title);    // default\r\n    \t.bindPopup(function (layer) {   // binding default small leaflet popup\r\n            return title;\r\n        })\r\n        .bindTooltip((params) => {  //binding tooltip\r\n            return title;\r\n        });\r\n    \tmarkers.addLayer(marker);   //adding marker to marker cluster object\r\n    }\r\n});\r\nobj.map.addLayer(markers);  //adding marker clusters to the map\r\n\r\nmarkers.on(\"click\", function(e) {   \r\n    if(obj.map.clickable) {     // select the marker / value if the clickable flag is enabled\r\n        //appending $MCV to the value to identify this selected marker values from the geoJson values\r\n        //let value = \"$MCV\" + e.layer.options.data.name; \r\n        \r\n        let value = e.layer.options.data[db.point_data_y_axis]; \r\n        e.targetElement = \"marker\";     //should be passed to identify the click target\r\n        \r\n        if (value) {\r\n            let region = \"region\" + obj.region.region_id;\r\n            let query_id = obj.query_id;\r\n            let query_data = window.rxds.m.query_tracker[query_id].data;\r\n            // if(terr_name !== \"name\")\r\n            //         params.secondary_filters = true;\r\n            rxds.toggleSelection(value,obj,db,data,\"highlight\",e);\r\n            e.layer.setIcon(getMarkerIcon(value));\r\n        }\r\n    } else {    //show semantic ui popup to the markers\r\n        $('.leaflet-marker-modal > .header').html(db.point_data_y_axis + \": \" + e.layer.options.data[db.point_data_y_axis]);\r\n        //  again assume we are not using templates\r\n        $('.leaflet-marker-modal > .content').html(\r\n            [\r\n                '<div class=\"ui items\">',\r\n                    '<div class=\"ui item\">',\r\n                        '<div class=\"content\">',\r\n                            '<div>',\r\n                               '<b>'+ db.point_data_x_axis + \": \" + e.layer.options.data[db.point_data_x_axis]+'</b>',\r\n                            '</div>',\r\n                            '<div class=\"description\">',\r\n                                '<p> Investigator Name: ' + e.layer.options.data[db.point_data_pres_name] + '</p>',\r\n                                '<p>NPI ID: ' + e.layer.options.data[db.point_data_y_axis] + '</p>',\r\n                                '<p>Specialty: ' + e.layer.options.data[db.point_data_speciality] + '</p>', \r\n                                '<p>Primary Facility Name: ' + e.layer.options.data[db.point_data_HCO_name] + '</p>',\r\n                                '<p>Address: ' + e.layer.options.data[db.point_data_Address] + '</p>',\r\n                                '<p>City  : '+ e.layer.options.data[db.point_data_City]+'</p>',\r\n                                '<p>Latitude: ' + e.layer.options.data[db.point_data_lat] + '</p>',\r\n                                '<p>Longitude: ' + e.layer.options.data[db.point_data_long] + '</p>',\r\n                            '</div>',\r\n                        '</div>',\r\n                    '</div>',\r\n                '</div>'\r\n            ].join(\"\")\r\n        );\r\n        $('.leaflet-marker-modal').modal('show');\r\n    }\r\n});\r\n\r\n/* ****************** End - Adding Markers ************************ */\r\n\r\n/********* Adding Message Box (leaflet control) on bottom-right section *********/\r\n//ref: https://leafletjs.com/examples/choropleth/\r\n//https://leafletjs.com/reference-1.7.1.html#control\r\nlet messagebox = L.control({position: 'bottomright'});\r\n\r\n//to show custom content in the message box\r\nmessagebox.onAdd = function(map) {  //executed when the message box is added for the first time in map\r\n    let container = createDiv('', 'info message-box');\r\n    let markers_in_screen = createDiv(`<strong style = \"color:orange\">Markers</strong>: <span class=\"data\">-</span>`, 'message no-of-markers-in-screen');\r\n    let HCPCount = createDiv(`<strong style = \"color:orange\">Investigator Count</strong>: <span class=\"HCPdata\">${data.HCP_dist_count}</span>`, 'message no-of-markers-in-screen');\r\n    let MinState = createDiv(`<strong style = \"color:orange\">Min</strong>: <span class=\"Mindata\">${data.minstate}</span>`, 'message no-of-markers-in-screen');\r\n    let MaxState = createDiv(`<strong style = \"color:orange\">Max</strong>: <span class=\"Maxdata\">${data.maxstate}</span>`, 'message no-of-markers-in-screen');\r\n    let TotalCount = createDiv(`<strong style = \"color:orange\">Total # of Flags</strong>: <span class=\"Totaldata\">${data.point_data.data_arr.length.format()}</span>`, 'message no-of-markers-in-screen');\r\n    let details = [TotalCount,MinState,MaxState, markers_in_screen,HCPCount];\r\n    details.forEach(v => container.appendChild(v) );    //appending the messages into the box container\r\n    this._container = container;\r\n    return this._container;\r\n};\r\n\r\n// to update message box content dynamically based on some map events\r\nmessagebox.update_markers_details = function() {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .data\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    features.forEach(function(ftr) {\r\n       if(ftr.getChildCount) {      // if getChildCount is available then this is a cluster\r\n         count = count + ftr.getChildCount();\r\n       } else {     // otherwise a single marker so count is 1\r\n         count = count + 1;\r\n       }\r\n    });\r\n    \r\n    message =total>0? `<strong> ${count.format()} </strong> of ${total.format()} (${d3.format(',.1%')(count/total)})`:`<strong> ${count.format()} </strong> of ${total.format()} (${('0.0%')})`;\r\n    marker_data_elem.html(message);\r\n};\r\n\r\nmessagebox.addTo(obj.map);\r\n\r\n/********* Ennd - Adding Message Box (leaflet control) on bottom-right section *********/\r\n\r\n/*****************************function to work min and max dynamically when the cluster is clicked********/\r\n// to update message box content dynamically based on some map events\r\nmessagebox.Min_State_Count = function(Min) {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .Mindata\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    message =total>0? `<strong> ${Min} </strong>`:`<strong> ${Min} </strong>`;\r\n    marker_data_elem.html(message);\r\n};\r\nmessagebox.addTo(obj.map);\r\n\r\n// to update message box content dynamically based on some map events\r\nmessagebox.Max_State_Count = function(Max) {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .Maxdata\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    message =total>0? `<strong> ${Max} </strong>`:`<strong> ${Max} </strong>`;\r\n    marker_data_elem.html(message);\r\n};\r\nmessagebox.addTo(obj.map);\r\n/*******************************End of Min, Max code dynamically***************************************************/\r\n\r\n// to update message box content dynamically based on some map events\r\nmessagebox.HCP_Count_Details = function(ftt) {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .HCPdata\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    message =total>0? `<strong> ${ftt} </strong>`:`<strong> ${ftt} </strong>`;\r\n    marker_data_elem.html(message);\r\n};\r\nmessagebox.addTo(obj.map);\r\n/********* Ennd - Adding Message Box (leaflet control) on bottom-right section *********/\r\n\r\n// to update message box content dynamically based on some map events\r\nmessagebox.Total_Count_Details = function(tot) {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .Totaldata\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    message =total>0? `<strong> ${tot} </strong>`:`<strong> ${tot} </strong>`;\r\n    marker_data_elem.html(message);\r\n};\r\nmessagebox.addTo(obj.map);\r\n/********* Ennd - Adding Message Box (leaflet control) on bottom-right section *********/\r\n\r\n/*************** static color legend ***************/\r\nvar legend = L.control({position: 'bottomleft'});\r\n\r\nlegend.onAdd = function (map) {\r\n    var div = L.DomUtil.create('div', 'info legend');\r\n    // <i style=\"background: ${color(0.75)}\"></i><br>\r\n         div.innerHTML = `Max <br>\r\n            <i style=\"background: ${color(1)}\"></i><br>\r\n            <i style=\"background: ${color(0.5)}\"></i><br>\r\n            <i style=\"background: ${color(0.25)}\"></i><br>\r\n            <i style=\"background: ${color(0)}\"></i><br>\r\n            Min\r\n         `;\r\n    return div;\r\n};\r\nlegend.addTo(obj.map);\r\n/*************** Ennd - color legend ***************/\r\n\r\n/************* Adding Zoom reset option ****************/\r\n// Referennce:\r\n// https://github.com/CliffCloud/Leaflet.EasyButton\r\n// http://danielmontague.com/projects/easyButton.js/v2/examples/\r\n// L.easyButton('<i class=\"redo icon\"></i>', function(){\r\n//     obj.map.setView(obj.map.options.center, obj.map.options.zoom);\r\n// }).addTo(obj.map);\r\n\r\nvar stateChangingButton = L.easyButton({\r\n    states: [{\r\n        stateName: 'reset',        // name the state\r\n        icon:      '<i class=\"undo icon\"></i>',               // and define its properties\r\n        title:     'Reset Zoom',      // like its title\r\n        onClick: function(btn, map) {       // and its callback\r\n            obj.map.setView(obj.map.options.center, obj.map.options.zoom);\r\n        }\r\n    }]\r\n});\r\n\r\nstateChangingButton.addTo(obj.map);\r\n/************* End - Adding Zoom reset option ****************/\r\n\r\n// update count in messagebox on move/zoom events\r\nobj.map.on(\"moveend\", function() {  //actions to do when the map is dragged or zoomed\r\n    messagebox.update_markers_details();\r\n});\r\n\r\n// update count in messagebox after aimation events\r\nmarkers.on(\"animationend\", function(e) {    //actions to do when the clusters / markers are updated / repositioned\r\n    messagebox.update_markers_details();\r\n});\r\n\r\n// update count in messagebox after map is rendered - one time function\r\nobj.map.whenReady(function(e) {    //actions to do when the map is rendered\r\n    messagebox.update_markers_details();\r\n});\r\n\r\n/* Add Control Scale */\r\n//https://leafletjs.com/reference-1.7.1.html#control-scale\r\n// let controlScale = L.control.scale();\r\n// controlScale.addTo(obj.map);\r\n/* End - Add Control Scale */\r\n\r\n/********************* Adding layer control on topright *********************/\r\n//https://leafletjs.com/reference-1.7.1.html#control-layers\r\nlet overlayMaps = { \"GeoJSON\": gj , \"Markers & Clusters\": markers};\r\nL.control.layers(baseLayers, overlayMaps/*, {collapsed: false}*/).addTo(obj.map);\r\n/********************* End - Adding layer control on topright *********************/\r\n\r\n/*********** Adding option to change the visibility of control boxes visibility ************/\r\n//controlling info box visibility\r\naddCheckBoxToOverlay(\"message-box\", \"Info Box\", \"bottomright\");\r\n//controlling zoom box visibility\r\naddCheckBoxToOverlay(\"zoom-box\", \"Zoom Box\", \"topleft\");\r\n//controlling scale visibility\r\n// addCheckBoxToOverlay(\"scalex\", \"Scale\", \"bottomleft\");\r\n//controlling bottom left section visibility\r\naddCheckBoxToOverlay(\"legends\", \"Color Map\", \"bottomleft\");\r\n//controlling click and popup actions\r\naddCheckBoxToOverlay(\"click-event\", \"Enable Click\");\r\n/*********** End - Adding option to change the visibility of control boxes visibility ************/\r\n\r\n/************** Adding save map option *****************/\r\nvar printer = L.easyPrint({\r\n    title: 'Save Map',\r\n\tposition: 'topleft',\r\n  \ttileLayer: tiles,\r\n  \tsizeModes: ['Current', 'A4Landscape', 'A4Portrait'],\r\n  \tfilename: obj.config.title,\r\n  \texportOnly: true,\r\n  \thideControlContainer: false\r\n}).addTo(obj.map);\r\n/************** End - Adding save map option *****************/\r\n\r\n//executed when the map object initialize - like a constructor\r\nL.Map.addInitHook(function () {     //For POC - Can be utilized later\r\n    //nothing for now\r\n});\r\n\r\n//Actions to do after Map loaded\r\nobj.map.on('load', function() {     //For POC - Can be utilized later\r\n    //nothing for now\r\n});\r\n\r\n/********************* Functions **************************/\r\n//Returns marker icon based on the value\r\nfunction getMarkerIcon(value) {\r\n    let color = \"#ff8b0c\";\r\n    if(value != undefined && obj.filters.includes(value))\r\n        color = \"#ff8b0c\";\r\n    let icon = L.divIcon({\r\n        html: `<i style=\"color: ${color}; font-size:35px; text-shadow: 3px -1px 5px black;\" class=\"map marker alternate icon\"></i>`,\r\n        iconSize: [20, 20],\r\n        className: 'myDivIcon'\r\n    });\r\n    return icon;\r\n}//getMarkerIcon\r\n\r\n//returns div node with class, style and inner html\r\nfunction createDiv(html, className = \"\", style = {}, attr = {}) {\r\n    let div = L.DomUtil.create('div', className);\r\n    div.innerHTML = html;\r\n    Object.keys(style).forEach(v => {\r\n        div.style[v] = style[v];\r\n    });\r\n    Object.keys(attr).forEach(v => {\r\n        div.setAttribute([v],attr[v]);\r\n    });\r\n    return div;\r\n}//createDiv\r\n\r\n//controlling control boxes visibility\r\nfunction addCheckBoxToOverlay(controlBox, label, position) {\r\n    if(controlBox == \"click-event\") {\r\n        let box = L.DomUtil.create('label', `${controlBox}-toggle`);\r\n        let div = createDiv(`<input type=\"checkbox\" class=\"leaflet-control-layers-selector ${controlBox}-action-control\"><span> ${label} </span>`);\r\n        box.appendChild(div);\r\n        $(box).on(\"change\", function(){\r\n            if(this.querySelector(\"input\").checked)  {\r\n                obj.map.clickable = true;\r\n                obj.opts.markers.options.zoomToBoundsOnClick = false;\r\n            }\r\n            else {\r\n                obj.map.clickable = false;\r\n                obj.opts.markers.options.zoomToBoundsOnClick = true;\r\n            }\r\n        });\r\n        $(obj.map._controlCorners.topright).find(\".leaflet-control-layers-overlays\").append(box);\r\n    } else {\r\n        let box = L.DomUtil.create('label', `${controlBox}-toggle`);\r\n        let div = createDiv(`<input type=\"checkbox\" class=\"leaflet-control-layers-selector ${controlBox}-visibility-control\" checked=\"checked\"><span> ${label} </span>`);\r\n        box.appendChild(div);\r\n        $(box).on(\"change\", function(){\r\n            $(obj.map._controlCorners[position]).toggle();\r\n        });\r\n        $(obj.map._controlCorners.topright).find(\".leaflet-control-layers-overlays\").append(box);\r\n    }\r\n}//addCheckBoxToOverlay\r\n\r\n// add a counter function adapated from \r\n// https://stackoverflow.com/questions/22081680/get-a-list-of-markers-layers-within-current-map-bounds-in-leaflet\r\nfunction getFeaturesInView() {\r\n  let features = [];\r\n  obj.map.eachLayer( function(layer) {\r\n    if(layer instanceof L.Marker) {\r\n      if(obj.map.getBounds().contains(layer.getLatLng())) {\r\n        features.push(layer);\r\n      }\r\n    }\r\n  });\r\n  return features;\r\n}\r\n/********************* End - Functions **************************/\r\n\r\nobj.opts.totalCountLabel = totalCountLabel;\r\nobj.opts.start_lat = start_lat;\r\nobj.opts.start_lng = start_lng;\r\nobj.opts.start_zoom = start_zoom;\r\nobj.opts.color_range = color_range;\r\nobj.opts.marker_color_range = marker_color_range;\r\nobj.opts.geo_json = geo_json;\r\nobj.opts.layers = layers;\r\nobj.opts.baseLayers = baseLayers;\r\nobj.opts.tiles = tiles;\r\nobj.opts.color = color;\r\nobj.opts.colorScale = colorScale;\r\nobj.opts.style = style;\r\nobj.opts.markerColor = markerColor;\r\nobj.opts.markerColorScale = markerColorScale;\r\n\r\n\r\nobj.opts.gj = gj;\r\nobj.opts.overlayMaps = overlayMaps;\r\nobj.opts.markers = markers;\r\nobj.opts.messagebox = messagebox;\r\nobj.opts.legend = legend;\r\nobj.opts.stateChangingButton = stateChangingButton;\r\nobj.opts.printer = printer;\r\n\r\nobj.opts.getMarkerIcon = getMarkerIcon;\r\nobj.opts.createDiv = createDiv;\r\nobj.opts.addCheckBoxToOverlay = addCheckBoxToOverlay;\r\nobj.opts.getFeaturesInView = getFeaturesInView;"},"dependent_items":["item210002420","item210002449"],"dependent_regions":[],"child_regions":[]},"region210004683":{"control_type":"Map Leaflet","query_id":210007422,"dataset_format":"JSON","region":{"region_id":210004683,"region_type":"Map Leaflet","region_seq":8,"group":"NONE","conditional_display":null,"group_count":"0"},"auth_roles":"ALL","config":{"icon":"fa-map","name":"KOL_CT_clinical_trail_site_leaf_maplet","title":"Site Map","cols":"sixteen","equal_width":"N","form_size":null,"inverted":"N","region_style":null,"region_transform":"let chart_data = db.chart_data_obj ? data[db.chart_data_obj] : data; //if the dataset result is dictionary instead of table or array Object\r\nif(db.map_data)     //if the dataset has data as dictionary instead of table\r\n    chart_data = db.chart_data_obj ? data[db.chart_data_obj][db.map_data] : data[db.map_data];\r\nif(db.map_data === \"none\")\r\n    chart_data =[];\r\n\r\nlet values_arr = chart_data.map(v => v[db.value_field]);\r\nlet sum = values_arr.reduce((s,v)=>s+v,0);\r\nlet min = (values_arr.length)?Math.min(...values_arr):0; \r\nlet max = (values_arr.length)?Math.max(...values_arr):0;\r\nlet data_arr = [];\r\n\r\n// min = min >=0 ? min : 0;\r\n\r\nlet HCP = chart_data.map(v => v[db.HCP_count]);\r\nlet HCP_dist_count = (HCP.length)?Math.min(...HCP):0; \r\n// console.log(HCP_dist_count)\r\n\r\n\r\nif(db.name_field && db.value_field) {\r\n    data_arr = chart_data.map(v => {\r\n        let obj = {...v};\r\n        obj.name =  (v[db.name_field] === \"\" ? \"-\" : v[db.name_field]);\r\n        obj.value=v[db.value_field];\r\n        return obj;\r\n    });\r\n}\r\n\r\nvar a =data_arr.sort(function (a, b) {\r\nreturn a.value - b.value\r\n});\r\nvar min1 = a[0];\r\nvar max1 = a[a.length - 1];\r\nlet minstate = (min1)?(min1.value+\" (\"+ min1.name +\")\"):0;\r\nlet maxstate = (max1)?(max1.value+\" (\"+ max1.name +\")\"):0;\r\n\r\nlet rtn = {data, chart_data, data_arr, sum, max, min, minstate, maxstate,HCP_dist_count};\r\n\r\nif(db.show_markers && db.point_data) {     //to show the pushpins\r\n\r\n//*****Code to convert the data stucture from array to object array as a part of perf. tuning.*****************************/    \r\n    //let point_data = db.chart_data_obj ? data[db.chart_data_obj][db.point_data] : data[db.point_data];\r\n    let point_data_array = db.chart_data_obj ? data[db.chart_data_obj][db.point_data_arr] : data[db.point_data_arr];\r\n    let point_data = [];\r\n    for(v of point_data_array){\r\n        var item={}; \r\n        for (var i=0; i <= data[db.point_data_keys].length; i++){\r\n            item[data[db.point_data_keys][i]]=v[i]\r\n        }\r\n        \r\n        point_data.push(item);\r\n    }\r\n     \r\n    if(db.chart_data_obj)\r\n        data[db.chart_data_obj][db.point_data] = point_data;\r\n    else\r\n        data[db.point_data]= point_data;\r\n//*****************************************************************************************************************************/        \r\n\r\n    let lat_field = db.point_data_lat ? db.point_data_lat : \"Latitude\";\r\n    let long_field = db.point_data_long ? db.point_data_long : \"Longtitude\";\r\n    let sum = 0;\r\n    let min = 0;\r\n    let max = 0;\r\n    \r\n    /*if(db.point_data_y_axis) {\r\n        let values_arr = point_data.map(v => v[db.point_data_y_axis]);\r\n        sum = values_arr.reduce((s,v)=>s+v,0);\r\n        min = Math.min(...values_arr);\r\n        max = Math.max(...values_arr);\r\n        min = min >=0 ? min : 0;\r\n    }*/\r\n    let data_arr = point_data.map(v => { \r\n        //if (db.point_data_y_axis && v[db.point_data_y_axis] > max) max=v[db.point_data_y_axis];\r\n        let obj = {...v};\r\n        let val = v[db.point_data_y_axis];\r\n        obj.name = v[db.point_data_x_axis];\r\n        obj.value = ( db.latlong_field ? [...v[db.latlong_field]] : [v[long_field], v[lat_field]] );\r\n        if(db.point_data_y_axis)    obj.value.push(v[db.point_data_y_axis]);\r\n        if(db.point_data_y_axis)    obj.value.push(v[db.point_data_y_axis]);\r\n        if(val < min) min = val;\r\n        if(val > max) max = val;\r\n        sum += val;\r\n        return obj;\r\n    });\r\n    min = min >=0 ? min : 0;\r\n    rtn.point_data = {point_data, data_arr, sum, max, min, minstate, maxstate,HCP_dist_count};\r\n}\r\nreturn rtn;\r\n\r\n\r\n/*{\r\n  \"start_lat\": 41.850033,\r\n  \"start_lng\": -87.6500523,\r\n  \"start_zoom\": 4,\r\n  \"lat_column\": \"LATITUDE\",\r\n  \"lng_column\": \"LONGITUDE\",\r\n  \"title_column\": \"Account_Name\"\r\n}*/","data_binding":"{\"map_data\":\"map_data\",\"point_data\":\"markers\",\"point_data_arr\":\"markers_array\",\"point_data_keys\":\"keys\",\"name_field\":\"State\"\r\n,\"value_field\":\"COUNT\",\"HCP_count\":\"HCO_Count\",\"start_lat\":38.50985839504626,\"start_lng\":-96.59179687500001,\"start_zoom\":4,\r\n\"show_markers\":true,\"point_data_lat\":\"Facility_Latitude\",\"point_data_long\":\"Facility_Longitude\",\"point_data_y_axis\":\"Location_NPI\",\r\n\"point_data_x_axis\":\"Facility_Zip\",\"point_data_pres_name\":\"Facility_Name\",\"point_data_address\":\"Address\",\"point_data_city\":\"City\",\r\n\"point_data_Flag\":\"FLAG\",\"point_data_speciality\":\"Facility_Specalization\",\"point_data_StateCount\":\"State_Count\",\"point_data_State\":\"State\",\"point_data_Site_Name\":\"Site_Name\",\"resource_url\":\"{{vendor}}/echarts/map/USA.json\"}","export":"CSVDB:ExcelDB","template":"<div class=\"ui  segment\">\r\n    <div id=\"example-3\" class=\"ui two cards\">\r\n            <div class=\"ui equal width grid\" style=\"padding:15px;\">\r\n                <div class=\"ui row\" style=\"align-items:left;\">\r\n                    <div class=\"twenty wide column\" style=\"font-color:rgb(0,0,0);\">\r\n                        <div class=\"twenty wide column\">\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"font-size:20px;\"><span><b>Cohort Id:  </b></span><a id=\"link_to_apex\" href=\"#\" target=\"_blank\" class=\"ui right floated orange circular label\" style=\"font-size:21px;\">{{data.cohort_id}}</a>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Cohort Name: </b></span>{{data.name}}\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\" style=\"text-transform: capitalize\"><span><b>Description: </b></span>{{data.description}}\r\n                        </div>\r\n                        </div>\r\n                        </div>\r\n                        <div class=\"ui center aligned column\">\r\n                        <div class=\"label\"><span><b>Note: </b></span>Data are shown between {{data.mindt}} & {{data.maxdt}}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n","column_filter":"N","server_filter":"Y","modal_region":"N","flip_report":"N","annotate":"N","limit_rows":"1000","include_in_ppt":"N","aggrid_options":null,"height":"50","help":"Shows Site locations and its details for the selected Clinical Trial.","help_detail":null,"region_config":"//chart optionns with default values\r\nlet geo_json = JSON.parse(db.resource); //parsingn the geo_json\r\nlet start_lat = db.start_lat ? db.start_lat : 38.50985839504626;\r\nlet start_lng = db.start_lng ? db.start_lng : -96.59179687500001;\r\nlet start_zoom = db.start_zoom ? db.start_zoom : 4;\r\nlet totalCountLabel = \"Total # of Flags\";\r\n// let color_range = db.color_range ? db.color_range : [d3.rgb(\"#73ccf3\"), d3.rgb(\"#009adf\")];\r\nlet color_range = db.color_range ? db.color_range : [d3.rgb(\"#ffbc72\"), d3.rgb(\"#ff8b0c\")];\r\nlet marker_color_range = db.marker_color_range ? db.marker_color_range : [\"#ffbc72\", \"#ff8b0c\"];\r\nlet tile_layer = \"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\";  //default layer\r\nlet layer_attribution = '© <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, Points © 2012 LINZ';\r\nlet layers = [{\r\n    name: \"openStreet\",\r\n    label: \"Open Street\",\r\n    show: true,\r\n    mapUrl: tile_layer,\r\n    param: {\r\n        \"attribution\": layer_attribution\r\n    }\r\n},{\r\n    name: \"Mapbox-light-v9\",\r\n    label: \"Mapbox Light\",\r\n    show: true,\r\n    mapUrl: \"https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw\",\r\n    param: { id: 'mapbox/light-v9', attribution: 'Map data © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, ' +\r\n\t\t\t'Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>' }\r\n},{\r\n    name: \"Mapbox-streets-v11\",\r\n    label: \"Mapbox streets\",\r\n    show: true,\r\n    mapUrl: \"https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw\",\r\n    param: { id: 'mapbox/streets-v11', attribution: 'Map data © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, ' +\r\n\t\t\t'Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>' }\r\n}];\r\nlet baseLayers = {};\r\n\r\n//to adjust the chart initial zoom level correctly for different devices or resolutions - Not Working\r\n//start_zoom = ((start_zoom/4)/100)*obj.chartContainerHeight;\r\nlayers.forEach(v => {   //adding the layers to baseLayers object for the layer switching from layer control panel\r\n    if(v.show)  baseLayers[v.label] = L.tileLayer(v.mapUrl, v.param);\r\n});\r\n\r\n//adding value into the geo_json properties itself\r\n//this is because in leaflet it is easy to access or use the values if they are part of the geojson itself\r\ngeo_json.features.forEach(v => {\r\n    let data_indx = data.data_arr.find(v1 => v1.name == v.properties.name);\r\n    if(data_indx)   v.properties.value = data_indx.value;\r\n});\r\n\r\n//Creating the tiles (map geography type)\r\n//background layer - default: open street tile layer \r\nlet tiles = L.tileLayer(tile_layer, { maxZoom: 18, attribution: layer_attribution });\r\n\r\n//Initializing the map object\r\nobj.map = L.map(obj.map_id, {\r\n    layers: [tiles],\r\n    center: L.latLng(start_lat, start_lng), \r\n    zoom: start_zoom, \r\n    // zoomSnap: 3,\r\n    // zoomDelta: 1,\r\n    // touchZoom: false,\r\n    // wheelPxPerZoomLevel: 150,\r\n    scrollWheelZoom: true,\r\n    gestureHandling: true,  //controls the scroll whell zooming\r\n    fullscreenControl: true, //adding new option on top left to enter to show the map in fullscreen\r\n\tfullscreenControlOptions: { // optional\r\n\t\ttitle:\"Show me the fullscreen !\",\r\n\t\ttitleCancel:\"Exit fullscreen mode\"\r\n\t}\r\n});\r\n\r\n/******************* creating the geojson layer *******************/\r\n// make color scale for the geojson state choropleth\r\nlet color = d3.interpolateHsl(...color_range);  //returns the color based on the passed number\r\nlet colorScale = d3.scaleLinear().domain([0, data.max]); //returns the value between 0 to 1 based on the given min and max values\r\n\r\n//style for each feature in the geojson, will be called seperately for each geojson\r\nfunction style(feature) {\r\n    let fillColor = feature.properties.value ? color(colorScale(feature.properties.value)) : 'grey';\r\n    if(obj.filters.includes(feature.properties.name))\r\n        fillColor = \"#ff8b0c\";      //show this color when the area is selected\r\n    return {\r\n        fillColor: fillColor,   //feature / area color\r\n        weight: 1,\r\n        opacity: 1,\r\n        color: 'white',     //border color\r\n        fillOpacity: 0.6\r\n    };\r\n}\r\n\r\n//creating geo Json layer object\r\nlet gj = L.geoJson(geo_json, {style:style})\r\n    .bindPopup(function (layer) {   //binding default small leaflet popup on click\r\n        let value = layer.feature.properties.value ? (\": \" + layer.feature.properties.value) : \"\";\r\n        return layer.feature.properties.name + value;\r\n    })\r\n    .bindTooltip((params) => {  //binding tooltip\r\n        let value = params.feature.properties.value ? (\": \" + params.feature.properties.value) : \"\";\r\n        return params.feature.properties.name + value;\r\n    });\r\n\r\n//functions to execute while clicking on the geoJson areas\r\ngj.on(\"click\", function(e) {\r\n    // console.log(e);\r\n    if(obj.map.clickable) {    //select area if the clickable flag is enabled\r\n        // let value = \"$GJV\" + e.layer.feature.properties.name; //optional if multiple parameters are passed on click event\r\n        let value = e.layer.feature.properties.name;\r\n        \r\n        e.targetElement = \"geoJson\";    //should be passed to identify the click target\r\n        if (data && e.layer.feature.properties.value !== undefined) {\r\n            let region = \"region\" + obj.region.region_id;\r\n            let query_id = obj.query_id;\r\n            let query_data = window.rxds.m.query_tracker[query_id].data;\r\n            //rxds.toggleSelection(value,obj,db,data,\"highlight\",e);\r\n            //gj.resetStyle();    //resetting style (highlight colors) after the click event\r\n        }\r\n    } else {    //binding the semantic ui modal popup with the markers\r\n        if(e.layer.feature.properties.value !== undefined) {\r\n            //updating the content in the semantic ui modal and showing it\r\n            $('.leaflet-marker-modal > .header').html(e.layer.feature.properties.name);\r\n            $('.leaflet-marker-modal > .content').html(\r\n                [\r\n                    '<div class=\"ui items\">',\r\n                        '<div class=\"ui item\">',\r\n                            '<div class=\"content\">',\r\n                                '<div>',\r\n                                    '<b>Count: ' + e.layer.feature.properties.value+'</b',\r\n                                '</div>',\r\n                                '<div class=\"description\">',\r\n                                    '<p>Latitude: ' + e.latlng.lat + '</p>',\r\n                                    '<p>Longitude: ' + e.latlng.lng + '</p>',\r\n                                '</div>',\r\n                            '</div>',\r\n                        '</div>',\r\n                    '</div>'\r\n                ].join(\"\")\r\n            );\r\n            $('.leaflet-marker-modal').modal('show');\r\n        }\r\n    }\r\n});\r\n\r\nobj.map.addLayer(gj);   //adds the geojson layer into the map and map object\r\n/******************* End - creating the geojson layer *******************/\r\n\r\n/* ****************** Adding Markers ************************ */\r\n// Color scale for markers\r\nlet markerColor = d3.interpolateHsl(...marker_color_range);  //returns the color based on the passed number\r\nlet markerColorScale = d3.scaleLinear().domain([data.point_data.min, data.point_data.sum]); //returns the value between 0 to 1 based on the given min and max values\r\n\r\n// creating marker cluster object\r\n//let markers = L.markerClusterGroup();     //without options\r\nlet markers = L.markerClusterGroup({\r\n    zoomToBoundsOnClick: true,  //zoom while clicking on clusters\r\n    iconCreateFunction: function(cluster) {     //custom icon with custom label\r\n        let c = cluster;\r\n\t    c.childMarkers = cluster.getAllChildMarkers();\r\n\t    c.childMarkersData = c.childMarkers.map(v => (v.options.data[db.point_data_y_axis] || 0));\r\n\t    //c.childMarkersData = c.childMarkers.map(v => (v.options.data[db.point_data_records] || 0));\r\n\t    c.childMarkersSum = c.childMarkersData.reduce((s,v) => s+v, 0);\r\n        c.childMarkersCount = cluster.getChildCount();\r\n        c.clusterColor = markerColor(markerColorScale(c.childMarkersSum));\r\n        c.clusterStyle = `background-color: rgb(255, 227, 0)`;//${c.clusterColor}`;\r\n        \r\n        let selected_count = c.childMarkersData.map(v => obj.filters.includes(v)).filter(v => v).length;\r\n        if(selected_count == c.childMarkersData.length) {\r\n            c.clusterStyle = `background-color: #ff8b0c`;\r\n        } else if (selected_count > 0) {\r\n            c.clusterStyle = `background-color: #ff8b0c`;\r\n        }\r\n        \r\n\t\treturn L.divIcon({ \r\n\t\t    html: '<div title=\"' + '\" style=\"' + c.clusterStyle + '\"><span>' + c.childMarkersCount + '</span></div>',\r\n\t\t    className: 'marker-cluster',\r\n\t\t    iconSize: new L.Point(40,40)\r\n\t\t});\r\n\t}\r\n});\r\n\r\nmarkers.on('clustermouseover', function (a) {   //for POC, can be utilized later\r\n\t// a.layer is actually a cluster\r\n});\r\n\r\n// Functions to run when cluster is clicked\r\nmarkers.on('clusterclick', function (e) {\r\n\t// a.layer is actually a cluster\r\n\r\n\t/* to show bounds / spiderify polygon after enpading the cluster */\r\n\tobj.clusterBounds = e.layer.getBounds();\r\n\tif(obj.spiderify_polygon)   obj.map.removeLayer(obj.spiderify_polygon);\r\n\tobj.spiderify_polygon = L.polygon(e.layer.getConvexHull());\r\n\tobj.map.addLayer(obj.spiderify_polygon);\r\n\t/* end - to show bounds / spiderify polygon after enpading the cluster */\r\n\t\r\n\t//if(obj.map.clickable) {   //uncomment this to disable selection when clicking on cluster by default\r\n\t    // appending $MCV to the value to identify this selected marker cluster values from other clicked values\r\n        // let values = e.layer.childMarkers.map(v => \"$MCV\" + v.options.data[db.point_data_y_axis]);\r\n        \r\n        let values = e.layer.childMarkers.map(v => v.options.data[db.point_data_y_axis]);\r\n        \r\n        /****************************To show Min and Max Count dynamically based on the selected cluster********************************************/\r\n        let state = e.layer.childMarkers.map(v => v.options.data[db.point_data_State]);  \r\n         \r\n        const arrToInstanceCountObj = state.reduce((obj, e) => { \r\n            obj[e] = (obj[e] || 0) + 1; \r\n            return obj; \r\n        }, {}); \r\n        \r\n        let entries = Object.entries(arrToInstanceCountObj); \r\n        let entriesdesc = Object.entries(arrToInstanceCountObj); \r\n        let sortedasc = entries.sort((a, b) => a[1] - b[1]); \r\n        let sorteddesc = entriesdesc.sort((a, b) => b[1] - a[1]);                \r\n        \r\n        //If the Min and max count by state is same then show the min and max count by flag                        \r\n        if(sortedasc[0][0] === sorteddesc[0][0]){\r\n        if(db.point_data_Flag && db.point_data_Flag_Count) { \r\n            data_arr2 = e.layer.childMarkers.map(v => { \r\n                let obj2 = {...v}; \r\n                obj2.name =  (v.options.data[db.point_data_Flag] === \"\" ? \"-\" : v.options.data[db.point_data_Flag]); \r\n                obj2.value=v.options.data[db.point_data_Flag_Count]; \r\n                return obj2; \r\n            }); \r\n        } \r\n         \r\n        let FlagCnt_Sort =data_arr2.sort(function (a, b) { \r\n                        return a.value - b.value \r\n                        });   \r\n        let Min_FlagCnt = FlagCnt_Sort[0]; \r\n        let Max_FlagCnt = FlagCnt_Sort[FlagCnt_Sort.length - 1]; \r\n        let MinState=\"\";\r\n        let MaxState=\"\";\r\n        \r\n        //If the min and max count of flag is same then show only the min and max count without flag names in the brackets.\r\n        if(Min_FlagCnt.value === Max_FlagCnt.value){\r\n            MinState = (Min_FlagCnt)?(Min_FlagCnt.value):0; \r\n            MaxState = (Max_FlagCnt)?(Max_FlagCnt.value):0; \r\n        }\r\n        else {\r\n            MinState = (Min_FlagCnt)?(Min_FlagCnt.value+\" (\"+ Min_FlagCnt.name +\")\"):0; \r\n            MaxState = (Max_FlagCnt)?(Max_FlagCnt.value+\" (\"+ Max_FlagCnt.name +\")\"):0; \r\n        }\r\n        messagebox.Min_State_Count(MinState)  \r\n        messagebox.Max_State_Count(MaxState) \r\n        }  \r\n        else {\r\n        let Min_State_Cluster = sortedasc[0]; \r\n        let Max_State_Cluster = sorteddesc[0];     \r\n        let MinState = (Min_State_Cluster)?(Min_State_Cluster[1]+\" (\"+ Min_State_Cluster[0] +\")\"):0; \r\n        let MaxState = (Max_State_Cluster)?(Max_State_Cluster[1]+\" (\"+ Max_State_Cluster[0] +\")\"):0; \r\n        messagebox.Min_State_Count(MinState) \r\n        messagebox.Max_State_Count(MaxState)    \r\n        }\r\n        /****************************End of Min, Max dynamic count code********************************/\r\n    \r\n        /**********************To show the HCP's distinct count dynamically **************************/\r\n        //let HCPCnt = e.layer.childMarkers.map(v => v.options.data[db.point_data_pres_name]); \r\n        let HCPCnt = values; \r\n        HCPCnt = HCPCnt.filter((c, index) => {\r\n            return HCPCnt.indexOf(c) === index;\r\n        });\r\n        HCPCnt = (HCPCnt.length)\r\n        messagebox.HCP_Count_Details(HCPCnt)\r\n       /***********************************************************************************************/ \r\n        \r\n       /**********************To show the Total # of Flags count dynamically **************************/\r\n        //let HCPCnt = e.layer.childMarkers.map(v => v.options.data[db.point_data_pres_name]); \r\n        let TotCnt = values; \r\n        TotCnt = (TotCnt.length)\r\n        messagebox.Total_Count_Details(TotCnt)\r\n       /***********************************************************************************************/ \r\n        \r\n        e.targetElement = \"markerCluster\";  //should be passed to identify the click target\r\n        \r\n        if (values.length) {\r\n            let region = \"region\" + obj.region.region_id;\r\n            let query_id = obj.query_id;\r\n            let query_data = window.rxds.m.query_tracker[query_id].data;\r\n            rxds.toggleSelection(values,obj,db,data,\"highlight\",e);\r\n            e.layer.childMarkers.forEach(v => {\r\n                v.setIcon(getMarkerIcon(v.options.data.NPI));\r\n            });\r\n        }\r\n\tmarkers.refreshClusters(e.target);  // refreshing clusters (colors) after clicked\r\n});\r\n\r\n// Adding markers into the marker cluster object\r\ndata.point_data.data_arr.forEach( v =>{\r\n    if(v[db.point_data_lat] && v[db.point_data_long]) {\r\n        let title =   `Facility Name: ${v[db.point_data_pres_name]}<br>\r\n                       Location NPI: ${v[db.point_data_y_axis]}<br> \r\n                       Specialty:${v[db.point_data_speciality]}<br>\r\n                       Address:${v[db.point_data_address]}<br>\r\n                       City:${v[db.point_data_city]}<br>\r\n                       Zip:${v[db.point_data_x_axis]}`;\r\n        let icon = getMarkerIcon(v[db.point_data_y_axis]);\r\n    \tlet marker = L.marker(\r\n    \t    new L.LatLng(v[db.point_data_lat], v[db.point_data_long]),\r\n    \t    {\r\n    \t        icon: icon,\r\n    \t        data: v     // data is not a supported option but we can use to pass information - leaflet will ignore\r\n            }\r\n        );\r\n    \tmarker\r\n    \t//.bindPopup(title);    // default\r\n    \t.bindPopup(function (layer) {   // binding default small leaflet popup\r\n            return title;\r\n        })\r\n        .bindTooltip((params) => {  //binding tooltip\r\n            return title;\r\n        });\r\n    \tmarkers.addLayer(marker);   //adding marker to marker cluster object\r\n    }\r\n});\r\nobj.map.addLayer(markers);  //adding marker clusters to the map\r\n\r\nmarkers.on(\"click\", function(e) {   \r\n    if(obj.map.clickable) {     // select the marker / value if the clickable flag is enabled\r\n        //appending $MCV to the value to identify this selected marker values from the geoJson values\r\n        //let value = \"$MCV\" + e.layer.options.data.name; \r\n        \r\n        let value = e.layer.options.data[db.point_data_y_axis]; \r\n        e.targetElement = \"marker\";     //should be passed to identify the click target\r\n        \r\n        if (value) {\r\n            let region = \"region\" + obj.region.region_id;\r\n            let query_id = obj.query_id;\r\n            let query_data = window.rxds.m.query_tracker[query_id].data;\r\n            // if(terr_name !== \"name\")\r\n            //         params.secondary_filters = true;\r\n            rxds.toggleSelection(value,obj,db,data,\"highlight\",e);\r\n            e.layer.setIcon(getMarkerIcon(value));\r\n        }\r\n    } else {    //show semantic ui popup to the markers\r\n        $('.leaflet-marker-modal > .header').html(db.point_data_y_axis + \": \" + e.layer.options.data[db.point_data_y_axis]);\r\n        //  again assume we are not using templates\r\n        $('.leaflet-marker-modal > .content').html(\r\n            [\r\n                '<div class=\"ui items\">',\r\n                    '<div class=\"ui item\">',\r\n                        '<div class=\"content\">',\r\n                            '<div>',\r\n                               '<b>'+ db.point_data_x_axis + \": \" + e.layer.options.data[db.point_data_x_axis]+'</b>',\r\n                            '</div>',\r\n                            '<div class=\"description\">',\r\n                                '<p>Facility Name: ' + e.layer.options.data[db.point_data_pres_name] + '</p>',\r\n                                '<p>Specialty: ' + e.layer.options.data[db.point_data_speciality] + '</p>', \r\n                                '<p>Address: ' + e.layer.options.data[db.point_data_address] + '</p>',\r\n                                '<p>City : ' + e.layer.options.data[db.point_data_city] + '</p>',\r\n                                '<p>Latitude: ' + e.layer.options.data[db.point_data_lat] + '</p>',\r\n                                '<p>Longitude: ' + e.layer.options.data[db.point_data_long] + '</p>',\r\n                            '</div>',\r\n                        '</div>',\r\n                    '</div>',\r\n                '</div>'\r\n            ].join(\"\")\r\n        );\r\n        $('.leaflet-marker-modal').modal('show');\r\n    }\r\n});\r\n\r\n/* ****************** End - Adding Markers ************************ */\r\n\r\n/********* Adding Message Box (leaflet control) on bottom-right section *********/\r\n//ref: https://leafletjs.com/examples/choropleth/\r\n//https://leafletjs.com/reference-1.7.1.html#control\r\nlet messagebox = L.control({position: 'bottomright'});\r\n\r\n//to show custom content in the message box\r\nmessagebox.onAdd = function(map) {  //executed when the message box is added for the first time in map\r\n    let container = createDiv('', 'info message-box');\r\n    let markers_in_screen = createDiv(`<strong style = \"color:orange\">Markers</strong>: <span class=\"data\">-</span>`, 'message no-of-markers-in-screen');\r\n    let HCPCount = createDiv(`<strong  style = \"color:orange\">Site Count</strong>: <span class=\"HCPdata\">${data.HCP_dist_count}</span>`, 'message no-of-markers-in-screen');\r\n    let MinState = createDiv(`<strong style = \"color:orange\">Min</strong>: <span class=\"Mindata\">${data.minstate}</span>`, 'message no-of-markers-in-screen');\r\n    let MaxState = createDiv(`<strong style = \"color:orange\">Max</strong>: <span class=\"Maxdata\">${data.maxstate}</span>`, 'message no-of-markers-in-screen');\r\n    let TotalCount = createDiv(`<strong style = \"color:orange\">Total # of Flags</strong>: <span class=\"Totaldata\">${data.point_data.data_arr.length.format()}</span>`, 'message no-of-markers-in-screen');\r\n    let details = [TotalCount,MinState,MaxState, markers_in_screen,HCPCount];\r\n    details.forEach(v => container.appendChild(v) );    //appending the messages into the box container\r\n    this._container = container;\r\n    return this._container;\r\n};\r\n\r\n// to update message box content dynamically based on some map events\r\nmessagebox.update_markers_details = function() {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .data\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    features.forEach(function(ftr) {\r\n       if(ftr.getChildCount) {      // if getChildCount is available then this is a cluster\r\n         count = count + ftr.getChildCount();\r\n       } else {     // otherwise a single marker so count is 1\r\n         count = count + 1;\r\n       }\r\n    });\r\n    \r\n    message =total>0? `<strong> ${count.format()} </strong> of ${total.format()} (${d3.format(',.1%')(count/total)})`:`<strong> ${count.format()} </strong> of ${total.format()} (${('0.0%')})`;\r\n    marker_data_elem.html(message);\r\n};\r\n\r\nmessagebox.addTo(obj.map);\r\n\r\n/********* Ennd - Adding Message Box (leaflet control) on bottom-right section *********/\r\n\r\n/*****************************function to work min and max dynamically when the cluster is clicked********/\r\n// to update message box content dynamically based on some map events\r\nmessagebox.Min_State_Count = function(Min) {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .Mindata\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    message =total>0? `<strong> ${Min} </strong>`:`<strong> ${Min} </strong>`;\r\n    marker_data_elem.html(message);\r\n};\r\nmessagebox.addTo(obj.map);\r\n\r\n// to update message box content dynamically based on some map events\r\nmessagebox.Max_State_Count = function(Max) {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .Maxdata\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    message =total>0? `<strong> ${Max} </strong>`:`<strong> ${Max} </strong>`;\r\n    marker_data_elem.html(message);\r\n};\r\nmessagebox.addTo(obj.map);\r\n/*******************************End of Min, Max code dynamically***************************************************/\r\n\r\n// to update message box content dynamically based on some map events\r\nmessagebox.HCP_Count_Details = function(ftt) {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .HCPdata\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    message =total>0? `<strong> ${ftt} </strong>`:`<strong> ${ftt} </strong>`;\r\n    marker_data_elem.html(message);\r\n};\r\nmessagebox.addTo(obj.map);\r\n/********* Ennd - Adding Message Box (leaflet control) on bottom-right section *********/\r\n\r\n// to update message box content dynamically based on some map events\r\nmessagebox.Total_Count_Details = function(tot) {    //executed manually when called from some other functions\r\n    let marker_data_elem = $(this._container).find(\".no-of-markers-in-screen .Totaldata\");\r\n    let features = getFeaturesInView();\r\n    let count = 0;\r\n    let total = data.point_data.data_arr.length;\r\n    let message = \"\";\r\n    message =total>0? `<strong> ${tot} </strong>`:`<strong> ${tot} </strong>`;\r\n    marker_data_elem.html(message);\r\n};\r\nmessagebox.addTo(obj.map);\r\n/********* Ennd - Adding Message Box (leaflet control) on bottom-right section *********/\r\n\r\n/*************** static color legend ***************/\r\nvar legend = L.control({position: 'bottomleft'});\r\n\r\nlegend.onAdd = function (map) {\r\n    var div = L.DomUtil.create('div', 'info legend');\r\n    // <i style=\"background: ${color(0.75)}\"></i><br>\r\n         div.innerHTML = `Max <br>\r\n            <i style=\"background: ${color(1)}\"></i><br>\r\n            <i style=\"background: ${color(0.5)}\"></i><br>\r\n            <i style=\"background: ${color(0.25)}\"></i><br>\r\n            <i style=\"background: ${color(0)}\"></i><br>\r\n            Min\r\n         `;\r\n    return div;\r\n};\r\nlegend.addTo(obj.map);\r\n/*************** Ennd - color legend ***************/\r\n\r\n/************* Adding Zoom reset option ****************/\r\n// Referennce:\r\n// https://github.com/CliffCloud/Leaflet.EasyButton\r\n// http://danielmontague.com/projects/easyButton.js/v2/examples/\r\n// L.easyButton('<i class=\"redo icon\"></i>', function(){\r\n//     obj.map.setView(obj.map.options.center, obj.map.options.zoom);\r\n// }).addTo(obj.map);\r\n\r\nvar stateChangingButton = L.easyButton({\r\n    states: [{\r\n        stateName: 'reset',        // name the state\r\n        icon:      '<i class=\"undo icon\"></i>',               // and define its properties\r\n        title:     'Reset Zoom',      // like its title\r\n        onClick: function(btn, map) {       // and its callback\r\n            obj.map.setView(obj.map.options.center, obj.map.options.zoom);\r\n        }\r\n    }]\r\n});\r\n\r\nstateChangingButton.addTo(obj.map);\r\n/************* End - Adding Zoom reset option ****************/\r\n\r\n// update count in messagebox on move/zoom events\r\nobj.map.on(\"moveend\", function() {  //actions to do when the map is dragged or zoomed\r\n    messagebox.update_markers_details();\r\n});\r\n\r\n// update count in messagebox after aimation events\r\nmarkers.on(\"animationend\", function(e) {    //actions to do when the clusters / markers are updated / repositioned\r\n    messagebox.update_markers_details();\r\n});\r\n\r\n// update count in messagebox after map is rendered - one time function\r\nobj.map.whenReady(function(e) {    //actions to do when the map is rendered\r\n    messagebox.update_markers_details();\r\n});\r\n\r\n/* Add Control Scale */\r\n//https://leafletjs.com/reference-1.7.1.html#control-scale\r\n// let controlScale = L.control.scale();\r\n// controlScale.addTo(obj.map);\r\n/* End - Add Control Scale */\r\n\r\n/********************* Adding layer control on topright *********************/\r\n//https://leafletjs.com/reference-1.7.1.html#control-layers\r\nlet overlayMaps = { \"GeoJSON\": gj , \"Markers & Clusters\": markers};\r\nL.control.layers(baseLayers, overlayMaps/*, {collapsed: false}*/).addTo(obj.map);\r\n/********************* End - Adding layer control on topright *********************/\r\n\r\n/*********** Adding option to change the visibility of control boxes visibility ************/\r\n//controlling info box visibility\r\naddCheckBoxToOverlay(\"message-box\", \"Info Box\", \"bottomright\");\r\n//controlling zoom box visibility\r\naddCheckBoxToOverlay(\"zoom-box\", \"Zoom Box\", \"topleft\");\r\n//controlling scale visibility\r\n// addCheckBoxToOverlay(\"scalex\", \"Scale\", \"bottomleft\");\r\n//controlling bottom left section visibility\r\naddCheckBoxToOverlay(\"legends\", \"Color Map\", \"bottomleft\");\r\n//controlling click and popup actions\r\naddCheckBoxToOverlay(\"click-event\", \"Enable Click\");\r\n/*********** End - Adding option to change the visibility of control boxes visibility ************/\r\n\r\n/************** Adding save map option *****************/\r\nvar printer = L.easyPrint({\r\n    title: 'Save Map',\r\n\tposition: 'topleft',\r\n  \ttileLayer: tiles,\r\n  \tsizeModes: ['Current', 'A4Landscape', 'A4Portrait'],\r\n  \tfilename: obj.config.title,\r\n  \texportOnly: true,\r\n  \thideControlContainer: false\r\n}).addTo(obj.map);\r\n/************** End - Adding save map option *****************/\r\n\r\n//executed when the map object initialize - like a constructor\r\nL.Map.addInitHook(function () {     //For POC - Can be utilized later\r\n    //nothing for now\r\n});\r\n\r\n//Actions to do after Map loaded\r\nobj.map.on('load', function() {     //For POC - Can be utilized later\r\n    //nothing for now\r\n});\r\n\r\n/********************* Functions **************************/\r\n//Returns marker icon based on the value\r\nfunction getMarkerIcon(value) {\r\n    let color = \"#ff8b0c\";\r\n    if(value != undefined && obj.filters.includes(value))\r\n        color = \"#ff8b0c\";\r\n    let icon = L.divIcon({\r\n        html: `<i style=\"color: ${color}; font-size:35px; text-shadow: 3px -1px 5px black;\" class=\"map marker alternate icon\"></i>`,\r\n        iconSize: [20, 20],\r\n        className: 'myDivIcon'\r\n    });\r\n    return icon;\r\n}//getMarkerIcon\r\n\r\n//returns div node with class, style and inner html\r\nfunction createDiv(html, className = \"\", style = {}, attr = {}) {\r\n    let div = L.DomUtil.create('div', className);\r\n    div.innerHTML = html;\r\n    Object.keys(style).forEach(v => {\r\n        div.style[v] = style[v];\r\n    });\r\n    Object.keys(attr).forEach(v => {\r\n        div.setAttribute([v],attr[v]);\r\n    });\r\n    return div;\r\n}//createDiv\r\n\r\n//controlling control boxes visibility\r\nfunction addCheckBoxToOverlay(controlBox, label, position) {\r\n    if(controlBox == \"click-event\") {\r\n        let box = L.DomUtil.create('label', `${controlBox}-toggle`);\r\n        let div = createDiv(`<input type=\"checkbox\" class=\"leaflet-control-layers-selector ${controlBox}-action-control\"><span> ${label} </span>`);\r\n        box.appendChild(div);\r\n        $(box).on(\"change\", function(){\r\n            if(this.querySelector(\"input\").checked)  {\r\n                obj.map.clickable = true;\r\n                obj.opts.markers.options.zoomToBoundsOnClick = false;\r\n            }\r\n            else {\r\n                obj.map.clickable = false;\r\n                obj.opts.markers.options.zoomToBoundsOnClick = true;\r\n            }\r\n        });\r\n        $(obj.map._controlCorners.topright).find(\".leaflet-control-layers-overlays\").append(box);\r\n    } else {\r\n        let box = L.DomUtil.create('label', `${controlBox}-toggle`);\r\n        let div = createDiv(`<input type=\"checkbox\" class=\"leaflet-control-layers-selector ${controlBox}-visibility-control\" checked=\"checked\"><span> ${label} </span>`);\r\n        box.appendChild(div);\r\n        $(box).on(\"change\", function(){\r\n            $(obj.map._controlCorners[position]).toggle();\r\n        });\r\n        $(obj.map._controlCorners.topright).find(\".leaflet-control-layers-overlays\").append(box);\r\n    }\r\n}//addCheckBoxToOverlay\r\n\r\n// add a counter function adapated from \r\n// https://stackoverflow.com/questions/22081680/get-a-list-of-markers-layers-within-current-map-bounds-in-leaflet\r\nfunction getFeaturesInView() {\r\n  let features = [];\r\n  obj.map.eachLayer( function(layer) {\r\n    if(layer instanceof L.Marker) {\r\n      if(obj.map.getBounds().contains(layer.getLatLng())) {\r\n        features.push(layer);\r\n      }\r\n    }\r\n  });\r\n  return features;\r\n}\r\n/********************* End - Functions **************************/\r\n\r\nobj.opts.totalCountLabel = totalCountLabel;\r\nobj.opts.start_lat = start_lat;\r\nobj.opts.start_lng = start_lng;\r\nobj.opts.start_zoom = start_zoom;\r\nobj.opts.color_range = color_range;\r\nobj.opts.marker_color_range = marker_color_range;\r\nobj.opts.geo_json = geo_json;\r\nobj.opts.layers = layers;\r\nobj.opts.baseLayers = baseLayers;\r\nobj.opts.tiles = tiles;\r\nobj.opts.color = color;\r\nobj.opts.colorScale = colorScale;\r\nobj.opts.style = style;\r\nobj.opts.markerColor = markerColor;\r\nobj.opts.markerColorScale = markerColorScale;\r\n\r\n\r\nobj.opts.gj = gj;\r\nobj.opts.overlayMaps = overlayMaps;\r\nobj.opts.markers = markers;\r\nobj.opts.messagebox = messagebox;\r\nobj.opts.legend = legend;\r\nobj.opts.stateChangingButton = stateChangingButton;\r\nobj.opts.printer = printer;\r\n\r\nobj.opts.getMarkerIcon = getMarkerIcon;\r\nobj.opts.createDiv = createDiv;\r\nobj.opts.addCheckBoxToOverlay = addCheckBoxToOverlay;\r\nobj.opts.getFeaturesInView = getFeaturesInView;"},"dependent_items":["item210002420","item210002449"],"dependent_regions":[],"child_regions":[]},"item210002420":{"control_type":"hiddenitem","query_id":0,"dataset_format":"","parameter":"COHORT_ID","item":{"item_id":210002420,"item_type":"hiddenitem"},"auth_roles":"ALL","config":{"name":"KOL_COHORT_ID","label":null,"inline":null,"limit_rows":null,"icon":null,"required":null,"def":null,"basic":null,"help":null,"validation":null},"dependent_items":[]},"item210002449":{"control_type":"hiddenitem","query_id":0,"dataset_format":"","parameter":"COHORT_NCT","item":{"item_id":210002449,"item_type":"hiddenitem"},"auth_roles":"ALL","config":{"name":"KOL_CT_NCT","label":null,"inline":null,"limit_rows":null,"icon":null,"required":null,"def":null,"basic":null,"help":null,"validation":null},"dependent_items":[]}};
+
+rxds.page_widgets = {};
+
+
+$(document)
+ .ready(rxds.ready(210000771 ))
+ ;
+ 
+   $(document)
+     .ready(function() {
+       agGrid.LicenseManager.setLicenseKey("CompanyName=RxDataScience Inc,LicensedGroup=RxDataScience Inc,LicenseType=MultipleApplications,LicensedConcurrentDeveloperCount=3,LicensedProductionInstancesCount=2,AssetReference=AG-008842,ExpiryDate=8_July_2021_[v2]_MTYyNTY5ODgwMDAwMA==d5c97b489a089434d3c9eba962efab90");
+     });
+
+
+</script>
+
+</footer>
+
+
+
+</html>

@@ -1,0 +1,1 @@
+6 2jsX~hr@antv/g/src/shape/polygon.js

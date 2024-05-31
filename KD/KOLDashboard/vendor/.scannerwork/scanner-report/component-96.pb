@@ -1,0 +1,1 @@
+` 2jsX	hr@antv/g2/src/attr/index.js

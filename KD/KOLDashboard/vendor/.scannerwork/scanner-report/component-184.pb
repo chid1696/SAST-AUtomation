@@ -1,0 +1,1 @@
+¸ 2jsXÕhr @antv/g2/src/geom/shape/point.js

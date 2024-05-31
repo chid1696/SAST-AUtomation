@@ -1,0 +1,1 @@
+± 2webXhr6dom-to-image/spec/resources/fonts/web-fonts/empty.html

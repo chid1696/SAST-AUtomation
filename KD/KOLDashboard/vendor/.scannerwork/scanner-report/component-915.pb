@@ -1,0 +1,1 @@
+“ 2jsX3hrdom-to-image/karma.conf.js

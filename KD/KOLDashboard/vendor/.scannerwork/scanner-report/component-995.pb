@@ -1,0 +1,1 @@
+ã 2jsXÆhr)dom-to-image/test-lib/tesseract-1.0.10.js

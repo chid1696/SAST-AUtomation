@@ -1,0 +1,1 @@
+¿ 2jsX3hr@antv/g2/src/global.js

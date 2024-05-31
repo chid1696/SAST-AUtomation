@@ -1,0 +1,1 @@
+° 2cssXhr8dom-to-image/spec/resources/fonts/web-fonts/embedded.css

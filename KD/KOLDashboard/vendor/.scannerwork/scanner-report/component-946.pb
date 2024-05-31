@@ -1,0 +1,1 @@
+² 2cssXhr6dom-to-image/spec/resources/fonts/web-fonts/remote.css

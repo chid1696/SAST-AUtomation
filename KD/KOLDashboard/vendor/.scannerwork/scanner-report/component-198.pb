@@ -1,0 +1,1 @@
+Æ 2jsXˆhr@antv/g2/src/scale/category.js

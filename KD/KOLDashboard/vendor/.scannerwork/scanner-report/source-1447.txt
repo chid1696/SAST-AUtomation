@@ -1,0 +1,504 @@
+
+var  temp = [];
+var _count = 0;
+
+$(function () {
+	$('.legends').live('change',function () {
+		var _id = $(this).data('no');
+		
+		if ($(this).is(':checked')) {
+			for (i = 0; i < temp[_id].component.legend.series.length; i++) {
+			    temp[_id].component.legend.setSelected(temp[_id].component.legend.series[i].name,false)
+
+			}
+		} else {
+			for (i = 0; i < temp[_id].component.legend.series.length; i++) {
+			    temp[_id].component.legend.setSelected(temp[_id].component.legend.series[i].name,true)
+			}
+		}
+
+	});	
+	
+});
+
+(function($) {
+
+$.buildEChart = function(url,staticid,charttype,stacking,configfunc, debug, theme) {
+
+
+
+$.qmonth = function(odate) {
+     return odate.substr(6,4) + "." +odate.substr(0,2) + "m";
+}
+
+$.qmon_format = function(odate) {
+    
+var mon = [
+                            'Jan',
+                            'Feb',
+                            'Mar',
+                            'Apr',
+                            'May',
+                            'Jun',
+                            'Jul',
+                            'Aug',
+                            'Sep',
+                            'Oct',
+                            'Nov',
+                            'Dec'
+                        ];
+ var mo = parseInt(odate.substr(5,2))-1;
+ return mon[mo]
++odate.substr(2,2);}
+
+$.qdate = function(odate) {
+     return odate.substr(6,4) + "." +odate.substr(0,2) + "." + odate.substr(2,2);
+}
+
+var ajax;
+if (url.substr(0,4) !== "APEX") {
+var sqlArea = document.getElementById("sql"+staticid).textContent;
+var sql="";
+if (sqlArea.substr(0,10) === "function()") {
+
+     //sqlArea=sqlArea.replace(/(\r\n|\n|\r)/gm," ");
+     if (debug) {console.log("var sqlf="+sqlArea);}
+     try { eval("var sqlf="+sqlArea); }
+         catch (e) {
+            if (!debug) {console.log("var sqlf="+sqlArea);}
+            console.log('Function did not compile properly; Copy and paste the code from var sqlf= in console to see the line with the error.');
+            console.log(e);
+        }
+     if (debug &&typeof sqlf == "function") {console.log(sqlf)};
+     sql=sqlf();
+     sql=sql.replace(/"/g,'\\"');
+     if (debug) {console.log(sql)};
+}
+else {
+     sqlArea=sqlArea.replace(/(\r\n|\n|\r)/gm," ");
+    sql=sqlArea;
+     sql=sql.replace(/"/g,'\\"');
+     if (debug) {console.log(sql)};
+}
+
+    var postdata= '.psv?.cache.execute[(`series;"'+encodeURIComponent(sql+'";1);1D00:00]'); 
+    ajax = {type:"POST", url:url+"/", data:postdata };
+} // KDB Plugin
+else { // Oracle Plugin
+      console.log(url);
+      var plugin_id = url.substr(4);
+                  var apexobj= {
+                    p_flow_id: $("#pFlowId").val(),
+                    p_flow_step_id: $("#pFlowStepId").val(),
+                    p_instance: $("#pInstance").val(),
+                    x01: 'DATA',
+                    x02: 'test',
+                    p_request: "PLUGIN="+plugin_id
+                  };
+                ajax =  {
+                  url: "wwv_flow.show",
+                  type: "POST",
+                  //dataType: "json",
+                  quietMillis: 250,
+                  data: apexobj,
+                  cache: true
+                };
+}
+
+    if (debug) {console.log(ajax)};
+	require.config({
+	    paths: {
+		echarts: '/libraries/echarts/build/dist'
+	    }
+	});
+	require(
+	    [
+		'echarts',
+		'echarts/chart/line',   // load-on-demand, don't forget the Magic switch type.
+		'echarts/chart/bar',
+		'echarts/chart/pie',
+		'echarts/chart/funnel'
+	    ],
+	    function (ec) {
+                var  myChart = ec.init(document.getElementById('container'+staticid));
+		
+		console.log('k' + _count);
+
+		myChart.showLoading({
+		    text: 'We are building the charts as fast as we can...please wait! ',    //loading text
+		});
+		
+		temp[_count] = myChart;
+		$('#container'+staticid).append('<div class="removeall-checkbox"><input title="Hide All Series" type="checkbox" id="legend-'+_count+'" data-no="'+_count+'" class="legends">Hide All</input></div>');
+		_count++;
+
+	 var ajaxFunc = function(data,textStatus) {
+                var jdata=data.substr(8);
+		if (debug) {console.log(jdata)};
+		    if (debug) {console.log("var jdata="+data.substr(8))};
+		     try { eval("var jdata="+jdata.substr(0,jdata.length-1)); }
+			 catch (e) {
+			    if (!debug) {console.log("var jdata="+data.substr(8));}
+			    console.log('We did not get a proper JSON for data. Please see output above');
+			    console.log(e);
+			}
+                var seriesData=jdata.series;
+		if (debug) {console.log(seriesData);}
+                var categories=jdata.categories;
+		if (debug) {console.log(categories);}
+		var l = seriesData.length;
+                var legend = [];
+                var config;
+                if ((charttype != "pie") && (charttype != "donut")) {
+		    config = $.ec_config_line();   
+		    config.legend.data = legend;
+		    config.xAxis[0].data = categories;
+		    config.series=seriesData;
+		    if (charttype === "Column") {charttype="bar";}
+		    else if (charttype == "Bar") {
+			charttype="bar";
+			var x = config.xAxis;
+			config.xAxis = config.yAxis;
+			config.yAxis = x;
+		    }
+		    for (var i = 0; i < l ; i++) {
+			 if (charttype === "area") {
+				 seriesData[i].type= "line"; 
+				 seriesData[i].itemStyle= {normal: {areaStyle: {type: 'default'}}};
+			 } else if (charttype === "spline") {
+				 seriesData[i].type= "line"; 
+				 seriesData[i].smooth= true;
+			 } else if (charttype === "areaspline") {
+				 seriesData[i].type= "line"; 
+				 seriesData[i].itemStyle= {normal: {areaStyle: {type: 'default'}}};
+				 seriesData[i].smooth= true;
+			 } else {
+			 seriesData[i].type= charttype; 
+			 }
+			 if (stacking === "Stacked") {
+			   seriesData[i].stack="Default";
+			 }
+			 legend[i]=seriesData[i].name;
+		    }
+                } else { // Pie chart
+                     config = $.ec_config_pie();
+                     var legend = [];
+                     var pieSeries=[];
+					 // commented by kishan to render pie chart
+					 /* for (var j = 0; j< l; j++) {
+					 legend[j] = seriesData[j].name;
+					 } */
+		     
+                     for (var i = 0; i < categories.length; i++) { // Loop through categories
+                         if (charttype == "pie") {
+				legend[i] = categories[i];
+			     if (i==0) {
+					// modified by kishan to render pie chart
+					pieSeries[i] = { name:seriesData[0].name, type:'pie', radius : '55%', center: ['65%', '50%'], data:[]};
+			     } else {
+					// commented by kishan to render pie chart
+					//  pieSeries[i] = { name:categories[i], type:'pie', radius : '55%', center: ['30%', '50%'], data:[]};
+			     }
+                         }
+                         else {
+			     if (i==0) {
+			     pieSeries[i] = { name:categories[i], type:'pie', radius : ["40%","55%"], center: ['70%', '50%'], data:[]};
+			     } else {
+					// commented by kishan to render pie chart
+					// pieSeries[i] = { name:categories[i], type:'pie', radius : ["40%","55%"], center: ['30%', '50%'], data:[]};
+			     }
+                         }
+                         var data=[];
+                         for (var j = 0; j< l; j++) {
+                             data[j] = {value:seriesData[j].data[i], name:categories[i]}; // modified by kishan to render pie chart
+                         }
+                         pieSeries[0].data.push(data[0]);// modified by kishan to render pie chart
+                     }
+                    config.series = pieSeries;
+					config.legend.data = legend; // modified by kishan to render pie chart
+		}//pie chart
+
+        configfunc(config);
+	if (debug) {console.log(config);}
+
+		myChart.setOption(config);
+		require(['/libraries/echarts/build/dist/theme/' + theme], function(tarTheme){
+			myChart.setTheme(tarTheme);
+		});
+		myChart.hideLoading();
+
+        }
+	
+	function ajaxReq()	 {
+    $.when(
+       //$.ajax({type:"POST", url:url+"/", data:postdata })
+       $.ajax(ajax)
+       ).then(ajaxFunc) // .then
+        .fail(function(xHR, textStatus, err) {
+           console.log('AJAX failed - ' + textStatus + ' ' + err);
+           console.log(xHR.responseText);
+		   //alert('Echarts Ajax call failed! Reinitiating...');
+		//$.when($.ajax(ajax)).then(ajaxFunc);
+		ajaxReq();
+	   myChart.hideLoading();
+	   
+	});
+	
+	}
+	ajaxReq();
+    }); // Require Load of echart complete
+}
+
+$.ec_config_line = function() {
+         return {
+    legend: {
+        data:[], y:"bottom"
+    },
+   grid : {x:"80",y:"80", x2:"90", y2: "120"},
+    tooltip : {
+        trigger: 'item', //item or axis
+       axisPointer:{
+            show: true,
+            type : 'cross',
+            lineStyle: {
+                type : 'dashed',
+                width : 1
+            }
+        },
+        formatter : function (params) {
+            return params.seriesName + ' : [ '
+                   + params[1] + ', ' 
+                   + params[2] + ' ]';
+        }
+    },
+    calculable : true,
+    dataZoom : {
+        show : false,
+        realtime : true,
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : []
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ], series:[],
+    toolbox: {
+        show : true,
+        orient: 'horizontal',     // 'horizontal' Â¦ 'vertical'
+        x: 'right',                // 'center' Â¦ 'left' Â¦ 'right'
+                                   // Â¦ {number}ï¼xåæ ï¼åä½pxï¼
+        y: 'top',                  // 'top' Â¦ 'bottom' Â¦ 'center'
+                                   // Â¦ {number}ï¼yåæ ï¼åä½pxï¼
+        color : ['#1e90ff','#22bb22','#4b0082','#d2691e'],
+        backgroundColor: 'rgba(0,0,0,0)', // å·¥å·ç®±èæ¯é¢è²
+        borderColor: '#ccc',       // å·¥å·ç®±è¾¹æ¡é¢è²
+        borderWidth: 0,            // å·¥å·ç®±è¾¹æ¡çº¿å®½ï¼åä½pxï¼é»è®¤ä¸º0ï¼æ è¾¹æ¡ï¼
+        padding: 5,                // å·¥å·ç®±åè¾¹è·ï¼åä½pxï¼é»è®¤åæ¹ååè¾¹è·ä¸º5ï¼
+        showTitle: true,
+        feature: {
+            mark: {
+                show: false,
+                title: {
+                    mark: 'Mark',
+                    markUndo: 'Undo',
+                    markClear: 'Clear'
+                },
+                lineStyle: {
+                    width: 1,
+                    color: '#1e90ff',
+                    type: 'dashed'
+                }
+            },
+            dataZoom: {
+                show: true,
+                title: {
+                    dataZoom: 'Zoom',
+                    dataZoomReset: 'Reset'
+                }
+            },
+            dataView : {
+                show : true,
+                title : 'Data View',
+                readOnly: true,
+                lang : ['Data', 'Close', 'Open'],
+                optionToContent: function(opt) {
+                    var axisData = opt.xAxis[0].data;
+					// Added by Kishan to load data from yAxis if horizontal bars (issue replicated Page 23)
+					if (axisData == undefined) {
+						axisData = opt.yAxis[0].data;
+					}
+                    var series = opt.series;
+                    var table = '<table style="width:100%;text-align:center"><tbody><tr>'
+                                 + '<td>&nbsp;</td>';
+                    for (var j = 0; j < series.length; j++) {
+                                 table += '<td>' + series[j].name + '</td>'
+                    }
+		    table += '</tr>';
+                    for (var i = 0, l = axisData.length; i < l; i++) {
+                        table += '<tr>'
+                                 + '<td>' + axisData[i] + '</td>';
+			         for (var j = 0; j < series.length; j++) {
+					 table += '<td>' + series[j].data[i] + '</td>'
+			         }
+			    table += '</tr>';
+                    }
+                    table += '</tbody></table>';
+					
+						//alert('k');
+					setTimeout(function () { 
+						$('.t-Region-bodyWrap button').on('click',function (e) {
+							//alert('d');
+							e.preventDefault();
+						});
+					}, 500)
+
+					
+					
+                    return table;
+                }
+            },
+            magicType: {
+                show: true,
+                title: {
+                    line: 'line',
+                    bar: 'bar',
+                    stack: 'stack',
+                    tiled: 'tiled',
+                    force: 'force',
+                    chord: 'chord',
+                    pie: 'pie',
+                    funnel: 'funnel'
+                },
+                type: ['line','bar','stack','tiled']
+            },
+            restore: {
+                show: true,
+                title: 'Restore'
+            },
+            saveAsImage: {
+                show: true,
+                title: 'SaveAs',
+                type: 'png',
+                lang: ['Save']
+            }
+         }
+       }
+    }; //End of Config
+}; //ec_config_line
+
+$.ec_config_pie = function () {
+     return {
+    title : {
+        text: '',
+        subtext: '',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)",
+		position: [20,320]
+    },
+    legend: {
+        orient : 'vertical',
+        x : 'left',
+        data:[] // Need to be names of categories or series
+    },
+    toolbox: {
+        show :true,
+        feature : {
+            mark : {show: false},
+            dataView : {
+					title : 'Data View',
+					show: true, 
+					readOnly: true,
+					lang : ['Data', 'Close', 'Open'],
+					 optionToContent: function(opt) {
+						console.log(opt);
+						
+						var data = opt.series[0].data;
+						var content = [];
+						
+						for (var i = 0; i < data.length ;i++) {
+							content[i] = ' ' + data[i].name + ': ' + data[i].value;
+						}
+						
+						setTimeout(function () { 
+							$('.t-Region-bodyWrap button').on('click',function (e) {							//alert('d');
+							
+							e.preventDefault();
+							});
+						}, 500);
+						
+						return opt.series[0].name + ": <br/>" + content.toString();
+					} 
+				},
+            magicType : {
+                show: false, 
+                type: ['pie', 'funnel'],
+                option: {
+                    funnel: {
+                        x: '25%',
+                        width: '50%',
+                        funnelAlign: 'center',
+                        max: 40757
+                    }
+                }
+            },
+            restore : {show: true,  title: 'Restore'},
+            saveAsImage : {show: true},
+            /* dataView : {
+                show : true,
+                title : 'Data View',
+                readOnly: true,
+                lang : ['Data', 'Close', 'Open'],
+                optionToContent: function(opt) {
+                    var axisData = opt.xAxis[0].data;
+					// Added by Kishan to load data from yAxis if horizontal bars (issue replicated Page 23)
+					if (axisData == undefined) {
+						axisData = opt.yAxis[0].data;
+					}
+                    var series = opt.series;
+                    var table = '<table style="width:100%;text-align:center"><tbody><tr>'
+                                 + '<td>&nbsp;</td>';
+                    for (var j = 0; j < series.length; j++) {
+                                 table += '<td>' + series[j].name + '</td>'
+                    }
+		    table += '</tr>';
+                    for (var i = 0, l = axisData.length; i < l; i++) {
+                        table += '<tr>'
+                                 + '<td>' + axisData[i] + '</td>';
+			         for (var j = 0; j < series.length; j++) {
+					 table += '<td>' + series[j].data[i] + '</td>'
+			         }
+			    table += '</tr>';
+                    }
+                    table += '</tbody></table>';
+					
+					
+					setTimeout(function () { 
+						$('.t-Region-bodyWrap button').on('click',function (e) {
+							//alert('d');
+							e.preventDefault();
+						});
+					}, 500)
+					
+                    return table;
+                }
+            } */
+        }
+    },
+    calculable : true,
+    series : [] 
+   }; // end of config
+
+}; // ec_config_pie
+
+						
+
+}(jQuery));

@@ -1,0 +1,1 @@
+§ 2cssX hr=datatables/FixedColumns-3.2.4/css/fixedColumns.foundation.css

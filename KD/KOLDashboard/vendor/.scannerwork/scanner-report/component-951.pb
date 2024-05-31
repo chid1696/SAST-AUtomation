@@ -1,0 +1,1 @@
+· 2webXhr.dom-to-image/spec/resources/hash/dom-node.html

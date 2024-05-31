@@ -1,0 +1,215 @@
+/* 
+	CSS FILE for RxData - Alnylam Test 
+	
+	Ted Papoulas - t.papoulas@gmail.com
+	
+	2018
+	
+*/
+
+
+
+
+:root {
+
+    /*  PRIMARY COLORS  */
+    --primary-midnight: #00264c; 
+    --primary-midnight-lt: #013d7a; 
+    --primary-sky: #0099dc; 
+    --primary-slate: #d8dad9; 
+    --primary-slate-lt: #e5e5e5;
+    
+    /*  SECONDARY COLORS  */
+    --secondary-twilight: #682666;
+    --secondary-magenta: #af1f65;
+    --secondary-ocean: #60bed4;
+    --secondary-storm: #8a8c8c;
+    
+    /*  BODY COPY  */
+    --body-copy: #404040;
+    
+    /*  ACCENT - Use Sparingly  */
+    --accent-mint: #3dd5ae;
+    --accent-marigold: #edaa00;
+    
+}
+
+
+body, label {
+	color: var(--body-copy) !important; 
+}
+
+
+
+/** Main Nav Bars **/
+
+
+.ui.menu, .ui.menu a.item:hover  {
+	background-color: var(--primary-midnight) !important; 
+}
+
+.dropdown.item:hover, .ui.menu .link.item:hover, .ui.menu a.item:hover {
+	background-color: var(--primary-midnight) !important; 
+	color: var(--secondary-ocean) !important; 
+}
+
+.ui.inverted.blue.header {
+	color: var(--secondary-ocean) !important; 
+}
+
+
+
+.ui[class*="top fixed"].menu, .ui[class*="top fixed"].menu a, .ui[class*="top fixed"].menu div  {
+	background-color: white !important; 
+	color: var(--body-copy) !important; 
+}
+
+.ui[class*="top fixed"].menu a:hover {
+	background-color: white !important; 
+	color: var(--primary-sky) !important; 
+}
+
+
+
+/* menu divider rules */
+.ui[class*="top fixed"].menu .item:before {
+    background-color: white !important;
+}
+
+
+
+/* Lefthand Bar Menu */
+
+.ui.vertical.menu {
+	background-color: var(--primary-midnight) !important; 
+}
+
+.ui.vertical.menu a {
+	border-bottom: 1px solid var(--primary-midnight-lt) !important; 
+}
+
+.ui.vertical.menu a:hover {
+	color: white !important;
+	background: var(--primary-sky) !important; 
+}
+
+.ui.vertical.menu a.item.logo, .ui.vertical.menu a.item.logo:hover {
+	background-color: white !important; 
+}
+
+.ui.vertical.menu a.item.logo i img {	
+	display: none;
+}
+
+
+.ui.vertical.menu a.item.logo i {
+	display: block;
+	margin: 0 auto;
+	border: none;
+	height: 50px; 
+	background: transparent url('./alnylam-50px.png') no-repeat ; 
+	background-position: center center;
+}
+
+
+
+.ui.vertical.menu a:hover:after {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	right: 0;
+	top: 50%;
+	margin-top: -35px;
+	border-right: 10px solid white;
+	border-top: 35px solid transparent;
+	border-bottom: 35px solid transparent;
+}
+
+
+
+/*  Main Body  */
+
+.pusher {
+	background-color: white !important; 
+}
+
+
+/* Box Content */
+
+.ui.segments {
+	box-shadow: none !important;
+	border: 1px solid var(--primary-slate) !important;
+	border-top:  15px solid var(--primary-slate) !important;
+}
+
+h2.ui.inverted.blue.header {
+	color: var(--primary-midnight) !important;
+	font-weight: 700;
+}
+
+
+.ui.raised.segment, .ui.raised.segments {
+	box-shadow: none !important;
+	border: 1px solid var(--primary-sky) !important;
+	border-top: 15px solid var(--primary-sky) !important;
+}
+
+.ui.blue.segment:not(.inverted) {
+	border-top: none !important;
+}
+
+/* Orange Button now Twilight */
+.ui.inverted.orange.button, .ui.inverted.orange.buttons .button {
+	color: var(--secondary-twilight) !important;
+	border-color: var(--secondary-twilight) !important;
+	box-shadow: 0 0 0 2px var(--secondary-twilight) inset!important
+}
+
+.ui.inverted.orange.button:hover, .ui.inverted.orange.buttons .button:hover {
+	background-color: var(--secondary-twilight) !important;
+	color: white !important;
+}
+
+/* TEST WHITE */
+#region470000548 h5, #region470000550 h5 {
+	color: white !important;
+}
+
+
+#copyright {
+	background: white !important;
+	color: var(--secondary-storm) !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+
+
+/* Icons */
+
+i.large.green.checkmark.icon {
+	color:  var(--accent-mint) !important;
+	margin-left: 15px !important; 
+}
+
+i.teal.icon {
+	color:  var(--secondary-ocean) !important;
+} 
+
+i.green.icon {
+	color:  var(--accent-mint) !important;
+}
+
+i.blue.icon {
+	color:  var(--primary-sky) !important;
+}
+
+i.red.icon {
+	color:  var(--secondary-magenta) !important;
+}
+
+i.purple.icon {
+	color:  var(--secondary-twilight) !important;
+}
+

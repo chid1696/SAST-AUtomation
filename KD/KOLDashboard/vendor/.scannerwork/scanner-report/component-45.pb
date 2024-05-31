@@ -1,0 +1,1 @@
+- 2jsXhr@antv/g/src/shape/index.js

@@ -1,0 +1,1 @@
+¬ 2webXhr0dom-to-image/spec/resources/filter/dom-node.html
